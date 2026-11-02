@@ -1170,7 +1170,7 @@ function say(text, cb, noVoice){
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     if(speakLang === "en"){ u.lang = "en-GB"; if(enVoice) u.voice = enVoice; } else { u.lang = "fr-FR"; if(frVoice) u.voice = frVoice; }
-    u.rate = (typeof pdata !== "undefined" && pdata && pdata.settings && pdata.settings.voiceRate) || .9; u.pitch = 1;
+    u.rate = (typeof pdata !== "undefined" && pdata && pdata.settings && pdata.settings.voiceRate) || .9; u.pitch = 1.2;
     if(speakLang !== "en" && typeof pdata !== "undefined" && pdata && pdata.settings && pdata.settings.voiceName){ const v = speechSynthesis.getVoices().find(x => x.name === pdata.settings.voiceName); if(v) u.voice = v; }
     if(cb){ u.onend = fin; u.onerror = fin; setTimeout(fin, 900 + text.length * 75); }
     const ag = document.getElementById("again");
