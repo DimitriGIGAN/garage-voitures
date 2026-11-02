@@ -809,6 +809,40 @@ html{background:var(--grass)}
 .a-color .right::after,.a-color .wrong::after{position:absolute;top:6px;right:8px;font:900 1.8rem Arial,sans-serif;line-height:1;width:1.3em;height:1.3em;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;z-index:4}
 .a-color .right::after{content:"✓";background:#1f2a44}
 .a-color .wrong::after{content:"✗";background:#000}
+/* ---- mode dessin animé ---- */
+#mascot{position:fixed;left:6px;top:62px;z-index:30;width:96px;padding:0;border:0;background:none;cursor:pointer}
+#mascot[hidden]{display:none}
+#mascot svg{display:block;width:100%;overflow:visible}
+.has-mascot .prompt{padding-left:88px}
+#mascot .mbody{transform-box:fill-box;transform-origin:50% 100%;animation:mbreath 3.2s ease-in-out infinite}
+#mascot .meyes{transform-box:fill-box;transform-origin:center;animation:blinkeye 4.5s infinite}
+#mascot .mopen,#mascot .msad,#mascot .msweat,#mascot .mbrow-sad{opacity:0}
+#mascot.m-talk .mopen{animation:mtalk .28s steps(1) infinite}
+#mascot.m-talk .mclosed{animation:mtalk2 .28s steps(1) infinite}
+#mascot.m-happy .mbody{animation:mhappy .9s cubic-bezier(.3,.7,.4,1) 1}
+#mascot.m-happy .wh{animation:spin .5s linear 2}
+#mascot.m-happy .mshadow{animation:mshadow .9s ease-in-out 1}
+#mascot.m-sad .mbody{animation:msadshake .8s ease-in-out 1}
+#mascot.m-sad .mclosed,#mascot.m-sad .mopen{opacity:0!important;animation:none!important}
+#mascot.m-sad .msad,#mascot.m-sad .msweat,#mascot.m-sad .mbrow-sad{opacity:1}
+#mascot.m-sad .msweat{animation:msweat 1.2s ease-in 1}
+@keyframes mbreath{0%,100%{transform:none}50%{transform:scale(1.03,.97)}}
+@keyframes mtalk{0%{opacity:1}50%{opacity:0}}
+@keyframes mtalk2{0%{opacity:0}50%{opacity:1}}
+@keyframes mhappy{0%{transform:none}18%{transform:scale(1.18,.8)}45%{transform:translateY(-26px) scale(.88,1.14) rotate(-4deg)}70%{transform:translateY(0) scale(1.14,.86)}85%{transform:scale(.97,1.04)}100%{transform:none}}
+@keyframes mshadow{45%{transform:scale(.6);opacity:.08}}
+@keyframes msadshake{0%,100%{transform:none}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(2deg)}}
+@keyframes msweat{from{transform:translateY(-4px)}to{transform:translateY(10px);opacity:0}}
+.wipe{position:fixed;inset:0;z-index:70;pointer-events:none;background:radial-gradient(circle at 50% 45%,#ffc93c 0 18%,#ff7a2f 18% 100%)}
+.boing{animation:boing .38s cubic-bezier(.3,.7,.4,1.4)}
+@keyframes boing{0%{transform:scale(1)}30%{transform:scale(1.07,.9)}60%{transform:scale(.96,1.05)}100%{transform:scale(1)}}
+.hero-car{filter:drop-shadow(0 7px 0 rgba(31,42,68,.18))}
+.hero-car svg{animation:carbob .55s ease-in-out infinite alternate;transform-origin:50% 100%}
+@keyframes carbob{from{transform:scale(1,1)}to{transform:scale(1.015,.985) translateY(1px)}}
+.hero-car .wh,.road .rcar .wh,.xcar .wh{animation:spin 1s linear infinite}
+.party .card{animation:cardpop .55s cubic-bezier(.2,.9,.3,1.35)}
+@keyframes cardpop{0%{transform:scale(.3) rotate(-8deg);opacity:0}70%{transform:scale(1.06) rotate(1deg);opacity:1}100%{transform:none}}
+.calm #mascot .mbody,.calm #mascot .meyes,.calm .hero-car svg{animation:none!important}
 /* parents space */
 .parent-entry{display:flex;justify-content:center;padding-bottom:24px}
 .pwrap{background:var(--card);border:4px solid var(--ink);border-radius:24px;padding:20px;margin:16px 0 24px;display:flex;flex-direction:column;gap:14px}
@@ -929,10 +963,12 @@ function say(text, cb){
     if(cb){ u.onend = fin; u.onerror = fin; setTimeout(fin, 900 + text.length * 75); }
     const ag = document.getElementById("again");
     if(ag){ ag.classList.add("talking"); const off = () => ag.classList.remove("talking"); u.addEventListener("end", off); u.addEventListener("error", off); setTimeout(off, 900 + text.length * 75); }
+    try{ mascotTalk(true); const off = () => mascotTalk(false); u.addEventListener("end", off); u.addEventListener("error", off); window.setTimeout(off, 900 + text.length * 75); }catch(e){}
     speechSynthesis.speak(u);
   }catch(e){ fin(); }
 }
 function beep(kind){
+  try{ if(kind === "good") mascotReact("happy"); else if(kind === "bad") mascotReact("sad"); }catch(e){}
   if(!soundOn) return;
   try{ flashSignal(kind); }catch(e){}
   if(kind === "bad"){ try{ fxPuff(); }catch(e){} }
@@ -1222,7 +1258,7 @@ const shuffle = a => a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x
 
 function topBar(withHome){
   speakLang = "fr";
-  try{ fxDecor(); applyTheme(); applyA11y(); document.documentElement.classList.toggle("onhome", !withHome); }catch(e){}
+  try{ fxDecor(); applyTheme(); applyA11y(); document.documentElement.classList.toggle("onhome", !withHome); mascotShow(!!(withHome && curGame && !isCalm())); }catch(e){}
   try{ document.documentElement.classList.toggle("calm", isCalm()); }catch(e){}
   return `<div class="top">
     ${withHome ? '<button class="iconbtn" id="home" aria-label="Retour au menu">⟵ Menu</button>' : `<button class="iconbtn whochip" id="who" aria-label="Changer de joueur"><span class="whocar">${favSvg()}</span>${esc(curProfile().name)}</button>`}
@@ -1232,7 +1268,7 @@ function topBar(withHome){
 }
 function wireTop(){
   try{ fxWaveTitle(); }catch(e){}
-  const h = document.getElementById("home"); if(h) h.onclick = () => { beep("tap"); menu(); };
+  const h = document.getElementById("home"); if(h) h.onclick = () => { beep("tap"); withWipe(() => menu()); };
   const w = document.getElementById("who"); if(w) w.onclick = () => { beep("tap"); whoPlays(); };
   document.getElementById("snd").onclick = e => {
     soundOn = !soundOn; e.target.textContent = soundOn ? "Son : oui" : "Son : non"; e.target.setAttribute("aria-pressed", soundOn);
@@ -1458,7 +1494,7 @@ function menu(page){
   [["m1","couleurs"],["m2","compter"],["m3","formes"],["m4","taille"],["m5","sons"],["m6","prenom"],["m7","feu"],["m8","suites"],["m9","espace"],["m10","bus"],["m11","semaine"],["m12","lavage"],["m13","trace"],["m14","histoires"],["m15","consignes"],["m16","memoire"],["m17","emotions"],["m18","puzzle"],["m19","ombres"],["m20","monnaie"],["m21","rythme"],["m22","rue"],["m23","peinture"],["m24","labyrinthe"],["m25","tri"],["m26","meteo"],["m27","metiers"],["m28","balance"],["m29","course"],["m30","moitie"],["m31","contraires"]].forEach(([id, g]) => {
     const el = document.getElementById(id), f = el.onclick;
     el.insertAdjacentHTML("afterbegin", `<span class="mstars" aria-label="${starsBy[g] || 0} étoiles">${STAR}${starsBy[g] || 0}</span>`);
-    el.onclick = () => { navSeq++; if(limitReached()) return closedScreen(); curGame = g; play = {game: g, count: 0}; if(duo){ duo.turn = 0; return showTurn(f); } f(); };
+    el.onclick = () => withWipe(() => { navSeq++; if(limitReached()) return closedScreen(); curGame = g; play = {game: g, count: 0}; if(duo){ duo.turn = 0; return showTurn(f); } f(); });
     if(GAMES[g] && (!gradeOK(g) || pdata.settings.hidden.includes(g))) el.hidden = true;
     { const pic = el.querySelector(".pic"); if(pic) GAMEPIC[g] = pic.outerHTML; }
     if(!el.hidden && GAMES[g]){ const onHome = home.includes(g); if(page === "home" ? !onHome : onHome) el.hidden = true; }
@@ -5082,6 +5118,63 @@ function maybePause(){
 }
 // ---- dys : syllabes en couleurs ----
 function colorSyll(word){ const s = (SYLL.find(x => x[0] === word) || [word, [word]])[1]; return s.join("") === word ? s.map((x, i) => `<span class="sy${i % 2}">${x}</span>`).join("") : word; }
+
+// ====================== MODE DESSIN ANIMÉ ======================
+// ---- Vroumi, la mascotte qui parle et réagit ----
+function mascotSvg(){
+  const body = (CARS.find(c => c.id === pdata.fav) && pdata.fav === "bleue") || !pdata.fav ? "#2f6fe4" : ({course:"#e63946", taxi:"#ffc93c", police:"#2f6fe4", ambulance:"#e63946", depanneuse:"#ff7a2f", poubelle:"#2fb36b", bus:"#ffc93c", pompiers:"#e63946", tracteur:"#2fb36b", doree:"#f2c14e", monster:"#8e5ae8"}[pdata.fav] || "#2f6fe4");
+  return `<svg viewBox="0 0 160 120" aria-hidden="true">
+    <ellipse class="mshadow" cx="80" cy="112" rx="56" ry="6" fill="#1f2a44" opacity=".18"/>
+    <g class="mbody">
+      <path d="M12 76 Q8 56 26 54 L40 52 L52 28 Q56 22 66 22 L100 22 Q110 22 114 30 L126 52 L140 54 Q152 56 150 70 L150 80 Q150 86 144 86 L18 86 Q12 86 12 80Z" fill="${body}" stroke="#1f2a44" stroke-width="3.5" stroke-linejoin="round"/>
+      <path d="M40 52 L52 28 Q56 22 66 22 L100 22 Q110 22 114 30 L126 52 Z" fill="#dff3ff" stroke="#1f2a44" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M58 30 Q62 26 70 27" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+      <g class="meyes"><circle cx="66" cy="42" r="10" fill="#fff" stroke="#1f2a44" stroke-width="2.5"/><circle cx="100" cy="42" r="10" fill="#fff" stroke="#1f2a44" stroke-width="2.5"/>
+        <circle class="mpupil" cx="68" cy="43" r="5" fill="#1f2a44"/><circle class="mpupil" cx="102" cy="43" r="5" fill="#1f2a44"/>
+        <circle cx="70" cy="40" r="1.6" fill="#fff"/><circle cx="104" cy="40" r="1.6" fill="#fff"/></g>
+      <path class="mbrow mbrow-sad" d="M56 28 L74 32 M110 28 L92 32" stroke="#1f2a44" stroke-width="3.5" stroke-linecap="round"/>
+      <path class="mclosed" d="M68 66 Q83 78 98 66" fill="none" stroke="#1f2a44" stroke-width="4" stroke-linecap="round"/>
+      <path class="mopen" d="M68 64 Q83 64 98 64 Q96 80 83 80 Q70 80 68 64Z" fill="#7a1f2b" stroke="#1f2a44" stroke-width="3" stroke-linejoin="round"/>
+      <path class="msad" d="M70 74 Q83 64 96 74" fill="none" stroke="#1f2a44" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="46" cy="66" r="6" fill="#ff8fa3" opacity=".55"/><circle cx="120" cy="66" r="6" fill="#ff8fa3" opacity=".55"/>
+      <path class="msweat" d="M130 30 q-5 9 0 12 q5 -3 0 -12z" fill="#7fc8ff" stroke="#1f2a44" stroke-width="1.5"/>
+      <g class="wh"><circle cx="42" cy="88" r="14" fill="#1f2a44"/><circle cx="42" cy="88" r="5.5" fill="#cfd6e4"/><path d="M42 80 V96 M34 88 H50" stroke="#9aa5bd" stroke-width="2"/></g>
+      <g class="wh"><circle cx="122" cy="88" r="14" fill="#1f2a44"/><circle cx="122" cy="88" r="5.5" fill="#cfd6e4"/><path d="M122 80 V96 M114 88 H130" stroke="#9aa5bd" stroke-width="2"/></g>
+    </g>
+  </svg>`;
+}
+let mascotTimer = null;
+function mascotEl(){ return document.getElementById("mascot"); }
+function mascotShow(on){
+  let m = mascotEl();
+  if(!m){ m = document.createElement("button"); m.id = "mascot"; m.setAttribute("aria-label", "Vroumi"); m.onclick = () => { mascotReact("happy"); say(pick(VTALK)); }; document.body.appendChild(m); }
+  if(on){ m.innerHTML = mascotSvg(); m.hidden = false; document.documentElement.classList.add("has-mascot"); }
+  else { m.hidden = true; document.documentElement.classList.remove("has-mascot"); }
+}
+function mascotReact(kind){
+  const m = mascotEl(); if(!m || m.hidden) return;
+  m.classList.remove("m-happy", "m-sad"); void m.offsetWidth; m.classList.add(kind === "happy" ? "m-happy" : "m-sad");
+  clearTimeout(mascotTimer); mascotTimer = window.setTimeout(() => m.classList.remove("m-happy", "m-sad"), kind === "happy" ? 1400 : 1600);
+}
+function mascotTalk(on){ const m = mascotEl(); if(m) m.classList.toggle("m-talk", !!on); }
+// ---- transition « iris » entre les écrans ----
+function withWipe(fn){
+  if(!fxOK()) return fn();
+  const p = fxPt || {x: innerWidth / 2, y: innerHeight / 2}, R = Math.hypot(Math.max(p.x, innerWidth - p.x), Math.max(p.y, innerHeight - p.y));
+  const o = document.createElement("div"); o.className = "wipe"; o.style.background = `radial-gradient(circle at ${p.x}px ${p.y}px, #ffc93c 0 60px, #ff7a2f 61px 100%)`; document.body.appendChild(o);
+  o.animate([{clipPath:`circle(0px at ${p.x}px ${p.y}px)`}, {clipPath:`circle(${R}px at ${p.x}px ${p.y}px)`}], {duration:280, easing:"cubic-bezier(.5,0,.75,0)", fill:"forwards"}).onfinish = () => {
+    try{ fn(); }catch(e){ console.error(e); }
+    window.scrollTo(0, 0);
+    o.animate([{clipPath:`circle(${R}px at 50% 45%)`}, {clipPath:`circle(0px at 50% 45%)`}], {duration:320, easing:"cubic-bezier(.25,1,.5,1)", fill:"forwards"}).onfinish = () => o.remove();
+  };
+}
+// ---- boutons qui rebondissent (écrasement / étirement) ----
+document.addEventListener("pointerdown", e => {
+  if(!fxOK()) return;
+  const b = e.target.closest && e.target.closest(".ans, .mode, .big, .iconbtn, .garage, .veh, .shape-ans, .ccard, .memcard, .coin, .swatch2, .sticker, .orditem, .tchoice, .platecar");
+  if(!b) return; b.classList.remove("boing"); void b.offsetWidth; b.classList.add("boing");
+}, true);
+document.addEventListener("animationend", e => { if(e.animationName === "boing") e.target.classList.remove("boing"); });
 
 // ====================== ANIMATIONS ======================
 let fxPt = null;
