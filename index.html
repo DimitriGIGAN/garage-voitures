@@ -1042,7 +1042,7 @@ html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 /* ---- scènes Vroumi + Dédé ---- */
 #mascot.m-visit{top:34vh;left:-4px;animation:mvisit .5s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes mvisit{from{transform:translateX(-120%)}to{transform:none}}
-#buddy.b-in{pointer-events:auto;cursor:pointer}
+#buddy.b-in{pointer-events:none}
 
 /* ---- jeux au repos ---- */
 .mode.resting{filter:saturate(.35) brightness(.96)}
@@ -1529,9 +1529,13 @@ function wireTop(){
 const MENU_ID = {"couleurs": "m1", "compter": "m2", "formes": "m3", "taille": "m4", "sons": "m5", "prenom": "m6", "feu": "m7", "suites": "m8", "espace": "m9", "bus": "m10", "semaine": "m11", "lavage": "m12", "trace": "m13", "histoires": "m14", "consignes": "m15", "memoire": "m16", "emotions": "m17", "puzzle": "m18", "ombres": "m19", "monnaie": "m20", "rythme": "m21", "rue": "m22", "peinture": "m23", "labyrinthe": "m24", "tri": "m25", "meteo": "m26", "metiers": "m27", "balance": "m28", "course": "m29", "moitie": "m30", "contraires": "m31"};
 
 // ---- varier les jeux : un même jeu se repose après N parties dans la journée ----
-function restLimit(){ try{ const v = pdata.settings.restMax; return v === undefined ? 15 : +v; }catch(e){ return 0; } }
-function roundsToday(g){ try{ const d = (stats[g] && stats[g].days && stats[g].days[today()]) || [0]; return d[0] || 0; }catch(e){ return 0; } }
-function gameResting(g){ const L = restLimit(); return L > 0 && !!GAMES[g] && roundsToday(g) >= L; }
+function restLimit(){ try{ const v = pdata.settings.restMin; return v === undefined ? 10 : +v; }catch(e){ return 0; } }
+// temps passé sur chaque jeu aujourd'hui (en secondes), compté toutes les 5 secondes quand l'écran est visible
+function roundsToday(g){ try{ return ((pdata.gtime || {})[today()] || {})[g] || 0; }catch(e){ return 0; } }
+function gameResting(g){ const L = restLimit(); return L > 0 && !!GAMES[g] && roundsToday(g) >= L * 60; }
+setInterval(() => { try{ if(!curGame || !GAMES[curGame] || document.visibilityState === "hidden" || !pdata) return; const d = today(); pdata.gtime = pdata.gtime || {};
+  if(!pdata.gtime[d]){ Object.keys(pdata.gtime).sort().slice(0, -6).forEach(k => delete pdata.gtime[k]); pdata.gtime[d] = {}; }
+  pdata.gtime[d][curGame] = (pdata.gtime[d][curGame] || 0) + 5; if(Date.now() % 30000 < 5000) saveProfileData(); }catch(e){} }, 5000);
 function restSuggest(g){
   const pool = availableGames().filter(k => k !== g && !gameResting(k) && GAMES[k]);
   return shuffle(pool).sort((a, b) => roundsToday(a) - roundsToday(b)).slice(0, 3);
@@ -3020,7 +3024,7 @@ function fixPdata(d){
   return {earned: d.earned || 0, fav: d.fav || "bleue", settings: Object.assign(b.settings, d.settings || {}), time: d.time || {}, sessions: d.sessions || {},
     storyNext: d.storyNext || 0, storiesDone: d.storiesDone || [], permits: d.permits || {},
     challenge: d.challenge || null, medals: d.medals || 0, custom: d.custom || null,
-    boost: d.boost || {}, recent: d.recent || {}, seen: d.seen || {}};
+    boost: d.boost || {}, recent: d.recent || {}, seen: d.seen || {}, gtime: d.gtime || {}};
 }
 const capFirst = t => t.charAt(0).toUpperCase() + t.slice(1);
 
@@ -3241,7 +3245,7 @@ function settingsHtml(){
         <select id="setmax" class="gsel">${[0,10,15,20,30,45,60].map(m => `<option value="${m}"${+s.maxMin === m ? " selected" : ""}>${m ? m + " minutes" : "Pas de limite"}</option>`).join("")}</select></div>
       <p class="pnote">Aujourd'hui : ${mins} minute${mins > 1 ? "s" : ""} de jeu.</p>
       <div class="setrow"><label for="setrest" class="glab">Un même jeu, au maximum par jour</label>
-        <select id="setrest" class="gsel">${[0,10,15,20,30].map(m => `<option value="${m}"${(s.restMax === undefined ? 15 : +s.restMax) === m ? " selected" : ""}>${m ? m + " parties" : "Pas de limite"}</option>`).join("")}</select></div>
+        <select id="setrest" class="gsel">${[0,5,8,10,15,20].map(m => `<option value="${m}"${(s.restMin === undefined ? 10 : +s.restMin) === m ? " selected" : ""}>${m ? m + " minutes" : "Pas de limite"}</option>`).join("")}</select></div>
       <p class="pnote">Quand la limite est atteinte, le jeu se repose jusqu'au lendemain et propose d'autres jeux : l'enfant varie les apprentissages.</p>
       <div class="setrow"><input type="checkbox" id="setparty"${s.party ? " checked" : ""}><label for="setparty">Petite fête toutes les 5 étoiles</label></div>
       <div class="setrow"><input type="checkbox" id="setvvoice"${s.vvoice !== false ? " checked" : ""}><label for="setvvoice">Voix enregistrée de Vroumi (sinon, voix de la tablette)</label></div>
@@ -3258,7 +3262,7 @@ function settingsHtml(){
 }
 function wireSettings(){
   document.getElementById("setmax").onchange = e => { pdata.settings.maxMin = +e.target.value; saveProfileData(); };
-  document.getElementById("setrest").onchange = e => { pdata.settings.restMax = +e.target.value; saveProfileData(); };
+  document.getElementById("setrest").onchange = e => { pdata.settings.restMin = +e.target.value; saveProfileData(); };
   document.getElementById("setparty").onchange = e => { pdata.settings.party = e.target.checked; saveProfileData(); };
   document.getElementById("setvvoice").onchange = e => { pdata.settings.vvoice = e.target.checked; saveProfileData(); say(e.target.checked ? "Coucou ! C'est moi, Vroumi !" : "D'accord, je prends la voix de la tablette."); };
   document.getElementById("setmusic").onchange = e => { pdata.settings.music = e.target.checked; saveProfileData(); musicUpdate(); };
