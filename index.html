@@ -397,17 +397,30 @@ html{background:var(--grass)}
 @keyframes illuin{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
 .storyc .cpic.illu{max-width:none;width:100%;border-radius:12px;overflow:hidden;border:2px solid var(--ink)}
 .storyc .cpic.illu img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover}
-#mascot .mstack{position:relative;display:block;width:100%;aspect-ratio:1/1;transform-origin:50% 100%;animation:mbreath 3.2s ease-in-out infinite}
-#mascot .mstack img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;filter:drop-shadow(0 3px 0 rgba(31,42,68,.18))}
-#mascot .mstack .mi-happy{opacity:1}
-#mascot.m-talk .mi-happy{animation:mtalk2 .28s steps(1) infinite}
-#mascot.m-talk .mi-talk{animation:mtalk .28s steps(1) infinite}
+#mascot .mstack{position:relative;display:block;width:100%;aspect-ratio:1/1;transform-origin:50% 100%;animation:mfloat 4.5s ease-in-out infinite}
+#mascot .mstack img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .25s ease;filter:drop-shadow(0 2px 0 rgba(31,42,68,.15))}
+#mascot .mstack .mi-happy{opacity:1;transition:none}
+#mascot::after{content:"";position:absolute;left:18%;right:18%;bottom:-2px;height:6px;border-radius:50%;background:#1f2a44;opacity:.14;z-index:-1}
+#mascot.m-talk .mstack{animation:mtalkbob .5s ease-in-out infinite alternate}
+#mascot.m-talk .mi-talk{animation:mtalksoft .5s ease-in-out infinite alternate}
 #mascot.m-happy .mstack{animation:mhappy .9s cubic-bezier(.3,.7,.4,1) 1}
-#mascot.m-happy .mi-happy,#mascot.m-sad .mi-happy{opacity:0;animation:none}
+#mascot.m-happy::after{animation:mshadow .9s ease-in-out 1}
 #mascot.m-happy .mi-cheer{opacity:1;animation:none}
-#mascot.m-sad .mstack{animation:msadshake .8s ease-in-out 1}
+#mascot.m-happy .mi-talk,#mascot.m-sad .mi-talk{animation:none;opacity:0}
+#mascot.m-sad .mstack{animation:msadtilt 1s ease-in-out 1}
 #mascot.m-sad .mi-sad{opacity:1}
-.calm #mascot .mstack{animation:none!important}
+#mascot.m-in .mstack{animation:mdrivein .8s cubic-bezier(.2,.8,.3,1.15) 1}
+@keyframes mfloat{0%,100%{transform:none}50%{transform:translateY(-2px)}}
+@keyframes mtalkbob{from{transform:none}to{transform:scale(1.02,.98)}}
+@keyframes mtalksoft{from{opacity:0}to{opacity:1}}
+@keyframes msadtilt{0%,100%{transform:none}30%{transform:rotate(-5deg) translateY(1px)}65%{transform:rotate(3deg)}}
+@keyframes mdrivein{0%{transform:translateX(-140%) rotate(-4deg)}70%{transform:translateX(6%) rotate(2deg)}100%{transform:none}}
+.calm #mascot .mstack,.calm #mascot .mi-talk{animation:none!important}
+.spage{animation:pagein .45s ease-out both}
+@keyframes pagein{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
+.sart.illu img{animation:illuin .7s ease-out both,kenburns 16s ease-in-out .7s infinite alternate}
+@keyframes kenburns{from{transform:none}to{transform:scale(1.035)}}
+.calm .spage,.calm .sart.illu img{animation:none!important}
 html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 .vimg{display:block;width:clamp(90px,30vw,150px);margin:0 auto}
 .vimg.big{width:100%}
@@ -829,10 +842,10 @@ html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 .a-color .right::after{content:"✓";background:#1f2a44}
 .a-color .wrong::after{content:"✗";background:#000}
 /* ---- mode dessin animé ---- */
-#mascot{position:fixed;left:6px;top:62px;z-index:30;width:96px;padding:0;border:0;background:none;cursor:pointer}
+#mascot{position:fixed;left:8px;top:64px;z-index:30;width:68px;padding:0;border:0;background:none;cursor:pointer}
 #mascot[hidden]{display:none}
 #mascot svg{display:block;width:100%;overflow:visible}
-.has-mascot .prompt{padding-left:88px}
+.has-mascot .prompt{padding-left:70px}
 #mascot .mbody{transform-box:fill-box;transform-origin:50% 100%;animation:mbreath 3.2s ease-in-out infinite}
 #mascot .meyes{transform-box:fill-box;transform-origin:center;animation:blinkeye 4.5s infinite}
 #mascot .mopen,#mascot .msad,#mascot .msweat,#mascot .mbrow-sad{opacity:0}
@@ -5174,7 +5187,12 @@ function mascotEl(){ return document.getElementById("mascot"); }
 function mascotShow(on){
   let m = mascotEl();
   if(!m){ m = document.createElement("button"); m.id = "mascot"; m.setAttribute("aria-label", "Vroumi"); m.onclick = () => { mascotReact("happy"); say(pick(VTALK)); }; document.body.appendChild(m); }
-  if(on){ m.innerHTML = mascotSvg(); m.hidden = false; document.documentElement.classList.add("has-mascot"); }
+  if(on){
+    const wasHidden = m.hidden || !m.firstChild;
+    if(!IMG.vroumi_happy || !m.querySelector(".mstack")) m.innerHTML = mascotSvg();
+    m.hidden = false; document.documentElement.classList.add("has-mascot");
+    if(wasHidden && IMG.vroumi_happy && !isCalm()){ m.classList.remove("m-in"); void m.offsetWidth; m.classList.add("m-in"); window.setTimeout(() => m.classList.remove("m-in"), 850); }
+  }
   else { m.hidden = true; document.documentElement.classList.remove("has-mascot"); }
 }
 function mascotReact(kind){
