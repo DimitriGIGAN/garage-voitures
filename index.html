@@ -1825,20 +1825,19 @@ const S2PIC = {"bois": "bois", "souris": "souris", "pomme": "pomme", "cloche": "
 const STITLE = {"bois": "Un, deux, trois, nous irons au bois", "souris": "Une souris verte", "pomme": "Pomme de reinette", "cloche": "Frère Jacques", "navire": "Il était un petit navire", "escargot": "Petit escargot", "lune": "Au clair de la lune", "choux": "Savez-vous planter les choux", "marionnette": "Ainsi font les petites marionnettes", "prince": "Lundi matin"};
 
 let chantAudio = null, chantNav = -1, chantBuf = {}, chantReq = 0;
-// les chansons passent par le même moteur audio que les bruitages (fetch + WebAudio), plus fiable sur tablette
-function chantLoad(k){ const c = audioCtx(); if(!c) return Promise.reject(); if(chantBuf[k]) return Promise.resolve(chantBuf[k]);
-  return fetch("chants/" + k + ".mp3").then(r => r.ok ? r.arrayBuffer() : Promise.reject(r.status)).then(b => c.decodeAudioData(b)).then(buf => (chantBuf[k] = buf)); }
-function chantStop(){ chantReq++; try{ if(chantAudio){ chantAudio.src.onended = null; chantAudio.src.stop(); } }catch(e){} chantAudio = null; try{ musicDuck(false); }catch(e){} }
+// les chansons sont lues comme les voix de Vroumi (lecteur audio + adresse data:), ce qui marche aussi quand la tablette est en mode silencieux
+function chantLoad(k){ if(chantBuf[k]) return Promise.resolve(chantBuf[k]);
+  return fetch("chants/" + k + ".mp3").then(r => r.ok ? r.blob() : Promise.reject(r.status)).then(b => new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(chantBuf[k] = fr.result); fr.onerror = rej; fr.readAsDataURL(new Blob([b], {type: "audio/mpeg"})); })); }
+function chantStop(){ chantReq++; try{ if(chantAudio){ chantAudio.onended = null; chantAudio.pause(); } }catch(e){} chantAudio = null; try{ musicDuck(false); }catch(e){} }
 function chantPlay(k, onEnd, onFail){
   chantStop(); if(!soundOn) return false;
+  try{ stopVoice(); speechSynthesis.cancel(); }catch(e){}
   const req = ++chantReq, nav = navSeq;
-  chantLoad(k).then(buf => {
+  chantLoad(k).then(uri => {
     if(req !== chantReq || nav !== navSeq) return;
-    const c = audioCtx(), src = c.createBufferSource(), g = c.createGain(); g.gain.value = .95; src.buffer = buf; src.connect(g).connect(c.destination);
-    chantNav = navSeq; try{ musicDuck(true); }catch(e){}
-    chantAudio = {src, t0: c.currentTime, dur: buf.duration, get currentTime(){ return audioCtx().currentTime - this.t0; }, get duration(){ return this.dur; }};
-    src.onended = () => { if(chantAudio && chantAudio.src === src){ chantAudio = null; try{ musicDuck(false); }catch(e){} onEnd && onEnd(); } };
-    src.start();
+    const a = new Audio(uri); a.volume = 1; chantAudio = a; chantNav = navSeq; try{ musicDuck(true); }catch(e){}
+    a.onended = () => { if(chantAudio === a){ chantAudio = null; try{ musicDuck(false); }catch(e){} onEnd && onEnd(); } };
+    const p = a.play(); if(p && p.catch) p.catch(() => { if(chantAudio === a){ chantAudio = null; onFail && onFail(); } });
   }).catch(() => { if(req === chantReq) onFail && onFail(); });
   return true;
 }
