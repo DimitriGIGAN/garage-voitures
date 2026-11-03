@@ -1178,7 +1178,8 @@ function loadSfx(){ if(sfxStarted) return; sfxStarted = true; const c = audioCtx
 function playSfx(n, vol){ const c = audioCtx(), b = SFX[n]; if(!c || !b) return false; const src = c.createBufferSource(), g = c.createGain(); g.gain.value = vol || .5; src.buffer = b; src.connect(g).connect(c.destination); src.start(); return true; }
 // musique douce selon le moment de la journée
 let music = null, musicKey = "", musicBuf = {};
-function musicWanted(){ try{ return soundOn && !isCalm() && !(pdata.settings && pdata.settings.music === false) && !(typeof hasA === "function" && (hasA("attention") || hasA("hearing"))); }catch(e){ return false; } }
+let singing = false;
+function musicWanted(){ try{ return soundOn && !singing && !isCalm() && !(pdata.settings && pdata.settings.music === false) && !(typeof hasA === "function" && (hasA("attention") || hasA("hearing"))); }catch(e){ return false; } }
 function musicMoment(){ const h = document.documentElement.classList; return h.contains("c-matin") ? "matin" : h.contains("c-soir") ? "soir" : h.contains("c-nuit") ? "nuit" : "jour"; }
 function musicStop(){ if(!music) return; const m = music; music = null; musicKey = ""; try{ m.g.gain.setTargetAtTime(0, actx.currentTime, .4); window.setTimeout(() => { try{ m.src.stop(); }catch(e){} }, 1600); }catch(e){} }
 function musicUpdate(){
@@ -1835,15 +1836,15 @@ function chantLoad(k){
   return chantData[k];
 }
 function chantMsg(t){ const m = document.getElementById("chantmsg"); if(m) m.textContent = t; }
-function chantStop(){ chantReq++; try{ if(chantAudio){ chantAudio.onended = null; chantAudio.pause(); } }catch(e){} chantAudio = null; try{ musicDuck(false); }catch(e){} }
+function chantStop(){ chantReq++; try{ if(chantAudio){ chantAudio.onended = null; chantAudio.pause(); } }catch(e){} chantAudio = null; singing = false; try{ musicUpdate(); }catch(e){} }
 function chantPlay(k, onEnd, onFail){
   chantStop(); if(!soundOn) return false;
   try{ stopVoice(); speechSynthesis.cancel(); }catch(e){}
   const req = ++chantReq, nav = navSeq; chantMsg("Chargement de la chanson…");
   chantLoad(k).then(uri => {
     if(req !== chantReq || nav !== navSeq) return;
-    const a = new Audio(uri); a.volume = 1; chantAudio = a; chantNav = navSeq; try{ musicDuck(true); }catch(e){}
-    a.onended = () => { if(chantAudio === a){ chantAudio = null; try{ musicDuck(false); }catch(e){} onEnd && onEnd(); } };
+    const a = new Audio(uri); a.volume = 1; chantAudio = a; chantNav = navSeq; singing = true; try{ musicStop(); }catch(e){}
+    a.onended = () => { if(chantAudio === a){ chantAudio = null; singing = false; try{ musicUpdate(); }catch(e){} onEnd && onEnd(); } };
     a.onplaying = () => chantMsg("🎵 La chanson joue… chante avec Vroumi !");
     const p = a.play(); if(p && p.catch) p.catch(e => { chantMsg("Le son est bloqué (" + (e && e.name || "lecture") + ") : touche « Encore une fois »."); if(chantAudio === a){ chantAudio = null; onFail && onFail(); } });
   }).catch(e => { chantMsg("Chanson introuvable (" + e + ")."); if(req === chantReq) onFail && onFail(); });
