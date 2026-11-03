@@ -1056,6 +1056,8 @@ html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 .restg:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
 
 /* ---- livret pour la maîtresse ---- */
+.cvprev img{max-height:62vh;width:auto!important;max-width:100%}
+.printlivret .cvprev img{max-height:none}
 .livretov .lvcard{max-width:min(96vw,760px);max-height:92vh;overflow:auto;text-align:center}
 .lvpages{display:flex;flex-direction:column;gap:14px;margin:12px 0}
 .lvpages img{width:100%;border:2px solid var(--ink);border-radius:10px;background:#fff;box-shadow:0 4px 0 rgba(31,42,68,.2)}
@@ -1575,7 +1577,7 @@ function parentPage(){
   wireSettings();
   wireSync();
   document.getElementById("classv").onclick = classView;
-  document.getElementById("carnet").onclick = e => saveCarnet(e.currentTarget);
+  document.getElementById("carnet").onclick = () => carnetScreen();
   document.getElementById("livret").onclick = () => livretScreen();
   document.getElementById("pgrade").onchange = e => { curProfile().grade = e.target.value; curProfile().gradeYear = schoolYear(); saveProfiles(); loadProfile(curProfile().id); parentPage(); };
 }
@@ -5880,22 +5882,49 @@ const VTALK = ["Tut tut ! Je suis content de te voir !", "Tu sais quoi ? Tu devi
 // ---- 5. Le carnet de route du mois (image à garder ou imprimer) ----
 function carnetSvg(){
   const d = new Date(), month = MOIS[d.getMonth()] + " " + d.getFullYear(), pre = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
-  const rows = SKILLS.map(sk => { const g = stats[sk.id]; let r = 0, f = 0; Object.entries((g && g.days) || {}).forEach(([k, v]) => { if(k.startsWith(pre)){ r += v[0]; f += v[1]; } }); return {sk, r, p: r ? f / r : 0}; }).filter(x => x.r >= 3).sort((a,b) => b.r - a.r).slice(0, 8);
+  const rows = SKILLS.map(sk => { const g = stats[sk.id]; let r = 0, f = 0; Object.entries((g && g.days) || {}).forEach(([k, v]) => { if(k.startsWith(pre)){ r += v[0]; f += v[1]; } }); return {sk, r, f, p: r ? f / r : 0}; }).filter(x => x.r >= 3).sort((a, b) => b.r - a.r).slice(0, 8);
   const permits = SKILLS.filter(sk => pdata.permits && pdata.permits[sk.id]).map(sk => sk.label);
-  const X = s => esc(s), W = 1240;
-  let y = 560;
-  const bars = rows.map(x => { const out = `<text x="110" y="${y}" font-size="34" font-weight="700" fill="#1f2a44">${X(x.sk.label)}</text><rect x="620" y="${y - 30}" width="480" height="36" rx="18" fill="#e5e9f2"/><rect x="620" y="${y - 30}" width="${Math.max(36, 480 * x.p)}" height="36" rx="18" fill="${x.p >= .8 ? "#2fb36b" : x.p >= .5 ? "#ffc93c" : "#ff7a2f"}"/><text x="1120" y="${y}" font-size="30" font-weight="700" fill="#1f2a44" text-anchor="end"></text>`; y += 70; return out; }).join("");
-  const py = y + 50;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} 1754" width="${W}" height="1754" font-family="Nunito, Arial, sans-serif">
-  <rect width="${W}" height="1754" fill="#ffffff"/><rect x="40" y="40" width="${W - 80}" height="1674" rx="50" fill="#e9f7ff" stroke="#1f2a44" stroke-width="8"/>
-  <text x="${W/2}" y="170" font-size="72" font-weight="800" text-anchor="middle" fill="#1f2a44">Carnet de route</text>
-  <text x="${W/2}" y="250" font-size="44" font-weight="700" text-anchor="middle" fill="#ff7a2f">${X(curProfile().name)} · ${X(month)}</text>
-  <svg x="${W/2 - 150}" y="270" width="300" height="160" viewBox="0 -14 140 80">${inner120(vroumiSvg())}</svg>
-  <text x="${W/2}" y="470" font-size="36" font-weight="700" text-anchor="middle" fill="#1f2a44">${pdata.earned || 0} étoiles · ${pdata.medals || 0} médaille${(pdata.medals || 0) > 1 ? "s" : ""} · ${permits.length} permis · ${VSTAGES[vStage()].name}</text>
-  ${rows.length ? bars : `<text x="${W/2}" y="600" font-size="34" text-anchor="middle" fill="#5a6a8a">Pas encore assez de parties ce mois-ci.</text>`}
-  <text x="110" y="${py}" font-size="40" font-weight="800" fill="#1f2a44">Mes permis de conduire</text>
-  ${permits.length ? permits.slice(0, 12).map((p, i) => `<text x="${i % 2 ? 660 : 130}" y="${py + 70 + Math.floor(i / 2) * 56}" font-size="32" fill="#1f2a44">★ ${X(p)}</text>`).join("") : `<text x="130" y="${py + 70}" font-size="32" fill="#5a6a8a">Le premier arrive bientôt !</text>`}
-  <text x="${W/2}" y="1640" font-size="40" font-weight="800" text-anchor="middle" fill="#2fb36b">Bravo ${X(curProfile().name)}, continue comme ça !</text>
+  const days = Object.keys(pdata.time || {}).filter(k => k.startsWith(pre)), mins = Math.round(days.reduce((a, k) => a + (pdata.time[k] || 0), 0) / 60);
+  let stk = 0, stkN = 24; try{ stk = (pdata.stk || []).length; stkN = ALB.length; }catch(e){}
+  let ile = "", ileI = 0; try{ ileI = ileState().idx; ile = ILE[ileI].name; }catch(e){}
+  const nm = (curProfile() || {}).name || "", X = s => esc(s), W = 1240, H = 1754, col = p => p >= .8 ? "#2fb36b" : p >= .5 ? "#ffb703" : "#ff7a2f";
+  const vimg = IMG.vroumi_happy ? `<image href="${IMG.vroumi_happy}" x="${W / 2 - 100}" y="250" width="200" height="184"/>` : "";
+  // pastilles chiffres du mois
+  const tiles = [["Jours de jeu", days.length], ["Minutes", mins], ["Étoiles", pdata.earned || 0], ["Autocollants", stk + "/" + stkN]];
+  const tileSvg = tiles.map(([t, v], i) => { const x = 110 + i * 262; return `<rect x="${x}" y="500" width="240" height="130" rx="26" fill="#fff" stroke="#1f2a44" stroke-width="4"/>
+    <text x="${x + 120}" y="572" font-size="52" font-weight="800" text-anchor="middle" fill="#1f2a44">${X(String(v))}</text><text x="${x + 120}" y="612" font-size="24" font-weight="700" text-anchor="middle" fill="#5a6a8a">${X(t)}</text>`; }).join("");
+  let y = 730;
+  const bars = rows.map(x => { const w = Math.max(24, Math.round(440 * x.p)); const out = `<text x="110" y="${y}" font-size="31" font-weight="700" fill="#1f2a44">${X(x.sk.label)}</text>
+    <rect x="560" y="${y - 28}" width="440" height="34" rx="17" fill="#e5e9f2"/><rect x="560" y="${y - 28}" width="${w}" height="34" rx="17" fill="${col(x.p)}"/>
+    <text x="1020" y="${y}" font-size="26" font-weight="800" fill="#1f2a44">${Math.round(100 * x.p)} %</text><text x="1130" y="${y}" font-size="20" text-anchor="end" fill="#5a6a8a">${x.r} p.</text>`; y += rows.length > 5 ? 54 : 62; return out; }).join("");
+  const by = rows.length ? y + 10 : 800;
+  // tour de l'île : une route avec les 10 étapes
+  const iy = by + 90, stops = (typeof ILE !== "undefined" ? ILE : []).map((st, i, a) => { const cx = 140 + i * (960 / Math.max(1, a.length - 1)), done = i <= ileI;
+    return `<circle cx="${cx}" cy="${iy + 70}" r="${i === ileI ? 24 : 16}" fill="${done ? "#2fb36b" : "#fff"}" stroke="#1f2a44" stroke-width="4"/>${i === ileI ? `<text x="${cx}" y="${iy + 128}" font-size="22" font-weight="800" text-anchor="middle" fill="#1f2a44">${X(st.name)}</text>` : ""}`; }).join("");
+  const ileSvg = `<text x="110" y="${iy}" font-size="36" font-weight="800" fill="#1f2a44">Mon tour de l'île</text>
+  <line x1="140" y1="${iy + 70}" x2="1100" y2="${iy + 70}" stroke="#9aa6bf" stroke-width="10" stroke-linecap="round" stroke-dasharray="2 22"/>${stops}`;
+  const py = iy + 195, ph = Math.min(6, Math.max(1, Math.ceil(permits.length / 2))) * 50;
+  const ny = Math.max(py + 90 + ph, H - 230 - 300), showNote = H - 230 - ny >= 200, pmax = Math.max(2, (Math.floor((H - 225 - py - 60) / 50) + 1) * 2);
+  const lines = [0, 1, 2].slice(0, Math.max(2, Math.floor((H - 230 - ny - 90) / 60))).map(i => `<line x1="140" y1="${ny + 120 + i * 60}" x2="1100" y2="${ny + 120 + i * 60}" stroke="#c4cde0" stroke-width="3"/>`).join("");
+  const noteSvg = `<rect x="100" y="${ny}" width="1040" height="${Math.max(250, H - 230 - ny)}" rx="30" fill="#fff" stroke="#1f2a44" stroke-width="4" stroke-dasharray="14 10"/>
+  <text x="140" y="${ny + 58}" font-size="30" font-weight="800" fill="#1f2a44">Ce que j'ai préféré ce mois-ci :</text>${lines}`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="Nunito, Arial, sans-serif">
+  <rect width="${W}" height="${H}" fill="#ffffff"/><rect x="40" y="40" width="${W - 80}" height="${H - 80}" rx="50" fill="#e9f7ff" stroke="#1f2a44" stroke-width="8"/>
+  <text x="${W / 2}" y="160" font-size="72" font-weight="800" text-anchor="middle" fill="#1f2a44">Carnet de route</text>
+  <text x="${W / 2}" y="228" font-size="44" font-weight="700" text-anchor="middle" fill="#ff7a2f">${X(nm)} · ${X(month)}</text>
+  ${vimg}
+  <text x="${W / 2}" y="470" font-size="28" font-weight="700" text-anchor="middle" fill="#1f2a44">${X(VSTAGES[vStage()].name)}${ile ? " · en route vers " + X(ile) : ""}</text>
+  ${tileSvg}
+  <text x="110" y="680" font-size="36" font-weight="800" fill="#1f2a44">Mes jeux du mois</text>
+  <text x="1130" y="680" font-size="20" text-anchor="end" fill="#5a6a8a">% de réussite du premier coup · nombre de parties</text>
+  ${rows.length ? bars : `<text x="${W / 2}" y="760" font-size="32" text-anchor="middle" fill="#5a6a8a">Pas encore assez de parties ce mois-ci.</text>`}
+  ${ileSvg}
+  <g transform="translate(110 ${by})" ${rows.length ? "" : 'display="none"'}>${[["#2fb36b", "Très bien (80 % et plus)"], ["#ffb703", "Ça vient (50 à 79 %)"], ["#ff7a2f", "À travailler"]].map(([c, t], i) => `<circle cx="${i * 340 + 12}" cy="0" r="11" fill="${c}"/><text x="${i * 340 + 32}" y="8" font-size="22" fill="#1f2a44">${t}</text>`).join("")}</g>
+  <text x="110" y="${py}" font-size="36" font-weight="800" fill="#1f2a44">Mes permis de conduire · ${permits.length}</text>
+  ${permits.length ? permits.slice(0, showNote ? 12 : pmax).map((p, i) => `<text x="${i % 2 ? 660 : 130}" y="${py + 60 + Math.floor(i / 2) * 50}" font-size="29" fill="#1f2a44">★ ${X(p)}</text>`).join("") : `<text x="130" y="${py + 60}" font-size="29" fill="#5a6a8a">Le premier permis arrive bientôt !</text>`}
+  ${showNote ? noteSvg : ""}
+  <text x="${W / 2}" y="${H - 175}" text-anchor="middle" font-size="24" fill="#5a6a8a">Le Garage des Petites Voitures · jeux éducatifs à la maison</text>
+  <text x="${W / 2}" y="${H - 110}" font-size="42" font-weight="800" text-anchor="middle" fill="#2fb36b">Bravo ${X(nm)}, continue comme ça !</text>
 </svg>`;
 }
 
@@ -6033,11 +6062,26 @@ function livretScreen(){
   d.querySelector("#lvpdf").onclick = e => livretPdf(e.currentTarget);
   d.querySelector("#lvprint").onclick = () => { document.documentElement.classList.add("printlivret"); try{ window.print(); }catch(e){} window.setTimeout(() => document.documentElement.classList.remove("printlivret"), 800); };
 }
-async function saveCarnet(b){
-  const dl = window.claude && window.claude.use ? await window.claude.use("downloads") : null;
-  if(!dl){ b.textContent = "Indisponible ici"; b.disabled = true; return; }
-  try{ const blob = await svgToPng(carnetSvg(), 1240, 1754); await dl.save({filename: `carnet-de-route-${cleanName(displayName()).toLowerCase()}-${today().slice(0, 7)}.png`, data: blob}); b.textContent = "Carnet enregistré"; }
-  catch(err){ if(err && (err.code === "unavailable" || err.code === "not_granted")){ b.textContent = "Indisponible ici"; b.disabled = true; } else if(err && err.code !== "declined") b.textContent = "Réessayez dans un instant"; }
+async function saveFile(name, blob){
+  const dl = window.claude && window.claude.use ? await window.claude.use("downloads").catch(() => null) : null;
+  if(dl){ try{ await dl.save({filename: name, data: blob}); return; }catch(err){ if(err && err.code === "declined") throw err; } }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
+}
+function carnetScreen(){
+  const d = document.createElement("div"); d.className = "party livretov";
+  const sv = carnetSvg(), base = `carnet-de-route-${cleanName(displayName()).toLowerCase()}-${today().slice(0, 7)}`;
+  d.innerHTML = `<div class="card lvcard" role="dialog" aria-label="Carnet de route du mois">
+    <h2>Carnet de route du mois</h2>
+    <p class="pnote">Une page A4 à garder, à imprimer ou à envoyer à la famille.</p>
+    <div class="pactions"><button class="big" id="cpdf">📄 Télécharger en PDF</button><button class="iconbtn" id="cpng">🖼️ En image</button><button class="iconbtn" id="cprint">🖨️ Imprimer</button><button class="iconbtn" id="cclose">Fermer</button></div>
+    <div class="lvpages cvprev"><img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(sv)}" alt="Carnet de route"></div></div>`;
+  document.body.appendChild(d);
+  d.querySelector("#cclose").onclick = () => d.remove();
+  const run = async (btn, fn) => { const t = btn.textContent; btn.disabled = true; btn.textContent = "Préparation…";
+    try{ await fn(); btn.textContent = "Enregistré ✓"; }catch(err){ btn.textContent = err && err.code === "declined" ? t : "Réessayez dans un instant"; } btn.disabled = false; };
+  d.querySelector("#cpdf").onclick = e => run(e.currentTarget, async () => saveFile(base + ".pdf", await jpegsToPdf([await svgToJpeg(sv, 1240, 1754)], 1240, 1754)));
+  d.querySelector("#cpng").onclick = e => run(e.currentTarget, async () => saveFile(base + ".png", await svgToPng(sv, 1240, 1754)));
+  d.querySelector("#cprint").onclick = () => { const w = d.querySelector(".lvpages"); document.documentElement.classList.add("printlivret"); try{ window.print(); }catch(e){} window.setTimeout(() => document.documentElement.classList.remove("printlivret"), 800); };
 }
 
 // ====================== ACCESSIBILITÉ : un profil d'aides par enfant ======================
