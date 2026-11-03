@@ -1117,6 +1117,9 @@ html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 .aninum{font:900 clamp(2.4rem,9vw,3.4rem) var(--display);color:var(--ink)}
 .anihome{display:block;font-size:clamp(2.6rem,10vw,3.6rem);line-height:1.1}
 .anilab{display:block;font:800 1rem var(--display)}
+
+/* ---- programme 2026 : nouvelles questions ---- */
+.lmbig{font:900 clamp(4rem,18vw,6.5rem)/1 var(--display);text-align:center;color:var(--ink);background:#fff;border:4px solid var(--ink);border-radius:22px;width:clamp(110px,30vw,160px);margin:6px auto 10px;padding:10px 0;box-shadow:0 5px 0 var(--ink)}
 </style>
 
 <div class="app" id="app"></div>
@@ -1124,7 +1127,7 @@ html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 <script>
 (() => {
 // ====================== IMAGES (ComfyUI) ======================
-const VOICE_KEYS = new Set(["010d6bf4","01179b9f","015c1ed7","01f16448","022414c3","0356c494","03e00ab3","0413f758","048f5a9b","04d6f13a","0541a0ae","05c2af6e","0615d054","07148945","077442dc","0781932f","07e63f63","07ece5b0","0806d6ba","093a9ec1","0971bf18","09db8e8e","0a10ae1d","0ad5eeae","0b01dc7d","0b52c302","0bd13a52","0c3d144b","0d0507aa","0f89f3fb","0f92ae40","101e3d34","10874241","1203f690","135dd8df","13a6f4ed","141c2ad0","15215560","15463f23","154a4667","154f0f6b","159747cd","15c6108d","15ee7985","15ef9c89","15f977f7","15fce4ab","16d899b6","16f0d05f","172a58f5","1782deda","17f36b40","185f5690","186b75d7","192b7679","19888f23","1a49f03e","1aea659e","1b5fc1ee","1b9105eb","1cd6166b","1ce574c1","1d2e24a7","1e0d175a","1e69b87f","1ee40405","1f00356a","1f72d942","1f9c65a8","1fbc1e71","1fc1d5bf","20ef5590","21636e7c","21a8be6a","21eeed83","22045fbb","23468097","24679c6d","2569a72c","2708e3b1","277cddb4","27957cbc","28c84d22","2921d7b0","2942d3b6","297020fe","29bdbaac","2a6b3376","2aacbf88","2aaec826","2af07a80","2b13e113","2b858327","2ba57dad","2bd90c2b","2c4cdf4e","2d14cc7d","2d7e1fae","2f9ef7b7","2ff77e4b","30a56dc6","31bdc4d2","31d0d874","327227c5","328c0cb9","32f81ba8","32ff2ee3","34c315be","355f1381","359bca3b","35f96d12","3644ebcf","374eaca6","39831b98","3a1787de","3a21bc56","3a39f26a","3a5dac7c","3a8f1c76","3a949481","3b66898d","3be9da67","3c89ebfc","3f3eeafd","3f855fbe","3faec876","404b3aaa","40540d39","41a65833","41aea321","41f906c4","42296db7","42aa5e31","42fd12f1","43127e44","4404eade","4477569f","44e266fc","44f8767c","459dee7b","45bfe991","45e0acb1","46136786","46496013","464f3a22","466d4374","486b4c38","496de6f9","4992ce5a","49ed20b2","4a3f13da","4a7540d9","4b59d528","4b5ada73","4b90904c","4c0c99d7","4c12ee22","4c77b3ce","4ccb1d7a","4d60414f","4def74e1","4edce7bb","4ee2a735","4f38c893","4f9b2d67","50007dfa","5079812e","50a8a95c","50d47300","51175898","51275280","513ca8ee","516b6704","5255d911","526e3c4f","5322baeb","53bf2ec5","552fda1b","55513084","566b7ae3","5722370c","572d6e8d","57f392ee","583bd0da","58806f9a","58a28835","58f10ec4","5927c087","59d4f3c2","59e05407","5a136c7f","5a3dc639","5a42136b","5a659aa6","5a9383d8","5ad7f0c0","5b144473","5ba35891","5c3cab63","5d3f1a48","5d714873","5f47ca4f","60b21448","60e1da3b","61433a5a","619bba7c","61f35e74","624e41d5","6292d8b6","62f4ebc8","639281a4","6407d9ac","649d705c","64a6faae","64ed8e8e","650e0066","65e8be6d","6621cf7e","66d25cc1","66de2554","6720914b","67416472","67a72feb","67e5ceec","67f6e685","68398741","6933b59f","694168cc","69a79f7e","69fd3fce","6aa43fdb","6c59c2a9","6c9db81f","6d7ec49e","6debc3f5","6e0dcab8","6e756c0b","6f8ba7cb","6ff7440c","7009431f","7050e6f4","7055ba5f","70e01ec4","7203d60f","725d7215","737b76f4","738baf53","7407a4a0","741da553","749a2c98","753db5e7","75bb0358","7609e99b","761161de","761391c0","76b5bca3","76f4884b","76fa10d9","7828a126","7862d6ac","790ed501","7937c176","7957e6a0","7ad59f92","7b9f35aa","7c8d9f71","7d178a1a","7d30c30b","7d3af5a4","7dbf931f","7dc4c36d","7e5cc60e","7eab6725","7f64cde8","7fc820e5","80451c8a","80cc88a1","813242ea","81ba7758","8368f4f3","839c59ee","8401692d","84cfd18d","86b57f32","86df1a00","872d3437","87add592","87f06117","87fd4d5d","880ce8ac","88815a25","888bd281","88ac7c16","89ae32cb","89bea96f","8ae9c700","8b4583fb","8bd56b50","8bdfa867","8cf1868c","8d46e90f","8d7a4b82","8edc64e0","8f9384cc","8fb89a4a","8fc2bc60","903a9097","90b09182","90fe763f","9147afff","92441ab8","92bb808d","931680a2","93bb9f6c","93c3afee","947fdaa3","9493262f","949d16d2","950797e6","95b417f7","967aef7f","9683f95b","96ae549b","976aa621","985aecdf","9875128c","9a90dd9a","9ac0b441","9b3a4f3a","9b51f50d","9bbe66c4","9c5a7cc0","9cc3c648","9d885a75","9d930e47","9e8bed6e","a0175f63","a15b90c1","a16570d4","a19572b4","a210a877","a217ef43","a23d8ff9","a24a96c1","a36fa0e0","a39e57cb","a3b65f14","a4377a84","a43da09b","a53d354c","a596c1ec","a5ce6391","a676450e","a693374d","a73429a6","a75bd1a2","a7bd77ec","a7c8a01d","a7d309f7","a8dc3c43","a92fd6c3","a94d979b","a98dea5e","a9c443e3","a9fdaab3","aa030d1d","aa4f4182","aa5e9fd1","aa647b38","aa8dc0c9","aab59164","abc00ac6","abe8b550","ac2410bc","ac43efbb","ac45d6e8","ac7a9192","acf804cc","ad5c3258","adccc2ac","adce6fc7","ae29ff19","ae677ff4","aea0ec60","b0024b09","b09cab2a","b1dd800f","b28c06c5","b2cfcffc","b4c28760","b4e54c5c","b6090bb0","b70e7308","b7b25faa","b7c3233a","b8f7064f","b8fc8e51","ba7041ba","bad1bd2c","bb5025da","bb99a472","bbd75d0c","bc0b3217","bc1a1dfa","bc94c353","bc98a319","bccf7ab8","bce5d330","bd30663b","bd362352","bd6833c3","bd801dea","bddd6f4c","be4216a1","bebe32a5","bf7b9f2b","c02a0621","c02fc729","c04c90f8","c0afaa8d","c0ba34c8","c1de3769","c25dca0e","c2c3605b","c310de17","c3b32ca1","c3f7be4b","c4b57975","c4d7663f","c4eebf5d","c524d503","c54432b3","c5e036cd","c672d068","c6dc4c2f","c6e438b3","c71ecb5b","c7e52dc7","c7e7bf40","c81774c1","c85c0f77","c8bce0d6","c8eaf68b","c8f05475","c94d6fdb","c97fa8d1","c9be70d9","c9da7d2a","c9e7a824","ca2ae028","cb045612","cb65a61f","cc66dcdf","cdc1f911","cdc6c42c","cdd6e0f1","ce49ceda","cf0db587","cf2e5136","d0739549","d12e70f9","d1a82f4b","d31a3e5f","d370ad7f","d39ea837","d412e7fd","d51c5f67","d5b5684c","d6fb0abb","d7cf3c42","d7d19e37","d8502c9d","d90bcde0","d91ac09c","d944186f","d9473f7b","d98c82bc","da74e3c6","daabf41b","dafcef35","db7758d8","dbb9d0af","dbff55f7","dc1cb5a6","dcd935cf","dd220911","dd2ab969","dd42a7ec","dded4ad8","de1e0c92","de2f7c34","de9c5a8b","dffed9b6","e01d5a2d","e0896292","e0bd9aa2","e0c4d2b8","e0e69105","e11d47c0","e17d0c8d","e2234cdd","e22c2880","e242d461","e2733b9d","e2b41f2c","e2cfd9a4","e4a4ef9e","e4e2f04c","e4ed5274","e5438a31","e563ae9b","e58ae276","e6b1500a","e6b97d5c","e6be49dd","e6f11e53","e6f3f71b","e751b824","e7806607","e7ae0ba7","e8d25503","e8e36d38","e9322fa9","e979f157","e9c95d39","ea0fef4f","eb78793d","ecdd37e4","ecf6f4fe","ed2559ad","ee252d45","ee796472","ef3248db","ef8a7db2","f0036f49","f04bf670","f06efd49","f0eec9bc","f12e794f","f1351371","f27c809a","f299ad9e","f3dca9cc","f4004fba","f46a9c60","f47a4a18","f4ce2ab4","f5022182","f50c9260","f53b8d8f","f53d8764","f5958d62","f5efd637","f609d930","f7951700","fb3a26f8","fc7b0451","fc821b39","fc8f4cc0","fcbc738b","fcda3979","fce4011f","fdbce9ca","fe67fe01","fea01f79","ff154e89","ffb18aea","ffd98e76"]);
+const VOICE_KEYS = new Set(["010d6bf4","01179b9f","015c1ed7","01f16448","022414c3","0356c494","03e00ab3","0413f758","048f5a9b","04d6f13a","0541a0ae","05c2af6e","0615d054","07148945","077442dc","0781932f","07e63f63","07ece5b0","0806d6ba","093a9ec1","0971bf18","09db8e8e","0a10ae1d","0ad5eeae","0b01dc7d","0b52c302","0bd13a52","0c3d144b","0d0507aa","0f89f3fb","0f92ae40","101e3d34","10874241","1203f690","135dd8df","13a6f4ed","141c2ad0","15215560","15463f23","154a4667","154f0f6b","159747cd","15c6108d","15ee7985","15ef9c89","15f977f7","15fce4ab","16d899b6","16f0d05f","172a58f5","1782deda","17f36b40","17f370f3","185f5690","186b75d7","192b7679","19888f23","1a49f03e","1aea659e","1b5fc1ee","1b9105eb","1cd6166b","1ce574c1","1d2e24a7","1e0d175a","1e69b87f","1ee40405","1f00356a","1f72d942","1f9c65a8","1fbc1e71","1fc1d5bf","20ef5590","21636e7c","21a8be6a","21eeed83","22045fbb","23468097","24679c6d","2569a72c","26e3ee84","2708e3b1","277cddb4","27957cbc","28c84d22","2921d7b0","2942d3b6","297020fe","29bdbaac","2a6b3376","2aacbf88","2aaec826","2af07a80","2b13e113","2b3bc5a5","2b858327","2ba57dad","2bd90c2b","2c4cdf4e","2d14cc7d","2d7e1fae","2da7fd5e","2f9ef7b7","2ff77e4b","30a56dc6","31bdc4d2","31d0d874","327227c5","328c0cb9","32f81ba8","32ff2ee3","33191bde","34c315be","3551e61b","355f1381","359bca3b","35f96d12","3644ebcf","364d4e10","374eaca6","39831b98","3a1787de","3a21bc56","3a26711f","3a39f26a","3a5dac7c","3a6b2ab9","3a8f1c76","3a949481","3b66898d","3be9da67","3c89ebfc","3e6da6b8","3f3eeafd","3f855fbe","3faec876","404b3aaa","40540d39","41a65833","41aea321","41f906c4","42296db7","42aa5e31","42fd12f1","43127e44","4404eade","4477569f","44e266fc","44f8767c","459dee7b","45bfe991","45e0acb1","46136786","46496013","464f3a22","466d4374","486b4c38","496de6f9","4992ce5a","49db9625","49e65a09","49ed20b2","4a3f13da","4a7540d9","4b59d528","4b5ada73","4b90904c","4c0c99d7","4c12ee22","4c77b3ce","4ccb1d7a","4d60414f","4def74e1","4edce7bb","4ee2a735","4f38c893","4f9b2d67","4fedb2a4","50007dfa","5079812e","508cb713","50a8a95c","50d47300","51175898","51275280","513ca8ee","516b6704","5255d911","526e3c4f","5322baeb","53bf2ec5","552fda1b","55513084","55e218ca","566b7ae3","5697fcee","5722370c","572d6e8d","57f392ee","583bd0da","58806f9a","58a28835","58a51906","58f10ec4","5927c087","59d4f3c2","59e05407","5a136c7f","5a3dc639","5a42136b","5a659aa6","5a9383d8","5ad7f0c0","5b144473","5ba35891","5c3cab63","5d3f1a48","5d714873","5f47ca4f","60b21448","60e1da3b","61433a5a","619bba7c","61f35e74","624e41d5","6292d8b6","62f4ebc8","639281a4","6407d9ac","649d705c","64a6faae","64ed8e8e","650e0066","65e8be6d","6621cf7e","66d25cc1","66de2554","6720914b","67416472","67a72feb","67e5ceec","67f6e685","68398741","6933b59f","694168cc","69a79f7e","69fd3fce","6aa43fdb","6aebe02b","6c59c2a9","6c9db81f","6d7ec49e","6debc3f5","6e0dcab8","6e756c0b","6f89d1ff","6f8ba7cb","6ff7440c","7009431f","7050e6f4","7055ba5f","70e01ec4","70f847d9","7203d60f","725d7215","737b76f4","738baf53","7407a4a0","741da553","749a2c98","753db5e7","75bb0358","7609e99b","761161de","761391c0","76b5bca3","76f4884b","76fa10d9","7828a126","7862d6ac","790ed501","7937c176","7957e6a0","7ad59f92","7b9f35aa","7c8d9f71","7d178a1a","7d30c30b","7d3af5a4","7dbf931f","7dc4c36d","7e5cc60e","7eab6725","7f343d1f","7f64cde8","7fc820e5","80451c8a","80cc88a1","813242ea","81ba7758","82288bc8","8279b6fa","8368f4f3","839c59ee","8401692d","84cfd18d","86b57f32","86df1a00","872d3437","87add592","87f06117","87fd4d5d","880ce8ac","88815a25","888bd281","88ac7c16","891d32c9","89ae32cb","89bea96f","8a1553d2","8ae9c700","8b4583fb","8bd56b50","8bdfa867","8c1a25c8","8cf1868c","8d46e90f","8d7a4b82","8edc64e0","8f9384cc","8fb89a4a","8fc2bc60","903a9097","90b09182","90fe763f","9147afff","92441ab8","92bb808d","92d5d9c6","931680a2","93bb9f6c","93c3afee","947fdaa3","9493262f","949d16d2","950797e6","95b417f7","967aef7f","9683f95b","96ae549b","976aa621","985aecdf","9875128c","9a90dd9a","9ac0b441","9b3a4f3a","9b51f50d","9bbe66c4","9c5a7cc0","9cc3c648","9d885a75","9d930e47","9e8bed6e","a0175f63","a15b90c1","a16570d4","a19572b4","a210a877","a217ef43","a23d8ff9","a24a96c1","a2aa5acd","a36fa0e0","a39e57cb","a3b65f14","a4377a84","a43da09b","a53d354c","a596c1ec","a5ce6391","a676450e","a693374d","a73429a6","a75bd1a2","a7bd77ec","a7c8a01d","a7d309f7","a8b0283d","a8dc3c43","a92fd6c3","a94d979b","a98dea5e","a9c443e3","a9fdaab3","aa030d1d","aa4f4182","aa5e9fd1","aa647b38","aa8dc0c9","aab59164","abc00ac6","abe8b550","ac2410bc","ac43efbb","ac45d6e8","ac7a9192","acf804cc","ad5c3258","adccc2ac","adce6fc7","ae29ff19","ae677ff4","aea0ec60","b0024b09","b09cab2a","b1dd800f","b28c06c5","b2cfcffc","b4c28760","b4e54c5c","b6090bb0","b70e7308","b7b25faa","b7c3233a","b8f7064f","b8fc8e51","b9b635e7","ba284be7","ba7041ba","bad1bd2c","bb5025da","bb99a472","bbd75d0c","bc0b3217","bc1a1dfa","bc6e8441","bc94c353","bc98a319","bccf7ab8","bce5d330","bd30663b","bd362352","bd6833c3","bd801dea","bddd6f4c","be4216a1","bebe32a5","bf557b9a","bf7b9f2b","c02a0621","c02fc729","c04c90f8","c0afaa8d","c0ba34c8","c1de3769","c25dca0e","c2c3605b","c310de17","c3b32ca1","c3f7be4b","c4a11489","c4b57975","c4d7663f","c4eebf5d","c524d503","c54432b3","c5e036cd","c672d068","c6dc4c2f","c6e438b3","c71ecb5b","c7e52dc7","c7e7bf40","c81774c1","c85c0f77","c8bce0d6","c8eaf68b","c8f05475","c94d6fdb","c97fa8d1","c9be70d9","c9da7d2a","c9e7a824","ca2ae028","cb045612","cb65a61f","cc66dcdf","cdc1f911","cdc6c42c","cdd6e0f1","ce3fa5af","ce49ceda","cf0db587","cf2e5136","cf4baeb1","cf589373","d0739549","d12e70f9","d1a82f4b","d31a3e5f","d370ad7f","d39ea837","d412e7fd","d51c5f67","d5b5684c","d6fb0abb","d7cf3c42","d7d19e37","d8502c9d","d90bcde0","d91ac09c","d944186f","d9473f7b","d98c82bc","da74e3c6","daabf41b","dafcef35","db7758d8","dbb9d0af","dbff55f7","dc1cb5a6","dcd935cf","dd220911","dd2ab969","dd42a7ec","ddbce3db","dded4ad8","de1e0c92","de2f7c34","de9c5a8b","dffed9b6","e01d5a2d","e0896292","e0bd9aa2","e0c4d2b8","e0e69105","e11d47c0","e17d0c8d","e2234cdd","e22c2880","e242d461","e2733b9d","e2b41f2c","e2cfd9a4","e4a4ef9e","e4e2f04c","e4ed5274","e5438a31","e563ae9b","e58ae276","e6b1500a","e6b97d5c","e6be49dd","e6f11e53","e6f3f71b","e751b824","e7806607","e7ae0ba7","e8d25503","e8e36d38","e9322fa9","e979f157","e9c95d39","ea0fef4f","eb78793d","ecdd37e4","ecf6f4fe","ed2559ad","ee252d45","ee796472","ef3248db","ef8a7db2","f0036f49","f04bf670","f06efd49","f0eec9bc","f12e794f","f1351371","f27c809a","f299ad9e","f3dca9cc","f4004fba","f46a9c60","f47a4a18","f4ce2ab4","f5022182","f50c9260","f53b8d8f","f53d8764","f5958d62","f5efd637","f609d930","f7951700","fb3a26f8","fb41d082","fc7b0451","fc821b39","fc8f4cc0","fcbc738b","fcda3979","fce4011f","fdbce9ca","fe67fe01","fea01f79","ff154e89","ffb18aea","ffd98e76"]);
 
 // ---- voix enregistrée, bruitages, musique ----
 const VDATA = {}, VPACK = {};
@@ -1329,17 +1332,17 @@ const SKILLS = [
   {id:"couleurs", label:"Les couleurs",   skill:"Reconnaître les couleurs", min:10, item:"Couleurs ratées",
    repere:"Vers 4 ans, la plupart des enfants reconnaissent 4 à 6 couleurs.", lvl:null},
   {id:"compter",  label:"Compter",        skill:"Compter des objets et trouver le bon nombre", min:10, item:"Nombres ratés",
-   repere:"Vers 4-5 ans : compter jusqu'à 10 objets en les touchant un par un.", lvl:n => `jusqu'à ${n} voitures`},
+   repere:"Programme : avant 4 ans, jusqu'à 3 ou 4 ; dès 4 ans, jusqu'à 6 et décomposer avec les doigts ; dès 5 ans, au-delà de 10.", lvl:n => `jusqu'à ${n} voitures`},
   {id:"problemes", label:"Problèmes (+ et −)", skill:"Ajouter et retirer des voitures", min:10, item:"Calculs ratés",
-   repere:"GS : réunir deux petites quantités jusqu'à 10. CP : additions et soustractions jusqu'à 20.", lvl:null},
+   repere:"Programme : dès 4 ans, réunir deux petites quantités jusqu'à 6 ; dès 5 ans, ajouter et retirer jusqu'à 10 ; CP : jusqu'à 20.", lvl:null},
   {id:"formes",   label:"Les formes",     skill:"Reconnaître les formes", min:10, item:"Formes ratées",
    repere:"Vers 4 ans : rond, carré, triangle. Vers 5 ans : rectangle et autres formes.", lvl:n => `${n} formes sur 5`},
   {id:"taille",   label:"Petit ou grand", skill:"Comparer et ranger par taille", min:5, item:null,
    repere:"Vers 4 ans : ranger 3 objets. Vers 5 ans : 4 à 5 objets.", lvl:n => `${n} voitures à ranger`},
   {id:"sons",     label:"Les sons",       skill:"Écouter et reconnaître un bruit", min:10, item:"Bruits ratés",
-   repere:"Vers 4 ans : reconnaître les bruits familiers de son quotidien.", lvl:n => `${n} véhicules sur 5`},
+   repere:"Programme : avant 4 ans, taper les syllabes ; dès 4 ans, assembler et inverser les syllabes ; dès 5 ans, rimes et sons des mots.", lvl:n => `${n} véhicules sur 5`},
   {id:"prenom",   label:"Mon prénom",     skill:"Reconnaître les lettres", min:15, item:"Lettres difficiles",
-   repere:"Vers 4-5 ans : reconnaître les lettres de son prénom.", lvl:null},
+   repere:"Programme : avant 4 ans, les lettres du prénom en majuscules ; dès 4 ans, la même lettre en majuscule et en petit ; dès 5 ans, en attaché et les lettres qui se ressemblent (b, d, p, q).", lvl:null},
   {id:"suites",   label:"Le train",       skill:"Trouver la suite logique", min:10, item:"Suites ratées",
    repere:"MS : prolonger un motif qui se répète. GS : motifs plus difficiles. CP : suites de nombres.", lvl:null},
   {id:"espace",   label:"Le GPS",         skill:"Se repérer et se déplacer", min:8, item:"Difficultés",
@@ -1377,13 +1380,13 @@ const SKILLS = [
   {id:"tri",      label:"Le tri des déchets", skill:"Trier selon une règle (environnement)", min:8, item:"Déchets mal triés",
    repere:"PS : 2 poubelles. MS : 3 poubelles. GS-CP : 4 poubelles.", lvl:null},
   {id:"meteo",    label:"La météo", skill:"Comprendre le temps qu'il fait", min:8, item:"Difficultés",
-   repere:"PS : soleil et pluie. MS : vent et froid en plus. GS-CP : cyclone et lecture des mots de la météo.", lvl:null},
+   repere:"Programme : avant 4 ans, le temps qu'il fait ; dès 4 ans, les saisons d'après les signes de chez nous (fruits, fleurs, temps) ; dès 5 ans, lire les mots de la météo.", lvl:null},
   {id:"metiers",  label:"Les métiers", skill:"Connaître les métiers et leur rôle", min:8, item:"Métiers confondus",
    repere:"PS : qui conduit quel véhicule. MS-GS : le véhicule de chaque métier. CP : à quoi sert chaque métier.", lvl:null},
   {id:"balance",  label:"La balance", skill:"Comparer des masses", min:8, item:null,
    repere:"PS-MS : lire une balance. GS-CP : comparer sans balance, le plus lourd et le plus léger.", lvl:null},
   {id:"course",   label:"La grande course", skill:"Les rangs : premier, deuxième… (et le calcul au CP)", min:8, item:"Questions ratées",
-   repere:"PS : le premier. MS : premier, deuxième, dernier. GS : jusqu'à 4, « juste devant ». CP : jusqu'à 5 et calcul rapide.", lvl:null},
+   repere:"Programme : dès 4 ans, le rang dans une petite file (premier, deuxième, troisième, dernier) ; dès 5 ans, l'avant-dernier et des files plus longues.", lvl:null},
   {id:"moitie",   label:"L'autre moitié", skill:"Associer deux moitiés (observation)", min:8, item:"Moitiés ratées",
    repere:"PS : 2 choix très différents. MS : 3 choix. GS-CP : des moitiés qui se ressemblent.", lvl:null},
   {id:"contraires", label:"Les contraires", skill:"Connaître les contraires (vocabulaire)", min:8, item:"Contraires ratés",
@@ -2513,13 +2516,14 @@ let countRound = 0;
 function countGame(){
   const g = gradeKey(); countRound++;
   if((g === "GS" || g === "CP") && countRound % 2 === 0) return problemGame(g);
+  if(g === "MS" && countRound % 3 === 0) return problemGame(g);
   let n;
   if(g === "CP"){ do { n = 11 + rnd(89); } while(n === lastCount); }
   else { do { n = 1 + rnd(level); } while(n === lastCount && level > 1); }
   lastCount = n;
   const big = n > 10, max = big ? 100 : 10;
   const opts = new Set([n]);
-  const deltas = big ? [-10,10,-1,1] : [-2,-1,1,2];
+  const deltas = n > 20 ? [-10,10,-1,1] : [-2,-1,1,2];
   while(opts.size < 3){ const d = n + pick(deltas); if(d >= 1 && d <= max) opts.add(d); }
   const choices = shuffle([...opts]);
   const rows = big ? Math.floor(n / 10) : 0, units = big ? n % 10 : n;
@@ -2569,7 +2573,8 @@ function countGame(){
 }
 function problemGame(g){
   let a, b, op;
-  if(g === "GS"){ op = "+"; a = 1 + rnd(6); b = 1 + rnd(Math.min(4, 10 - a)); }
+  if(g === "MS"){ op = "+"; a = 1 + rnd(4); b = 1 + rnd(Math.min(2, 6 - a)); }
+  else if(g === "GS"){ op = pick(["+", "+", "-"]); if(op === "+"){ a = 1 + rnd(6); b = 1 + rnd(Math.min(4, 10 - a)); } else { a = 4 + rnd(6); b = 1 + rnd(Math.min(3, a - 1)); } }
   else {
     op = pick(["+","-"]);
     if(op === "+"){ a = 2 + rnd(12); b = 1 + rnd(Math.min(8, 20 - a)); }
@@ -2588,7 +2593,7 @@ function problemGame(g){
         <div class="arrive">${Array.from({length:b}, () => `<span class="acar">${car(hex)}</span>`).join("")}</div>
       </div>`;
     line = `Il y a ${nCars(a)} dans le garage. ${b === 1 ? "Une voiture arrive" : `${numWord(b)} voitures arrivent`}. Combien de voitures en tout ?`;
-    help = `Dis ${numWord(a)} dans ta tête, puis compte les voitures qui arrivent.`;
+    help = g === "MS" ? `Montre ${numWord(a)} doigts, puis lève encore ${b === 1 ? "un doigt" : numWord(b) + " doigts"}. Combien de doigts en tout ?` : `Dis ${numWord(a)} dans ta tête, puis compte les voitures qui arrivent.`;
   } else {
     scene = `<div class="pscene minus${small ? " small" : ""}">${Array.from({length:a}, (_,i) => `<span class="acar${i >= a - b ? " leave" : ""}">${car(i >= a - b ? "#9aa5bd" : hex)}</span>`).join("")}</div>`;
     line = `Il y a ${nCars(a)}. ${b === 1 ? "Une voiture s'en va" : `${numWord(b)} voitures s'en vont`}. Combien de voitures restent ?`;
@@ -2947,12 +2952,14 @@ function sizeEntry(){
 function nameEntry(){
   nameRound++;
   if(gradeKey() === "CP" && nameRound % 2 === 0) return syllReadGame();
+  if((gradeKey() === "MS" || gradeKey() === "GS") && nameRound % 3 === 0) return letterMatchGame();
   return nameGame();
 }
 function soundsEntry(){
   const g = gradeKey(); soundRound++;
-  if(g === "MS") return soundRound % 2 ? soundGame() : syllGame();
-  if(g === "GS") return soundRound % 2 ? syllGame() : rhymeGame();
+  if(g === "PS") return soundRound % 3 === 0 ? syllGame(true) : soundGame();
+  if(g === "MS") return [soundGame, syllGame, syllMixGame][soundRound % 3]();
+  if(g === "GS") return [syllMixGame, rhymeGame, phonemeGame, syllGame][soundRound % 4]();
   if(g === "CP") return soundRound % 2 ? phonemeGame() : syllGame();
   return soundGame();
 }
@@ -3136,6 +3143,25 @@ function letterPraise(t){
   if((g === "GS" || g === "CP") && LWORD[t]) return `Oui ! ${LETTER_SAY[t]}, comme dans ${LWORD[t]} !`;
   return pick(["Oui !","Bravo !","Super !"]);
 }
+// ---- prénom MS-GS : la même lettre dans les trois écritures ----
+const LOOKALIKE = {b:"dpq", d:"bpq", p:"qbd", q:"pdb", m:"nu", n:"mu", u:"nv", e:"co", c:"eo", o:"ce", i:"jl", l:"it"};
+function letterMatchGame(){
+  const g = gradeKey(), nm = (curProfile().name || "").normalize("NFD").replace(/[^A-Za-z]/g, "").toUpperCase();
+  const pool = nm.length >= 2 ? [...new Set(nm)] : [..."AEIOUMLRSPT"], t = pick(pool), lo = t.toLowerCase();
+  const cur = g === "GS" && Math.random() < .5;
+  const near = (LOOKALIKE[lo] || "").split("").filter(Boolean), other = "abcdefghijlmnoprstuv".split("").filter(x => x !== lo && !near.includes(x));
+  const keys = shuffle([lo, ...shuffle(g === "GS" && near.length ? [...near, ...other] : other).slice(0, 2)]);
+  choiceRound({
+    title: `Trouve la même lettre ${cur ? "en attaché" : "en petit"} !`,
+    line: `Voici la lettre ${LETTER_SAY[t] || lo} en majuscule. Trouve la même lettre ${cur ? "écrite en attaché" : "écrite en petit"}.`,
+    scene: `<div class="lmbig">${t}</div>`,
+    choices: keys.map(x => ({label: "Lettre " + (LETTER_SAY[x.toUpperCase()] || x), html: `<span class="plate${cur ? " cursive" : ""}">${x}</span>`})),
+    isRight: i => keys[i] === lo,
+    onRight: () => `Bravo ! ${t} et ${lo}, c'est la même lettre : ${LETTER_SAY[t] || lo} !`,
+    onWrong: i => `Non, ça, c'est la lettre ${LETTER_SAY[keys[i].toUpperCase()] || keys[i]}. Cherche la lettre ${LETTER_SAY[t] || lo}.`,
+    game: "prenom", item: `${t} = ${lo}${cur ? " (attaché)" : ""}`, next: nameEntry, wait: 2600
+  });
+}
 // ---- prénom CP : lire des syllabes ----
 const CONS = ["M","L","R","S","P","T","V","N","F"], VOW = ["A","I","O","U","É"];
 function syllReadGame(){
@@ -3167,8 +3193,9 @@ const SYLL = [
   ["trottinette",["trot","ti","nette"]],["caravane",["ca","ra","vane"]],["hélicoptère",["hé","li","cop","tère"]],["locomotive",["lo","co","mo","tive"]]
 ];
 let lastSyll = "";
-function syllGame(){
-  let w; do { w = pick(SYLL); } while(w[0] === lastSyll);
+function syllGame(short){
+  const pool = short ? SYLL.filter(x => x[1].length <= 2) : SYLL;
+  let w; do { w = pick(pool); } while(w[0] === lastSyll);
   lastSyll = w[0];
   const [word, parts, pic] = w, n = parts.length;
   app.innerHTML = `${topBar(true)}
@@ -3202,6 +3229,25 @@ function syllGame(){
       say(`Pas tout à fait. Écoute bien en tapant dans tes mains : ${parts.join(", ")}. Essaie encore !`);
     }
   };
+}
+// ---- sons : assembler les syllabes (MS) et les remettre dans l'ordre (MS-GS) ----
+let mixRound = 0;
+function syllMixGame(){
+  const g = gradeKey(); mixRound++;
+  const pool = SYLL.filter(x => x[2] && x[1].length === 2), t = pick(pool.filter(x => x[0] !== lastSyll)); lastSyll = t[0];
+  const keys = shuffle([t, ...shuffle(pool.filter(x => x !== t)).slice(0, 2)]);
+  const rev = g !== "PS" && (g !== "MS" || mixRound % 2 === 0);
+  const said = (rev ? [...t[1]].reverse() : t[1]).join(" … ");
+  choiceRound({
+    title: rev ? "Vroumi a mélangé les syllabes !" : "Quel est ce mot ?",
+    line: rev ? `Vroumi dit le mot à l'envers : « ${said} ». Remets les syllabes dans l'ordre : quel est ce mot ?` : `Écoute bien : « ${said} ». Quel est ce mot ?`,
+    scene: `<div class="syllword"><span class="sword">🔊 ${said}</span></div>`,
+    choices: keys.map(x => ({label: x[0], html: `<span class="spic">${PIC[x[2]]()}</span>`})),
+    isRight: i => keys[i] === t,
+    onRight: () => rev ? `Bravo ! « ${said} » à l'envers, ça fait « ${t[1].join(" … ")} » : ${t[0]} !` : `Bravo ! ${t[1].join(" … ")}, ça fait ${t[0]} !`,
+    onWrong: () => rev ? `Dis les syllabes dans l'autre sens : « ${t[1].join(" … ")} ».` : `Écoute encore et dis-le vite : « ${said} ».`,
+    game: "sons", item: (rev ? "à l'envers : " : "assembler : ") + t[0], next: soundsEntry, wait: 3000
+  });
 }
 // ---- sons : rimes (GS) ----
 const RHYMES = {
@@ -4837,6 +4883,7 @@ function weatherGame(){
   const g = gradeKey();
   const pool = g === "PS" ? ["soleil","pluie"] : g === "MS" ? ["soleil","pluie","vent","froid"] : Object.keys(SKY);
   const k = pick(pool), sk = SKY[k];
+  if(g !== "PS" && Math.random() < .35) return seasonGame();
   const wordMode = (g === "GS" || g === "CP") && Math.random() < .45;
   if(wordMode){
     const keys = shuffle([k, ...shuffle(Object.keys(SKY).filter(x => x !== k)).slice(0,2)]);
@@ -4862,6 +4909,28 @@ function weatherGame(){
   });
 }
 
+// ---- météo : les deux saisons de La Réunion (signes locaux : fruits, fleurs, animaux, temps) ----
+const SEASON_SIGNS = [
+  {k:"letchi", ete:true, pic:() => STKIMG.letchi ? `<img class="anipic lg" src="${STKIMG.letchi}" alt="">` : "", say:"Les letchis sont mûrs en été, pour Noël."},
+  {k:"flamboyant", ete:true, pic:() => STKIMG.flamboyant ? `<img class="anipic lg" src="${STKIMG.flamboyant}" alt="">` : "", say:"Le flamboyant fleurit tout rouge en été."},
+  {k:"mangue", ete:true, pic:() => STKIMG.mangue ? `<img class="anipic lg" src="${STKIMG.mangue}" alt="">` : "", say:"Les mangues arrivent avec la chaleur de l'été."},
+  {k:"cyclone", ete:true, pic:() => `<div class="skybox">${SKY.cyclone ? SKY.cyclone.svg : "🌀"}</div>`, say:"Les cyclones arrivent pendant l'été, la saison des grosses pluies."},
+  {k:"baleine", ete:false, pic:() => STKIMG.baleine ? `<img class="anipic lg" src="${STKIMG.baleine}" alt="">` : "", say:"Les baleines viennent en hiver, quand l'eau est plus fraîche."},
+  {k:"froid", ete:false, pic:() => `<div class="skybox">${SKY.froid ? SKY.froid.svg : "🧥"}</div>`, say:"En hiver, il fait frais le matin : on met un pull."},
+  {k:"canne", ete:false, pic:() => STKIMG.canne ? `<img class="anipic lg" src="${STKIMG.canne}" alt="">` : "", say:"On coupe la canne à sucre à partir de l'hiver."}
+];
+function seasonGame(){
+  const t = pick(SEASON_SIGNS);
+  const ch = [{ete:true, label:"L'été", html:`<span class="anihome">☀️</span><b class="anilab">L'été</b>`}, {ete:false, label:"L'hiver", html:`<span class="anihome">🧥</span><b class="anilab">L'hiver</b>`}];
+  choiceRound({
+    title: "L'été ou l'hiver ?", line: "À La Réunion, il y a deux saisons : l'été, quand il fait chaud, et l'hiver, quand il fait plus frais. Regarde l'image : c'est l'été ou l'hiver ?",
+    scene: `<div class="aniscene lg">${t.pic()}</div>`,
+    choices: ch, isRight: i => ch[i].ete === t.ete,
+    onRight: () => `Oui ! ${t.say}`,
+    onWrong: () => `Pas tout à fait. ${t.say}`,
+    game: "meteo", item: "saison : " + t.k, next: weatherGame, wait: 3200
+  });
+}
 // ---------- 4. les métiers et leurs véhicules ----------
 function personSvg(o){
   return icon(`<rect x="16" y="34" width="32" height="26" rx="8" fill="${o.body}" ${STK}/>${o.deco || ""}<circle cx="32" cy="24" r="11" fill="#f3c79b" ${STK}/><circle cx="28" cy="24" r="1.6" fill="#1f2a44"/><circle cx="36" cy="24" r="1.6" fill="#1f2a44"/><path d="M28 29 q4 3 8 0" fill="none" stroke="#1f2a44" stroke-width="1.8" stroke-linecap="round"/>${o.hat || ""}`);
@@ -4961,16 +5030,17 @@ function raceTrack(cars){
 function raceGame(){
   const g = gradeKey();
   if(g === "CP" && Math.random() < .5) return raceCalc();
-  const n = {PS:3, MS:3, GS:4, CP:5}[g];
+  const n = {PS:3, MS:4, GS:5, CP:5}[g];
   const cars = shuffle(RACERS).slice(0, n), ranks = shuffle([...Array(n).keys()]);
   cars.forEach((c, i) => { c.rank = ranks[i]; c.x = 70 - ranks[i] * (62 / n) - Math.random() * 4; });
   const byRank = cars.slice().sort((a,b) => a.rank - b.rank);
   let q, target;
-  const r = g === "PS" ? 0 : g === "MS" ? pick([0, n - 1, 1]) : rnd(n);
+  const r = g === "PS" ? 0 : g === "MS" ? pick([0, 1, 2, n - 1]) : rnd(n);
   if((g === "GS" || g === "CP") && Math.random() < .4){
     const ref = byRank[1 + rnd(n - 1)]; target = byRank[ref.rank - 1];
     q = `Quelle voiture est juste devant la voiture ${ref.n} ?`;
   } else if(r === n - 1 && g !== "PS"){ target = byRank[r]; q = "Quelle voiture est la dernière ?"; }
+  else if(r === n - 2 && (g === "GS" || g === "CP") && Math.random() < .5){ target = byRank[r]; q = "Quelle voiture est l'avant-dernière ?"; }
   else { target = byRank[r]; q = `Quelle voiture est ${ORD[r]} ?`; }
   const opts = shuffle(cars).slice(0, Math.min(n, 4)); if(!opts.includes(target)) opts[0] = target;
   const keys = shuffle(opts);
@@ -5541,11 +5611,13 @@ function carnetSvg(){
 
 // ====================== LIVRET DE SUIVI POUR LA MAÎTRESSE ======================
 const LDOM = [
-  {t:"Mobiliser le langage dans toutes ses dimensions", c:"#2f6fe4", ids:["histoires","consignes","contraires","sons","prenom","lavage","trace"]},
-  {t:"Construire les premiers outils pour structurer sa pensée", c:"#ff7a2f", ids:["compter","problemes","monnaie","course","bus","formes","taille","balance","suites","moitie","memoire"]},
-  {t:"Explorer le monde", c:"#2fb36b", ids:["couleurs","semaine","espace","labyrinthe","meteo","metiers","tri","ombres","animaux"]},
-  {t:"Agir, s'exprimer, comprendre à travers les activités artistiques", c:"#8e5ae8", ids:["rythme","puzzle"]},
-  {t:"Apprendre ensemble et vivre ensemble", c:"#e63946", ids:["emotions","rue","feu"]}
+  {t:"1. Le langage oral et écrit", c:"#2f6fe4", ids:["histoires","consignes","contraires","sons","prenom","lavage","trace"]},
+  {t:"4. Les premiers outils mathématiques", c:"#ff7a2f", ids:["compter","problemes","monnaie","course","bus","formes","taille","balance","suites","moitie","memoire"]},
+  {t:"5. Se repérer dans le temps et l'espace", c:"#0fa3b1", ids:["semaine","meteo","espace","labyrinthe"]},
+  {t:"6. Découvrir le vivant, la matière et les objets", c:"#2fb36b", ids:["animaux","tri","ombres","metiers"]},
+  {t:"3. Les activités artistiques", c:"#8e5ae8", ids:["couleurs","rythme","puzzle"]},
+  {t:"2. Les activités physiques", c:"#f4a300", ids:["feu"]},
+  {t:"Vivre ensemble (dans tous les domaines)", c:"#e63946", ids:["emotions","rue"]}
 ];
 const LCOL = {g:"#2fb36b", m:"#ff9f1c", l:"#e85d5d", n:"#b8c0d0"};
 const LTXT = {g:"Acquis", m:"En cours d'acquisition", l:"À renforcer", n:"Pas encore observé"};
@@ -5573,9 +5645,9 @@ function livretRow(sk, y){
 }
 function livretPage(doms, page, info){
   const X = s => esc(s), W = 1240, H = 1754;
-  let y = page === 1 ? 462 : 150, body = "";
+  let y = page === 1 ? 462 : page === 3 ? 170 : 150, body = "";
   const nRows = doms.reduce((a, d) => a + d.ids.filter(id => SKILLS.some(k => k.id === id)).length, 0);
-  const used = doms.length * 90 + nRows * 56 + (page === 2 ? 450 : 0), room = (H - 120) - y - used;
+  const used = doms.length * 90 + nRows * 56 + 0, room = (H - 120) - y - used;
   const pitch = 56 + Math.max(0, Math.min(18, room / Math.max(1, nRows + doms.length)));
   doms.forEach(d => {
     body += `<rect x="90" y="${y - 44}" width="${W - 180}" height="58" rx="16" fill="${d.c}"/><text x="120" y="${y - 6}" font-size="29" font-weight="800" fill="#fff">${X(d.t)}</text>`;
@@ -5591,18 +5663,33 @@ function livretPage(doms, page, info){
     <text x="130" y="334" font-size="25" fill="#1f2a44">${X(grade().label)} · ${info.n} jour${info.n > 1 ? "s" : ""} de jeu · ${pdata.earned || 0} étoiles</text>
     <text x="130" y="374" font-size="21" fill="#5a6a8a">${info.from ? `Du ${X(info.from)} au ${X(info.to)}` : `Édité le ${X(info.to)}`}</text>
     <g transform="translate(920 250)">${[["g","Acquis"],["m","En cours"],["l","À renforcer"],["n","Pas encore"]].map(([c, t], i) => `<circle cx="14" cy="${i * 36 + 12}" r="11" fill="${LCOL[c]}"/><text x="36" y="${i * 36 + 20}" font-size="21" fill="#1f2a44">${t}</text>`).join("")}</g>` : "";
-  const foot = page === 2 ? `
-    <rect x="90" y="${y}" width="${W - 180}" height="330" rx="24" fill="#fff" stroke="#1f2a44" stroke-width="3"/>
+  if(page === 3){
+    body += `<text x="${W / 2}" y="${y}" font-size="40" font-weight="800" text-anchor="middle" fill="#1f2a44">Bilan par domaine</text>`; y += 60;
+    LDOM.forEach(d => {
+      const n = {g: 0, m: 0, l: 0, n: 0}; d.ids.forEach(id => { const sk = SKILLS.find(k => k.id === id); if(sk) n[verdict(sk, stats[id]).cls]++; });
+      const tot = n.g + n.m + n.l + n.n || 1; let x = 700;
+      body += `<rect x="110" y="${y - 30}" width="18" height="40" rx="6" fill="${d.c}"/><text x="142" y="${y}" font-size="23" font-weight="800" fill="#1f2a44">${X(lfit(d.t, 23, true, 540))}</text>`;
+      ["g", "m", "l", "n"].forEach(c => { const w = Math.round(420 * n[c] / tot); if(w) body += `<rect x="${x}" y="${y - 26}" width="${w}" height="32" fill="${LCOL[c]}"/>`; x += w; });
+      body += `<rect x="700" y="${y - 26}" width="420" height="32" rx="8" fill="none" stroke="#1f2a44" stroke-width="2"/>`;
+      body += `<text x="700" y="${y + 30}" font-size="18" fill="#5a6a8a">${n.g} acquis · ${n.m} en cours · ${n.l} à renforcer · ${n.n} pas encore</text>`;
+      y += 78;
+    });
+    y += 20;
+  }
+  const foot = page === 3 ? `
+    <rect x="90" y="${y}" width="${W - 180}" height="500" rx="24" fill="#fff" stroke="#1f2a44" stroke-width="3"/>
     <text x="120" y="${y + 50}" font-size="28" font-weight="800" fill="#1f2a44">Observations de l'enseignant(e)</text>
-    ${[0, 1, 2, 3].map(i => `<line x1="120" y1="${y + 110 + i * 56}" x2="${W - 120}" y2="${y + 110 + i * 56}" stroke="#c9d1e0" stroke-width="2" stroke-dasharray="6 8"/>`).join("")}
-    <text x="120" y="${y + 400}" font-size="20" fill="#5a6a8a">« Acquis » : au moins 80 % de réussite du premier coup, après au moins 10 parties. « En cours » : de 50 à 79 %.</text>
-    <text x="120" y="${y + 432}" font-size="20" fill="#5a6a8a">Ce livret résume les jeux faits à la maison : il complète, sans la remplacer, l'observation faite en classe.</text>` : "";
+    ${[0, 1, 2, 3, 4, 5, 6].map(i => `<line x1="120" y1="${y + 110 + i * 56}" x2="${W - 120}" y2="${y + 110 + i * 56}" stroke="#c9d1e0" stroke-width="2" stroke-dasharray="6 8"/>`).join("")}
+    <text x="120" y="${y + 560}" font-size="20" fill="#5a6a8a">« Acquis » : au moins 80 % de réussite du premier coup, après au moins 10 parties. « En cours » : de 50 à 79 %.</text>
+    <text x="120" y="${y + 592}" font-size="20" fill="#5a6a8a">Ce livret résume les jeux faits à la maison : il complète, sans la remplacer, l'observation faite en classe.</text>
+    <text x="120" y="${y + 624}" font-size="20" fill="#5a6a8a">Domaines du programme de l'école maternelle (BO n° 41 du 31 octobre 2024 et BO n° 19 du 7 mai 2026).</text>
+    <text x="120" y="${y + 656}" font-size="20" fill="#5a6a8a">Les activités physiques se pratiquent surtout en vrai : le jeu ne travaille que l'attention et le contrôle du geste.</text>` : "";
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="Nunito, Arial, sans-serif">
     <rect width="${W}" height="${H}" fill="#fff"/><rect x="40" y="40" width="${W - 80}" height="${H - 80}" rx="36" fill="none" stroke="#1f2a44" stroke-width="5"/>
     ${head}${body}${foot}
-    <text x="${W / 2}" y="${H - 64}" font-size="20" text-anchor="middle" fill="#8a94a8">Page ${page}/2</text></svg>`;
+    <text x="${W / 2}" y="${H - 64}" font-size="20" text-anchor="middle" fill="#8a94a8">Page ${page}/3</text></svg>`;
 }
-function livretPages(){ const info = livretInfo(); return [livretPage(LDOM.slice(0, 2), 1, info), livretPage(LDOM.slice(2), 2, info)]; }
+function livretPages(){ const info = livretInfo(); return [livretPage(LDOM.slice(0, 2), 1, info), livretPage(LDOM.slice(2), 2, info), livretPage([], 3, info)]; }
 function svgToJpeg(svgText, w, h){
   return new Promise((res, rej) => { const img = new Image();
     img.onload = () => { const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0, w, h); c.toBlob(b => b ? res(b) : rej(new Error("jpg")), "image/jpeg", .9); };
@@ -5648,7 +5735,7 @@ function livretScreen(){
   const pages = livretPages();
   d.innerHTML = `<div class="card lvcard" role="dialog" aria-label="Livret pour la maîtresse">
     <h2>Livret pour la maîtresse</h2>
-    <p class="pnote">Deux pages A4, rangées comme le carnet de suivi de maternelle (les 5 domaines du programme). À imprimer ou à envoyer.</p>
+    <p class="pnote">Trois pages A4, rangées selon les domaines du programme de maternelle 2026. À imprimer ou à envoyer.</p>
     <div class="lvpages">${pages.map(p => `<img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(p)}" alt="Page du livret">`).join("")}</div>
     <div class="pactions"><button class="big" id="lvpdf">📄 Télécharger en PDF</button><button class="iconbtn" id="lvprint">🖨️ Imprimer</button><button class="iconbtn" id="lvclose">Fermer</button></div></div>`;
   document.body.appendChild(d);
@@ -6048,9 +6135,9 @@ function curProfile(){ return profiles.list.find(p => p.id === profiles.current)
 function profileData(id){ try{ return JSON.parse(lsGet("gv_p_" + id) || "{}") || {}; }catch(e){ return {}; } }
 function saveProfileData(){ const p = curProfile(); if(p) lsSet("gv_p_" + p.id, JSON.stringify(Object.assign({stars, starsBy, stats}, pdata))); }
 const GRADES = {
-  PS:{label:"Petite section",  count:3,  countMax:6,  shape:3, size:3, sound:3},
-  MS:{label:"Moyenne section", count:6,  countMax:10, shape:4, size:4, sound:4},
-  GS:{label:"Grande section",  count:10, countMax:10, shape:5, size:5, sound:5},
+  PS:{label:"Petite section",  count:3,  countMax:4,  shape:3, size:3, sound:3},
+  MS:{label:"Moyenne section", count:4,  countMax:6, shape:4, size:4, sound:4},
+  GS:{label:"Grande section",  count:10, countMax:15, shape:5, size:5, sound:5},
   CP:{label:"CP",              count:10, countMax:10, shape:5, size:5, sound:5}
 };
 function baseGradeKey(){ const p = curProfile(); return (p && GRADES[p.grade]) ? p.grade : "MS"; }
