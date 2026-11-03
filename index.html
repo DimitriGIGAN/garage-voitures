@@ -1137,6 +1137,7 @@ html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 .jbtn{background:var(--card);border:3px solid var(--ink);border-radius:18px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:6px;font:800 .95rem/1.2 var(--display);color:var(--ink);cursor:pointer;box-shadow:0 4px 0 var(--ink)}
 .jbtn img{width:80%;max-width:110px;aspect-ratio:1;object-fit:contain}
 .jbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.ytbtn{text-decoration:none;display:inline-flex;align-items:center;background:#ff3b30;color:#fff;border-color:var(--ink)}
 </style>
 
 <div class="app" id="app"></div>
@@ -1852,11 +1853,13 @@ function chantPlay(k, onEnd, onFail){
 }
 setInterval(() => { try{ if(chantAudio && navSeq !== chantNav) chantStop(); }catch(e){} }, 400);
 let singSeen = {};
+const ytLink = k => "https://www.youtube.com/results?search_query=" + encodeURIComponent(STITLE[k] + " comptine");
 function jukeboxScreen(){
   navSeq++; curGame = null;
   app.innerHTML = `${topBar(true)}
     <h1>Mes chansons</h1>
     <p class="sub">Touche une comptine pour l'écouter et chanter avec Vroumi !</p>
+    <p class="pnote">Pour les parents : dans chaque chanson, le bouton « Voir sur YouTube » ouvre la comptine avec son air traditionnel, dans une nouvelle fenêtre.</p>
     <div class="jukebox">${Object.keys(SONGS).map(k => `<button class="jbtn" data-k="${k}">${J3IMG[S2PIC[k]] ? `<img src="${J3IMG[S2PIC[k]]}" alt="">` : "🎵"}<span>${esc(STITLE[k])}</span></button>`).join("")}</div>`;
   wireTop();
   say("Voici mes chansons ! Laquelle tu veux chanter ?");
@@ -1871,7 +1874,7 @@ function singScreen(k, fromBox){
       ${pic ? `<img class="anipic lg" src="${pic}" alt="">` : ""}
       <div class="j3bubble singlines">${lines.map((l, i) => `<p data-i="${i}">${esc(l)}</p>`).join("")}</div>
       <p class="pnote" id="chantmsg" aria-live="polite"></p>
-      <div class="pactions gpsact"><button class="iconbtn" id="sagain">🎵 Encore une fois</button><button class="big" id="snext">${fromBox ? "Autre chanson" : "On continue !"}</button></div>
+      <div class="pactions gpsact"><a class="iconbtn ytbtn" href="${ytLink(k)}" target="_blank" rel="noopener">▶ Voir sur YouTube</a><button class="iconbtn" id="sagain">🎵 Encore une fois</button><button class="big" id="snext">${fromBox ? "Autre chanson" : "On continue !"}</button></div>
     </div>`;
   wireTop();
   const my = navSeq, ps = [...app.querySelectorAll(".singlines p")];
