@@ -1139,6 +1139,8 @@ html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 .jbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
 .ytbtn{text-decoration:none;display:inline-flex;align-items:center;background:#ff3b30;color:#fff;border-color:var(--ink)}
 .karaoke{display:block;width:min(100%,900px);aspect-ratio:16/9;margin:6px auto 10px;border:4px solid var(--ink);border-radius:18px;background:#000;box-shadow:0 5px 0 var(--ink)}
+.topr{display:flex;gap:8px;align-items:center}.musbtn{min-width:48px;font-size:1.25rem;padding-left:10px;padding-right:10px}
+@media (max-width:460px){.top{gap:6px}.top .iconbtn{padding-left:9px;padding-right:9px;font-size:.88rem}.top .stars small.tot{display:none}.musbtn{min-width:40px}}
 </style>
 
 <div class="app" id="app"></div>
@@ -1181,6 +1183,7 @@ function playSfx(n, vol){ const c = audioCtx(), b = SFX[n]; if(!c || !b) return 
 // musique douce selon le moment de la journée
 let music = null, musicKey = "", musicBuf = {};
 let singing = false;
+function musicOn(){ try{ return !(pdata && pdata.settings && pdata.settings.music === false); }catch(e){ return true; } }
 function musicWanted(){ try{ return soundOn && !singing && !isCalm() && !(pdata.settings && pdata.settings.music === false) && !(typeof hasA === "function" && (hasA("attention") || hasA("hearing"))); }catch(e){ return false; } }
 function musicMoment(){ const h = document.documentElement.classList; return h.contains("c-matin") ? "matin" : h.contains("c-soir") ? "soir" : h.contains("c-nuit") ? "nuit" : "jour"; }
 function musicStop(){ if(!music) return; const m = music; music = null; musicKey = ""; try{ m.g.gain.setTargetAtTime(0, actx.currentTime, .4); window.setTimeout(() => { try{ m.src.stop(); }catch(e){} }, 1600); }catch(e){} }
@@ -1609,7 +1612,7 @@ function topBar(withHome){
   return `<div class="top">
     ${withHome ? '<button class="iconbtn" id="home" aria-label="Retour au menu">⟵ Menu</button>' : `<button class="iconbtn whochip" id="who" aria-label="Changer de joueur"><span class="whocar">${favSvg()}</span>${esc(curProfile().name)}</button>`}
     <div class="stars" aria-label="${curGame ? "Étoiles gagnées dans ce jeu" : "Total des étoiles"}">${STAR}<span id="starN">${shownStars()}</span>${curGame ? "" : '<small class="tot">au total</small>'}</div>
-    <button class="iconbtn" id="snd" aria-pressed="${soundOn}">${soundOn ? "Son : oui" : "Son : non"}</button>
+    <div class="topr"><button class="iconbtn musbtn" id="mus" aria-pressed="${musicOn()}" aria-label="Musique d'ambiance">${musicOn() ? "🎵" : "🔇"}</button><button class="iconbtn" id="snd" aria-pressed="${soundOn}">${soundOn ? "Son : oui" : "Son : non"}</button></div>
   </div>${aidBar()}${duo && withHome && curGame ? duoBar() : ""}${session && withHome && curGame ? `<div class="sbar" aria-label="Ma journée : jeu ${session.i + 1} sur ${session.games.length}">Ma journée · jeu ${session.i + 1}/${session.games.length} <span>${[0,1,2].map(j => `<i class="${j < session.count ? "on" : ""}"></i>`).join("")}</span></div>` : ""}`;
 }
 function wireTop(){
@@ -1617,6 +1620,7 @@ function wireTop(){
   try{ fxWaveTitle(); }catch(e){}
   const h = document.getElementById("home"); if(h) h.onclick = () => { beep("tap"); withWipe(() => menu()); };
   const w = document.getElementById("who"); if(w) w.onclick = () => { beep("tap"); whoPlays(); };
+  const mb = document.getElementById("mus"); if(mb) mb.onclick = () => { beep("tap"); try{ pdata.settings.music = !musicOn(); saveProfileData(); musicUpdate(); }catch(_){} mb.textContent = musicOn() ? "🎵" : "🔇"; mb.setAttribute("aria-pressed", musicOn()); };
   document.getElementById("snd").onclick = e => {
     soundOn = !soundOn; try{ musicUpdate(); }catch(_){} e.target.textContent = soundOn ? "Son : oui" : "Son : non"; e.target.setAttribute("aria-pressed", soundOn);
     if(!soundOn){ try{ stopVoice(); speechSynthesis.cancel(); }catch(_){} } else say("Le son est allumé");
@@ -1862,7 +1866,6 @@ function jukeboxScreen(){
   app.innerHTML = `${topBar(true)}
     <h1>Mes chansons</h1>
     <p class="sub">Touche une comptine pour l'écouter et chanter avec Vroumi !</p>
-    <p class="pnote">Les vidéos karaoké sont aussi sur YouTube : bouton « Voir sur YouTube » dans chaque chanson.</p>
     <div class="jukebox">${Object.keys(SONGS).map(k => `<button class="jbtn" data-k="${k}">${J3IMG[S2PIC[k]] ? `<img src="${J3IMG[S2PIC[k]]}" alt="">` : "🎵"}<span>${esc(STITLE[k])}</span></button>`).join("")}</div>`;
   wireTop();
   say("Voici mes chansons ! Laquelle tu veux chanter ?");
@@ -1877,7 +1880,7 @@ function singScreen(k, fromBox){
       ${vid ? `<video class="karaoke" id="kvid" src="${vid}" playsinline controls preload="auto"></video>` : (pic ? `<img class="anipic lg" src="${pic}" alt="">` : "")}
       ${vid ? "" : `<div class="j3bubble singlines">${lines.map((l, i) => `<p data-i="${i}">${esc(l)}</p>`).join("")}</div>`}
       <p class="pnote" id="chantmsg" aria-live="polite"></p>
-      <div class="pactions gpsact"><a class="iconbtn ytbtn" href="${ytLink(k)}" target="_blank" rel="noopener">▶ YouTube</a><button class="iconbtn" id="sagain">🎵 Encore une fois</button><button class="big" id="snext">${fromBox ? "Autre chanson" : "On continue !"}</button></div>
+      <div class="pactions gpsact"><button class="iconbtn" id="sagain">🎵 Encore une fois</button><button class="big" id="snext">${fromBox ? "Autre chanson" : "On continue !"}</button></div>
     </div>`;
   wireTop();
   const my = navSeq, v = document.getElementById("kvid");
