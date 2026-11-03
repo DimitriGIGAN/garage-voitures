@@ -1824,13 +1824,23 @@ const W2S = {"bois": "bois", "cerises": "bois", "neuf": "bois", "herbe": "souris
 const S2PIC = {"bois": "bois", "souris": "souris", "pomme": "pomme", "cloche": "cloche", "navire": "navire", "escargot": "escargot", "lune": "lune", "choux": "choux", "marionnette": "marionnette", "prince": "prince"};
 const STITLE = {"bois": "Un, deux, trois, nous irons au bois", "souris": "Une souris verte", "pomme": "Pomme de reinette", "cloche": "Frère Jacques", "navire": "Il était un petit navire", "escargot": "Petit escargot", "lune": "Au clair de la lune", "choux": "Savez-vous planter les choux", "marionnette": "Ainsi font les petites marionnettes", "prince": "Lundi matin"};
 
-let chantAudio = null, chantNav = -1;
-function chantStop(){ try{ if(chantAudio){ chantAudio.pause(); chantAudio = null; } musicDuck(false); }catch(e){} }
-function chantPlay(k, onEnd){
+let chantAudio = null, chantNav = -1, chantBuf = {}, chantReq = 0;
+// les chansons passent par le même moteur audio que les bruitages (fetch + WebAudio), plus fiable sur tablette
+function chantLoad(k){ const c = audioCtx(); if(!c) return Promise.reject(); if(chantBuf[k]) return Promise.resolve(chantBuf[k]);
+  return fetch("chants/" + k + ".mp3").then(r => r.ok ? r.arrayBuffer() : Promise.reject(r.status)).then(b => c.decodeAudioData(b)).then(buf => (chantBuf[k] = buf)); }
+function chantStop(){ chantReq++; try{ if(chantAudio){ chantAudio.src.onended = null; chantAudio.src.stop(); } }catch(e){} chantAudio = null; try{ musicDuck(false); }catch(e){} }
+function chantPlay(k, onEnd, onFail){
   chantStop(); if(!soundOn) return false;
-  try{ chantAudio = new Audio("chants/" + k + ".mp3"); chantAudio.volume = .9; chantNav = navSeq; musicDuck(true);
-    chantAudio.onended = () => { chantStop(); onEnd && onEnd(); };
-    const p = chantAudio.play(); if(p && p.catch) p.catch(() => { chantStop(); }); return true; }catch(e){ return false; }
+  const req = ++chantReq, nav = navSeq;
+  chantLoad(k).then(buf => {
+    if(req !== chantReq || nav !== navSeq) return;
+    const c = audioCtx(), src = c.createBufferSource(), g = c.createGain(); g.gain.value = .95; src.buffer = buf; src.connect(g).connect(c.destination);
+    chantNav = navSeq; try{ musicDuck(true); }catch(e){}
+    chantAudio = {src, t0: c.currentTime, dur: buf.duration, get currentTime(){ return audioCtx().currentTime - this.t0; }, get duration(){ return this.dur; }};
+    src.onended = () => { if(chantAudio && chantAudio.src === src){ chantAudio = null; try{ musicDuck(false); }catch(e){} onEnd && onEnd(); } };
+    src.start();
+  }).catch(() => { if(req === chantReq) onFail && onFail(); });
+  return true;
 }
 setInterval(() => { try{ if(chantAudio && navSeq !== chantNav) chantStop(); }catch(e){} }, 400);
 let singSeen = {};
@@ -1856,9 +1866,11 @@ function singScreen(k, fromBox){
     </div>`;
   wireTop();
   const my = navSeq, ps = [...app.querySelectorAll(".singlines p")];
-  const go = () => { singSeen[k] = 1; if(!chantPlay(k)) say(lines.join(" ")); else { const t0 = Date.now(), tick = () => { if(navSeq !== my || !chantAudio) return; const d = chantAudio.duration || 30, i = Math.min(ps.length - 1, Math.floor((chantAudio.currentTime / Math.max(1, d - 2)) * ps.length)); ps.forEach((p, j) => p.classList.toggle("on", j === i)); requestAnimationFrame(tick); }; requestAnimationFrame(tick); } };
-  say(`On chante ensemble : ${STITLE[k]} ! Écoute bien, puis chante avec moi.`, () => { if(navSeq === my) go(); });
-  document.getElementById("sagain").onclick = () => { beep("tap"); go(); };
+  chantLoad(k).catch(() => {});
+  const go = () => { singSeen[k] = 1; if(!chantPlay(k, null, () => say(lines.join(" ")))) say(lines.join(" ")); else { const t0 = Date.now(), tick = () => { if(navSeq !== my) return; if(!chantAudio){ if(Date.now() - t0 < 8000) requestAnimationFrame(tick); return; } const d = chantAudio.duration || 30, i = Math.min(ps.length - 1, Math.floor((chantAudio.currentTime / Math.max(1, d - 2)) * ps.length)); ps.forEach((p, j) => p.classList.toggle("on", j === i)); requestAnimationFrame(tick); }; requestAnimationFrame(tick); } };
+  let started = false; const start = () => { if(started || navSeq !== my) return; started = true; go(); };
+  say(`On chante ensemble : ${STITLE[k]} ! Écoute bien, puis chante avec moi.`, start); setTimeout(start, 6000);
+  document.getElementById("sagain").onclick = () => { beep("tap"); started = true; go(); };
   document.getElementById("snext").onclick = () => { beep("tap"); chantStop(); withWipe(() => fromBox ? jukeboxScreen() : comptineGame()); };
 }
 // ---------- les comptines de Vroumi ----------
