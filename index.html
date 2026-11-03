@@ -1853,13 +1853,14 @@ function chantPlay(k, onEnd, onFail){
 }
 setInterval(() => { try{ if(chantAudio && navSeq !== chantNav) chantStop(); }catch(e){} }, 400);
 let singSeen = {};
-const ytLink = k => "https://www.youtube.com/results?search_query=" + encodeURIComponent(STITLE[k] + " comptine");
+const YTVID = {"escargot": "4UazSzE2P-E", "bois": "m17Z7JQcW2M", "souris": "4yfe-B61MlM", "pomme": "dTUedP9uxb0", "cloche": "F7Rn5QCFjAc", "navire": "imsPuJYwMxI", "lune": "U4i8ht9_qZ0", "choux": "2G2wSYotcFg", "marionnette": "T9b50aTesxI"};
+const ytLink = k => YTVID[k] ? "https://www.youtube.com/watch?v=" + YTVID[k] : "https://www.youtube.com/results?search_query=" + encodeURIComponent(STITLE[k] + " comptine");
 function jukeboxScreen(){
   navSeq++; curGame = null;
   app.innerHTML = `${topBar(true)}
     <h1>Mes chansons</h1>
     <p class="sub">Touche une comptine pour l'écouter et chanter avec Vroumi !</p>
-    <p class="pnote">Pour les parents : dans chaque chanson, le bouton « Voir sur YouTube » ouvre la comptine avec son air traditionnel, dans une nouvelle fenêtre.</p>
+    <p class="pnote">Pour les parents : dans chaque chanson, le bouton « Voir sur YouTube » ouvre la vidéo karaoké des Comptines de Vroumi, dans une nouvelle fenêtre.</p>
     <div class="jukebox">${Object.keys(SONGS).map(k => `<button class="jbtn" data-k="${k}">${J3IMG[S2PIC[k]] ? `<img src="${J3IMG[S2PIC[k]]}" alt="">` : "🎵"}<span>${esc(STITLE[k])}</span></button>`).join("")}</div>`;
   wireTop();
   say("Voici mes chansons ! Laquelle tu veux chanter ?");
