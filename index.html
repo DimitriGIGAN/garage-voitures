@@ -5388,23 +5388,33 @@ function livretInfo(){
   const ds = [...days].sort(), fmt = k => { const [y, m, d] = k.split("-"); return `${+d} ${MOIS[+m - 1]} ${y}`; };
   return {n: ds.length, from: ds[0] ? fmt(ds[0]) : "", to: fmt(today())};
 }
+let _lctx = null;
+function lfit(t, size, bold, maxW){
+  try{ _lctx = _lctx || document.createElement("canvas").getContext("2d"); _lctx.font = `${bold ? "800 " : ""}${size}px Nunito, Arial, sans-serif`;
+    if(_lctx.measureText(t).width <= maxW) return t;
+    while(t.length > 4 && _lctx.measureText(t + "…").width > maxW) t = t.slice(0, -1);
+    return t.replace(/[\s·,:]+$/, "") + "…"; }catch(e){ return t.length > 70 ? t.slice(0, 68) + "…" : t; }
+}
 function livretRow(sk, y){
   const X = s => esc(s), g = stats[sk.id], v = verdict(sk, g), col = LCOL[v.cls];
-  const dots = [0, 1, 2].map(i => { const on = v.cls === "g" ? 3 : v.cls === "m" ? 2 : v.cls === "l" ? 1 : 0; return `<circle cx="${860 + i * 34}" cy="${y - 10}" r="12" fill="${i < on ? col : "#fff"}" stroke="${col}" stroke-width="4"/>`; }).join("");
+  const dots = [0, 1, 2].map(i => { const on = v.cls === "g" ? 3 : v.cls === "m" ? 2 : v.cls === "l" ? 1 : 0; return `<circle cx="${850 + i * 34}" cy="${y - 10}" r="12" fill="${i < on ? col : "#fff"}" stroke="${col}" stroke-width="4"/>`; }).join("");
   const det = g && g.rounds ? `${g.rounds} partie${g.rounds > 1 ? "s" : ""} · ${pct(g.first, g.rounds)} du premier coup${sk.lvl && g.level ? " · " + sk.lvl(g.level) : ""}` : "Pas encore joué";
   const miss = g && sk.item ? Object.entries(g.missed || {}).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0]).join(", ") : "";
-  return `<text x="110" y="${y - 12}" font-size="25" font-weight="800" fill="#1f2a44">${X(sk.skill)}</text>
-    <text x="110" y="${y + 14}" font-size="19" fill="#5a6a8a">${X(sk.label)} · ${X(det)}${miss ? " · à revoir : " + X(miss) : ""}</text>
-    ${dots}<text x="${975}" y="${y - 2}" font-size="21" font-weight="700" fill="${col}">${X(v.cls === "m" ? "En cours" : v.cls === "n" ? "Pas encore" : LTXT[v.cls])}</text>
-    <line x1="100" y1="${y + 28}" x2="1140" y2="${y + 28}" stroke="#e5e9f2" stroke-width="2"/>`;
+  return `<text x="120" y="${y - 12}" font-size="25" font-weight="800" fill="#1f2a44">${X(lfit(sk.skill, 25, true, 690))}</text>
+    <text x="120" y="${y + 14}" font-size="19" fill="#5a6a8a">${X(lfit(sk.label + " · " + det + (miss ? " · à revoir : " + miss : ""), 19, false, 690))}</text>
+    ${dots}<text x="1120" y="${y - 2}" font-size="21" font-weight="700" text-anchor="end" fill="${col}">${X(v.cls === "m" ? "En cours" : v.cls === "n" ? "Pas encore" : LTXT[v.cls])}</text>
+    <line x1="110" y1="${y + 28}" x2="1130" y2="${y + 28}" stroke="#e5e9f2" stroke-width="2"/>`;
 }
 function livretPage(doms, page, info){
   const X = s => esc(s), W = 1240, H = 1754;
   let y = page === 1 ? 462 : 150, body = "";
+  const nRows = doms.reduce((a, d) => a + d.ids.filter(id => SKILLS.some(k => k.id === id)).length, 0);
+  const used = doms.length * 90 + nRows * 56 + (page === 2 ? 450 : 0), room = (H - 120) - y - used;
+  const pitch = 56 + Math.max(0, Math.min(18, room / Math.max(1, nRows + doms.length)));
   doms.forEach(d => {
-    body += `<rect x="90" y="${y - 44}" width="${W - 180}" height="58" rx="16" fill="${d.c}"/><text x="114" y="${y - 6}" font-size="29" font-weight="800" fill="#fff">${X(d.t)}</text>`;
+    body += `<rect x="90" y="${y - 44}" width="${W - 180}" height="58" rx="16" fill="${d.c}"/><text x="120" y="${y - 6}" font-size="29" font-weight="800" fill="#fff">${X(d.t)}</text>`;
     y += 60;
-    d.ids.map(id => SKILLS.find(k => k.id === id)).filter(Boolean).forEach(sk => { body += livretRow(sk, y); y += 56; });
+    d.ids.map(id => SKILLS.find(k => k.id === id)).filter(Boolean).forEach(sk => { body += livretRow(sk, y); y += pitch; });
     y += 30;
   });
   const head = page === 1 ? `
