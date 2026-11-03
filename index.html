@@ -1903,7 +1903,7 @@ function singScreen(k, fromBox){
     v.onplaying = () => { singing = true; try{ musicStop(); }catch(e){} chantMsg("🎵 Chante avec Vroumi !"); };
     v.onended = v.onpause = () => { singing = false; try{ musicUpdate(); }catch(e){} };
     let started = false; const start = () => { if(started) return; started = true; playV(); };
-    say(`On chante ensemble : ${STITLE[k]} ! Regarde les paroles, et chante avec moi.`, start); setTimeout(start, 6000);
+    say(`On chante ensemble : ${STITLE[k]} ! Écoute bien, puis chante avec moi.`, start); setTimeout(start, 6000);
     const stopOnLeave = setInterval(() => { if(navSeq !== my){ try{ v.pause(); }catch(e){} clearInterval(stopOnLeave); } }, 400);
   } else {
     const ps = [...app.querySelectorAll(".singlines p")];
