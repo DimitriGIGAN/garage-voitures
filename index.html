@@ -1826,10 +1826,11 @@ const STITLE = {"bois": "Un, deux, trois, nous irons au bois", "souris": "Une so
 
 let chantAudio = null, chantNav = -1, chantBuf = {}, chantReq = 0;
 // les chansons sont lues comme les voix de Vroumi (lecteur audio + adresse data:), ce qui marche aussi quand la tablette est en mode silencieux
-let chantPack = null;
+const chantData = {};
+// une chanson = un petit fichier, comme les paquets de voix (les gros fichiers peuvent être refusés sur certains appareils)
 function chantLoad(k){
-  if(!chantPack) chantPack = fetch("chants/chants.json").then(r => r.ok ? r.json() : Promise.reject("fichier " + r.status)).catch(e => { chantPack = null; throw e; });
-  return chantPack.then(d => d[k] || Promise.reject("chanson absente"));
+  if(!chantData[k]) chantData[k] = fetch("chants/c-" + k + ".json").then(r => r.ok ? r.json() : Promise.reject("erreur " + r.status)).then(d => d.d).catch(e => { delete chantData[k]; throw e; });
+  return chantData[k];
 }
 function chantMsg(t){ const m = document.getElementById("chantmsg"); if(m) m.textContent = t; }
 function chantStop(){ chantReq++; try{ if(chantAudio){ chantAudio.onended = null; chantAudio.pause(); } }catch(e){} chantAudio = null; try{ musicDuck(false); }catch(e){} }
