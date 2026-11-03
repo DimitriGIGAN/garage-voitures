@@ -1120,6 +1120,15 @@ html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 
 /* ---- programme 2026 : nouvelles questions ---- */
 .lmbig{font:900 clamp(4rem,18vw,6.5rem)/1 var(--display);text-align:center;color:var(--ink);background:#fff;border:4px solid var(--ink);border-radius:22px;width:clamp(110px,30vw,160px);margin:6px auto 10px;padding:10px 0;box-shadow:0 5px 0 var(--ink)}
+
+/* ---- comptines, labo, créole ---- */
+.j3emo{display:block;font-size:clamp(2.8rem,12vw,4.2rem);line-height:1.15;text-align:center}
+.j3emo.xl{font-size:clamp(4rem,16vw,6rem)}
+.j3menu{font-size:clamp(3rem,11vw,4.5rem);line-height:1}
+.j3bubble{background:#fff;border:4px solid var(--ink);border-radius:24px;padding:14px 18px;max-width:560px;margin:4px auto 10px;font:800 clamp(1.1rem,4.5vw,1.5rem)/1.3 var(--display);text-align:center;box-shadow:0 5px 0 var(--ink)}
+.j3seq{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px auto 12px}
+.j3n{min-width:clamp(48px,13vw,70px);padding:8px 4px;border:3px solid var(--ink);border-radius:16px;background:#fff;font:900 clamp(1.6rem,7vw,2.4rem) var(--display);text-align:center;box-shadow:0 4px 0 var(--ink)}
+.j3n.hole{background:#ffc93c}
 </style>
 
 <div class="app" id="app"></div>
@@ -1127,7 +1136,7 @@ html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 <script>
 (() => {
 // ====================== IMAGES (ComfyUI) ======================
-const VOICE_KEYS = new Set(["010d6bf4","01179b9f","015c1ed7","01f16448","022414c3","0356c494","03e00ab3","0413f758","048f5a9b","04d6f13a","0541a0ae","05c2af6e","0615d054","07148945","077442dc","0781932f","07e63f63","07ece5b0","0806d6ba","093a9ec1","0971bf18","09db8e8e","0a10ae1d","0ad5eeae","0b01dc7d","0b52c302","0bd13a52","0c3d144b","0d0507aa","0f89f3fb","0f92ae40","101e3d34","10874241","1203f690","135dd8df","13a6f4ed","141c2ad0","15215560","15463f23","154a4667","154f0f6b","159747cd","15c6108d","15ee7985","15ef9c89","15f977f7","15fce4ab","16d899b6","16f0d05f","172a58f5","1782deda","17f36b40","17f370f3","185f5690","186b75d7","192b7679","19888f23","1a49f03e","1aea659e","1b5fc1ee","1b9105eb","1cd6166b","1ce574c1","1d2e24a7","1e0d175a","1e69b87f","1ee40405","1f00356a","1f72d942","1f9c65a8","1fbc1e71","1fc1d5bf","20ef5590","21636e7c","21a8be6a","21eeed83","22045fbb","23468097","24679c6d","2569a72c","26e3ee84","2708e3b1","277cddb4","27957cbc","28c84d22","2921d7b0","2942d3b6","297020fe","29bdbaac","2a6b3376","2aacbf88","2aaec826","2af07a80","2b13e113","2b3bc5a5","2b858327","2ba57dad","2bd90c2b","2c4cdf4e","2d14cc7d","2d7e1fae","2da7fd5e","2f9ef7b7","2ff77e4b","30a56dc6","31bdc4d2","31d0d874","327227c5","328c0cb9","32f81ba8","32ff2ee3","33191bde","34c315be","3551e61b","355f1381","359bca3b","35f96d12","3644ebcf","364d4e10","374eaca6","39831b98","3a1787de","3a21bc56","3a26711f","3a39f26a","3a5dac7c","3a6b2ab9","3a8f1c76","3a949481","3b66898d","3be9da67","3c89ebfc","3e6da6b8","3f3eeafd","3f855fbe","3faec876","404b3aaa","40540d39","41a65833","41aea321","41f906c4","42296db7","42aa5e31","42fd12f1","43127e44","4404eade","4477569f","44e266fc","44f8767c","459dee7b","45bfe991","45e0acb1","46136786","46496013","464f3a22","466d4374","486b4c38","496de6f9","4992ce5a","49db9625","49e65a09","49ed20b2","4a3f13da","4a7540d9","4b59d528","4b5ada73","4b90904c","4c0c99d7","4c12ee22","4c77b3ce","4ccb1d7a","4d60414f","4def74e1","4edce7bb","4ee2a735","4f38c893","4f9b2d67","4fedb2a4","50007dfa","5079812e","508cb713","50a8a95c","50d47300","51175898","51275280","513ca8ee","516b6704","5255d911","526e3c4f","5322baeb","53bf2ec5","552fda1b","55513084","55e218ca","566b7ae3","5697fcee","5722370c","572d6e8d","57f392ee","583bd0da","58806f9a","58a28835","58a51906","58f10ec4","5927c087","59d4f3c2","59e05407","5a136c7f","5a3dc639","5a42136b","5a659aa6","5a9383d8","5ad7f0c0","5b144473","5ba35891","5c3cab63","5d3f1a48","5d714873","5f47ca4f","60b21448","60e1da3b","61433a5a","619bba7c","61f35e74","624e41d5","6292d8b6","62f4ebc8","639281a4","6407d9ac","649d705c","64a6faae","64ed8e8e","650e0066","65e8be6d","6621cf7e","66d25cc1","66de2554","6720914b","67416472","67a72feb","67e5ceec","67f6e685","68398741","6933b59f","694168cc","69a79f7e","69fd3fce","6aa43fdb","6aebe02b","6c59c2a9","6c9db81f","6d7ec49e","6debc3f5","6e0dcab8","6e756c0b","6f89d1ff","6f8ba7cb","6ff7440c","7009431f","7050e6f4","7055ba5f","70e01ec4","70f847d9","7203d60f","725d7215","737b76f4","738baf53","7407a4a0","741da553","749a2c98","753db5e7","75bb0358","7609e99b","761161de","761391c0","76b5bca3","76f4884b","76fa10d9","7828a126","7862d6ac","790ed501","7937c176","7957e6a0","7ad59f92","7b9f35aa","7c8d9f71","7d178a1a","7d30c30b","7d3af5a4","7dbf931f","7dc4c36d","7e5cc60e","7eab6725","7f343d1f","7f64cde8","7fc820e5","80451c8a","80cc88a1","813242ea","81ba7758","82288bc8","8279b6fa","8368f4f3","839c59ee","8401692d","84cfd18d","86b57f32","86df1a00","872d3437","87add592","87f06117","87fd4d5d","880ce8ac","88815a25","888bd281","88ac7c16","891d32c9","89ae32cb","89bea96f","8a1553d2","8ae9c700","8b4583fb","8bd56b50","8bdfa867","8c1a25c8","8cf1868c","8d46e90f","8d7a4b82","8edc64e0","8f9384cc","8fb89a4a","8fc2bc60","903a9097","90b09182","90fe763f","9147afff","92441ab8","92bb808d","92d5d9c6","931680a2","93bb9f6c","93c3afee","947fdaa3","9493262f","949d16d2","950797e6","95b417f7","967aef7f","9683f95b","96ae549b","976aa621","985aecdf","9875128c","9a90dd9a","9ac0b441","9b3a4f3a","9b51f50d","9bbe66c4","9c5a7cc0","9cc3c648","9d885a75","9d930e47","9e8bed6e","a0175f63","a15b90c1","a16570d4","a19572b4","a210a877","a217ef43","a23d8ff9","a24a96c1","a2aa5acd","a36fa0e0","a39e57cb","a3b65f14","a4377a84","a43da09b","a53d354c","a596c1ec","a5ce6391","a676450e","a693374d","a73429a6","a75bd1a2","a7bd77ec","a7c8a01d","a7d309f7","a8b0283d","a8dc3c43","a92fd6c3","a94d979b","a98dea5e","a9c443e3","a9fdaab3","aa030d1d","aa4f4182","aa5e9fd1","aa647b38","aa8dc0c9","aab59164","abc00ac6","abe8b550","ac2410bc","ac43efbb","ac45d6e8","ac7a9192","acf804cc","ad5c3258","adccc2ac","adce6fc7","ae29ff19","ae677ff4","aea0ec60","b0024b09","b09cab2a","b1dd800f","b28c06c5","b2cfcffc","b4c28760","b4e54c5c","b6090bb0","b70e7308","b7b25faa","b7c3233a","b8f7064f","b8fc8e51","b9b635e7","ba284be7","ba7041ba","bad1bd2c","bb5025da","bb99a472","bbd75d0c","bc0b3217","bc1a1dfa","bc6e8441","bc94c353","bc98a319","bccf7ab8","bce5d330","bd30663b","bd362352","bd6833c3","bd801dea","bddd6f4c","be4216a1","bebe32a5","bf557b9a","bf7b9f2b","c02a0621","c02fc729","c04c90f8","c0afaa8d","c0ba34c8","c1de3769","c25dca0e","c2c3605b","c310de17","c3b32ca1","c3f7be4b","c4a11489","c4b57975","c4d7663f","c4eebf5d","c524d503","c54432b3","c5e036cd","c672d068","c6dc4c2f","c6e438b3","c71ecb5b","c7e52dc7","c7e7bf40","c81774c1","c85c0f77","c8bce0d6","c8eaf68b","c8f05475","c94d6fdb","c97fa8d1","c9be70d9","c9da7d2a","c9e7a824","ca2ae028","cb045612","cb65a61f","cc66dcdf","cdc1f911","cdc6c42c","cdd6e0f1","ce3fa5af","ce49ceda","cf0db587","cf2e5136","cf4baeb1","cf589373","d0739549","d12e70f9","d1a82f4b","d31a3e5f","d370ad7f","d39ea837","d412e7fd","d51c5f67","d5b5684c","d6fb0abb","d7cf3c42","d7d19e37","d8502c9d","d90bcde0","d91ac09c","d944186f","d9473f7b","d98c82bc","da74e3c6","daabf41b","dafcef35","db7758d8","dbb9d0af","dbff55f7","dc1cb5a6","dcd935cf","dd220911","dd2ab969","dd42a7ec","ddbce3db","dded4ad8","de1e0c92","de2f7c34","de9c5a8b","dffed9b6","e01d5a2d","e0896292","e0bd9aa2","e0c4d2b8","e0e69105","e11d47c0","e17d0c8d","e2234cdd","e22c2880","e242d461","e2733b9d","e2b41f2c","e2cfd9a4","e4a4ef9e","e4e2f04c","e4ed5274","e5438a31","e563ae9b","e58ae276","e6b1500a","e6b97d5c","e6be49dd","e6f11e53","e6f3f71b","e751b824","e7806607","e7ae0ba7","e8d25503","e8e36d38","e9322fa9","e979f157","e9c95d39","ea0fef4f","eb78793d","ecdd37e4","ecf6f4fe","ed2559ad","ee252d45","ee796472","ef3248db","ef8a7db2","f0036f49","f04bf670","f06efd49","f0eec9bc","f12e794f","f1351371","f27c809a","f299ad9e","f3dca9cc","f4004fba","f46a9c60","f47a4a18","f4ce2ab4","f5022182","f50c9260","f53b8d8f","f53d8764","f5958d62","f5efd637","f609d930","f7951700","fb3a26f8","fb41d082","fc7b0451","fc821b39","fc8f4cc0","fcbc738b","fcda3979","fce4011f","fdbce9ca","fe67fe01","fea01f79","ff154e89","ffb18aea","ffd98e76"]);
+const VOICE_KEYS = new Set(["010d6bf4","01179b9f","015c1ed7","01f16448","022414c3","030d78d8","0356c494","038653d6","03a71232","03e00ab3","0413f758","048f5a9b","04d6f13a","0541a0ae","05c2af6e","0615d054","069d008c","07148945","077442dc","0781932f","07e63f63","07ece5b0","0806d6ba","093a9ec1","0971bf18","09db8e8e","0a10ae1d","0ad5eeae","0b01dc7d","0b52c302","0bd13a52","0c3d144b","0d0507aa","0f89f3fb","0f92ae40","0fcaa15f","101e3d34","10874241","11089f69","11b567d0","1203f690","135dd8df","13a6f4ed","141c2ad0","143f889f","14da008f","15215560","15463f23","154a4667","154f0f6b","159747cd","15c6108d","15ee7985","15ef9c89","15f977f7","15fce4ab","16d899b6","16f0d05f","172a58f5","1782deda","17f36b40","17f370f3","185f5690","186b75d7","18d0f814","192b7679","19888f23","1a49f03e","1aea659e","1b1d3c87","1b5fc1ee","1b9105eb","1ca1c615","1cd6166b","1ce574c1","1d2e24a7","1dee4d82","1e0d175a","1e69b87f","1ee40405","1f00356a","1f72d942","1f9c65a8","1fbc1e71","1fc1d5bf","20eb8117","20ef5590","21636e7c","21a8be6a","21eeed83","22045fbb","22edc9dd","23468097","24679c6d","2569a72c","258ef3a7","26b61cf7","26e3ee84","2708e3b1","277cddb4","27957cbc","28c84d22","2921d7b0","2942d3b6","297020fe","298185f4","29bdbaac","2a6b3376","2aacbf88","2aaec826","2af07a80","2b13e113","2b3bc5a5","2b858327","2ba57dad","2bd90c2b","2c4cdf4e","2cd97c67","2d14cc7d","2d7e1fae","2da7fd5e","2f9ef7b7","2ff77e4b","30a56dc6","3176a309","31bdc4d2","31d0d874","327227c5","328c0cb9","32f81ba8","32ff2ee3","33191bde","34c315be","34da365b","3551e61b","355f1381","359bca3b","35c656ff","35cce5dc","35f96d12","3644ebcf","364d4e10","374eaca6","39831b98","3a1787de","3a21bc56","3a26711f","3a39f26a","3a5dac7c","3a6b2ab9","3a8f1c76","3a949481","3b66898d","3b96d2f8","3be9da67","3c89ebfc","3cef2872","3de62e37","3de8c3eb","3e6da6b8","3f3eeafd","3f855fbe","3faec876","404b3aaa","40540d39","41a65833","41aea321","41f906c4","42296db7","42aa5e31","42fd12f1","43127e44","4404eade","4477569f","44e266fc","44f8767c","459dee7b","45bfe991","45e0acb1","46136786","46496013","464f3a22","466d4374","486b4c38","48e2c6fb","49125fbd","496de6f9","4992ce5a","49db9625","49e65a09","49ed20b2","4a3f13da","4a4555c7","4a7540d9","4b59d528","4b5ada73","4b90904c","4c0c99d7","4c12ee22","4c77b3ce","4ccb1d7a","4d60414f","4def74e1","4edce7bb","4ee2a735","4f38c893","4f9b2d67","4fedb2a4","50007dfa","5079812e","508cb713","50a8a95c","50d47300","51175898","51275280","513ca8ee","516b6704","5255d911","526e3c4f","5322baeb","53bf2ec5","552fda1b","55513084","55e218ca","56197828","566b7ae3","5697fcee","5722370c","572d6e8d","573e3c2f","5741adb3","57a4de86","57a6695b","57f392ee","583bd0da","586f3dcf","58806f9a","58a28835","58a51906","58f10ec4","591b2d48","5927c087","597fbac9","59d4f3c2","59e05407","5a136c7f","5a3dc639","5a42136b","5a659aa6","5a9383d8","5ad7f0c0","5b144473","5ba35891","5c3cab63","5d01f4ea","5d3f1a48","5d714873","5f47ca4f","5fd100b9","5ff823ed","60b21448","60e1da3b","61433a5a","619bba7c","61f35e74","624e41d5","626f0f4f","6292d8b6","62d7b114","62f4ebc8","6373d881","639281a4","63db947e","6407d9ac","649d705c","64a6faae","64ed8e8e","650e0066","65e51955","65e8be6d","6621cf7e","66d25cc1","66de2554","6720914b","67416472","67a72feb","67e5ceec","67f6e685","68398741","68ec3365","6933b59f","694168cc","69a79f7e","69e2c3fd","69fd3fce","6aa43fdb","6aebe02b","6c59c2a9","6c9db81f","6cf9f486","6d7ec49e","6debc3f5","6e0dcab8","6e1a9186","6e756c0b","6f89d1ff","6f8ba7cb","6f9f8c23","6ff7440c","7009431f","7050e6f4","7055ba5f","70d2f63f","70e01ec4","70f847d9","7203d60f","72084b04","725d7215","737b76f4","738baf53","7407a4a0","741da553","74716dfd","749a2c98","753db5e7","75831d69","75bb0358","7609e99b","761161de","761391c0","7684157d","76b5bca3","76f4884b","76fa10d9","7828a126","7836295e","7862d6ac","790ed501","7937c176","7957e6a0","7ad59f92","7afa2a23","7b981822","7b9f35aa","7c66776b","7c8d9f71","7d178a1a","7d30c30b","7d3af5a4","7dbf931f","7dc4c36d","7e5cc60e","7eab6725","7f343d1f","7f64cde8","7fc820e5","80451c8a","80cc88a1","813242ea","81ba7758","82288bc8","8279b6fa","8368f4f3","8385f42e","839c59ee","8401692d","84cfd18d","86b57f32","86df1a00","872d3437","87498df9","87add592","87f06117","87fd4d5d","880ce8ac","88815a25","888bd281","88ac7c16","891d32c9","89ae32cb","89bea96f","8a1553d2","8ae9c700","8b4583fb","8ba7a6a5","8bb3f7a6","8bd56b50","8bdfa867","8c1a25c8","8c3d3345","8cf1868c","8d46e90f","8d7a4b82","8edc64e0","8f9384cc","8fb89a4a","8fc2bc60","903a9097","9087e9ff","90b09182","90fe763f","9147afff","92441ab8","92bb808d","92d5d9c6","92e2e53d","931680a2","93bb9f6c","93c3afee","93f02394","947fdaa3","9493262f","949d16d2","950797e6","9521356d","9588a01a","95b417f7","95b9412f","967aef7f","9683f95b","96ae549b","976aa621","97ba79ac","985aecdf","9875128c","9a90dd9a","9ac0b441","9b3a4f3a","9b51f50d","9b9db8fd","9bbe66c4","9c5a7cc0","9cc3c648","9d885a75","9d930e47","9e42a9ed","9e8bed6e","a0175f63","a0f7a2c9","a15b90c1","a16570d4","a19572b4","a210a877","a217ef43","a21adf33","a23d8ff9","a24a96c1","a2aa5acd","a31d78d6","a36fa0e0","a39e57cb","a3b65f14","a420af43","a4377a84","a43da09b","a47ca343","a539a5a3","a53b2b8f","a53d354c","a596c1ec","a5ce6391","a676450e","a693374d","a6d1c371","a73429a6","a75bd1a2","a7bd77ec","a7c8a01d","a7d309f7","a8b0283d","a8dc3c43","a92fd6c3","a94d979b","a98dea5e","a9c443e3","a9fdaab3","aa030d1d","aa4f4182","aa5e9fd1","aa647b38","aa8dc0c9","aab59164","ab4687cb","abc00ac6","abdb2e86","abe8b550","ac2410bc","ac43efbb","ac45d6e8","ac7a9181","ac7a9192","acf804cc","ad5c3258","adccc2ac","adce6fc7","ae29ff19","ae677ff4","aea0ec60","b0024b09","b07b2832","b089e91b","b09cab2a","b1dd800f","b24a852b","b28c06c5","b2cfcffc","b483b706","b4c28760","b4dc6402","b4e54c5c","b6090bb0","b70e7308","b79ee854","b7b25faa","b7c3233a","b8f7064f","b8fc8e51","b9b635e7","ba284be7","ba7041ba","bad1bd2c","bb228397","bb5025da","bb99a472","bbd75d0c","bc0b3217","bc1a1dfa","bc6e8441","bc94c353","bc98a319","bccf7ab8","bce5d330","bd30663b","bd362352","bd6833c3","bd801dea","bddd6f4c","be4216a1","bebe32a5","bec74fa6","bf557b9a","bf7b9f2b","c02a0621","c02fc729","c04c90f8","c0afaa8d","c0ba34c8","c15b57d3","c1de3769","c25dca0e","c2c3605b","c310de17","c3b32ca1","c3f7be4b","c41d957e","c4a11489","c4b57975","c4bb666c","c4d7663f","c4eebf5d","c524d503","c54432b3","c5e036cd","c672d068","c6dc4c2f","c6e438b3","c7169d48","c71ecb5b","c7e52dc7","c7e7bf40","c81774c1","c85c0f77","c8bce0d6","c8eaf68b","c8f05475","c94d6fdb","c97fa8d1","c9be70d9","c9da7d2a","c9e7a824","ca2ae028","cb045612","cb65a61f","cc66dcdf","cd171163","cdc1f911","cdc6c42c","cdd6e0f1","ce3fa5af","ce49ceda","cf0db587","cf2e5136","cf4baeb1","cf589373","d0739549","d12e70f9","d16225e9","d1a82f4b","d31a3e5f","d36e405a","d370ad7f","d39ea837","d3f123ee","d412e7fd","d4e5b83c","d51c5f67","d52bf62f","d5b5684c","d6fb0abb","d7cf3c42","d7d19e37","d8502c9d","d90bcde0","d91ac09c","d944186f","d9473f7b","d98c82bc","da74e3c6","daabf41b","dafcef35","db7758d8","dbb9d0af","dbff55f7","dc1cb5a6","dcd935cf","dd220911","dd2ab969","dd42a7ec","ddbce3db","dded4ad8","de1e0c92","de2f7c34","de9c5a8b","decc0eba","dffed9b6","e01d5a2d","e0896292","e0bd9aa2","e0c4d2b8","e0e69105","e11d47c0","e17d0c8d","e2234cdd","e22c2880","e22d3b39","e242d461","e2733b9d","e2b41f2c","e2cfd9a4","e42d9829","e4a4ef9e","e4e2f04c","e4ed5274","e5438a31","e563ae9b","e58ae276","e6b1500a","e6b97d5c","e6be49dd","e6f11e53","e6f3f71b","e751b824","e7806607","e7ae0ba7","e7e155ee","e8d25503","e8e36d38","e9322fa9","e979f157","e9c95d39","ea070377","ea0fef4f","eb78793d","ecdd37e4","ecf6f4fe","ed2559ad","ee252d45","ee796472","eedc436b","ef3248db","ef8a7db2","f0036f49","f04bf670","f06efd49","f0eec9bc","f12e794f","f1351371","f27c809a","f299ad9e","f37c579f","f3dca9cc","f4004fba","f46a9c60","f47a4a18","f4ce2ab4","f5022182","f50c9260","f53b8d8f","f53d8764","f5958d62","f5bcf3e0","f5efd637","f609d930","f7951700","f8530399","f889d4ff","fb3a26f8","fb41d082","fc7b0451","fc821b39","fc8f4cc0","fcbc738b","fcda3979","fce4011f","fdbce9ca","fe67fe01","fea01f79","ff154e89","ffb18aea","ffd98e76"]);
 
 // ---- voix enregistrée, bruitages, musique ----
 const VDATA = {}, VPACK = {};
@@ -1365,6 +1374,12 @@ const SKILLS = [
    repere:"PS : content, triste, en colère. MS : la peur en plus. GS-CP : relier une émotion à une situation.", lvl:null},
   {id:"puzzle",   label:"Le puzzle", skill:"Reconstituer une image", min:5, item:null,
    repere:"PS : 4 morceaux. MS : 6 morceaux. GS : 9 morceaux. CP : 12 morceaux.", lvl:null},
+  {id:"comptines", label:"Les comptines", skill:"Dire des comptines et la suite des nombres", min:8, item:"Comptines à revoir",
+   repere:"Programme : avant 4 ans, au moins 5 comptines ; dès 4 ans, au moins 8 et la comptine des nombres jusqu'à 12 ; dès 5 ans, jusqu'à 30 et à rebours.", lvl:null},
+  {id:"labo", label:"Le labo de Dédé", skill:"Le corps, les sens et les matières", min:8, item:"Questions ratées",
+   repere:"Programme : avant 4 ans, les parties du corps et les sens ; dès 4 ans, les matières (aimant, glace qui fond, transparent, flotter).", lvl:null},
+  {id:"creole", label:"Le créole", skill:"Découvrir une langue régionale : le créole", min:8, item:"Mots à revoir",
+   repere:"Programme : entendre d'autres langues, dont les langues régionales. Ici, les premiers mots du créole réunionnais.", lvl:null},
   {id:"animaux", label:"Les animaux de l'île", skill:"Connaître les animaux de La Réunion", min:8, item:"Questions ratées",
    repere:"PS : reconnaître un animal. MS : où il vit, compter jusqu'à 5. GS-CP : compter jusqu'à 8 puis 10.", lvl:null},
   {id:"ombres",   label:"Les ombres", skill:"Reconnaître une forme (discrimination visuelle)", min:8, item:"Ombres ratées",
@@ -1597,7 +1612,7 @@ function wireTop(){
   };
 }
 
-const MENU_ID = {"couleurs": "m1", "compter": "m2", "formes": "m3", "taille": "m4", "sons": "m5", "prenom": "m6", "feu": "m7", "suites": "m8", "espace": "m9", "bus": "m10", "semaine": "m11", "lavage": "m12", "trace": "m13", "histoires": "m14", "consignes": "m15", "memoire": "m16", "emotions": "m17", "puzzle": "m18", "ombres": "m19", "monnaie": "m20", "rythme": "m21", "rue": "m22", "peinture": "m23", "labyrinthe": "m24", "tri": "m25", "meteo": "m26", "metiers": "m27", "balance": "m28", "course": "m29", "moitie": "m30", "contraires": "m31", "animaux": "m32"};
+const MENU_ID = {"couleurs": "m1", "compter": "m2", "formes": "m3", "taille": "m4", "sons": "m5", "prenom": "m6", "feu": "m7", "suites": "m8", "espace": "m9", "bus": "m10", "semaine": "m11", "lavage": "m12", "trace": "m13", "histoires": "m14", "consignes": "m15", "memoire": "m16", "emotions": "m17", "puzzle": "m18", "ombres": "m19", "monnaie": "m20", "rythme": "m21", "rue": "m22", "peinture": "m23", "labyrinthe": "m24", "tri": "m25", "meteo": "m26", "metiers": "m27", "balance": "m28", "course": "m29", "moitie": "m30", "contraires": "m31", "animaux": "m32", "comptines": "m33", "labo": "m34", "creole": "m35"};
 
 // ---- varier les jeux : un même jeu se repose après N parties dans la journée ----
 function restLimit(){ try{ const v = pdata.settings.restMin; return v === undefined ? 10 : +v; }catch(e){ return 0; } }
@@ -1790,6 +1805,84 @@ function animalGame(){
     game: "animaux", item: `${N} ${t.pl}`, next: animalGame, wait: 2600
   });
 }
+const J3 = {"rhymes": [["Un, deux, trois, nous irons au", "bois", "🌳"], ["Quatre, cinq, six, cueillir des", "cerises", "🍒"], ["Sept, huit, neuf, dans mon panier", "neuf", "🧺"], ["Une souris verte, qui courait dans l'", "herbe", "🐭"], ["Pomme de reinette et pomme d'", "api", "🍎"], ["Frère Jacques, dormez-vous ? Sonnez les matines : ding, dang,", "dong", "🔔"], ["Il était un petit", "navire", "⛵"], ["Petit escargot porte sur son dos sa", "maisonnette", "🐌"], ["Au clair de la", "lune", "🌙"], ["Savez-vous planter les", "choux", "🥬"], ["Ainsi font, font, font, les petites", "marionnettes", "🎭"], ["Lundi matin, l'empereur, sa femme et le petit", "prince", "👑"]], "sens": [["voir les couleurs", "les yeux", "👀"], ["entendre la musique", "les oreilles", "👂"], ["sentir une fleur", "le nez", "👃"], ["goûter une mangue", "la langue", "👅"], ["toucher un doudou tout doux", "les mains", "🤲"]], "corps": [["la main", "✋"], ["le pied", "🦶"], ["l'oreille", "👂"], ["l'œil", "👁️"], ["le nez", "👃"], ["les dents", "🦷"], ["la bouche", "👄"], ["le bras", "💪"]], "mat": [{"q": "Qu'est-ce qui colle à l'aimant ?", "icon": "🧲", "yes": [["le trombone", "📎"], ["la clé", "🔑"], ["la vis", "🔩"]], "no": [["le doudou", "🧸"], ["la pomme", "🍎"], ["la feuille", "🍃"], ["le crayon de bois", "✏️"]], "why": "L'aimant attire le fer : les objets en métal."}, {"q": "Qu'est-ce qui fond au soleil ?", "icon": "☀️", "yes": [["le glaçon", "🧊"], ["la glace", "🍦"]], "no": [["le caillou", "🪨"], ["la brique", "🧱"], ["la cuillère", "🥄"], ["la balle", "⚽"]], "why": "Quand il fait chaud, la glace fond et devient de l'eau."}, {"q": "À travers quoi on voit de l'autre côté ?", "icon": "🔍", "yes": [["la vitre", "🪟"], ["le verre d'eau", "🥛"]], "no": [["la brique", "🧱"], ["le carton", "📦"], ["le livre", "📕"], ["la porte", "🚪"]], "why": "Une vitre est transparente : la lumière passe à travers."}, {"q": "Qu'est-ce qui flotte sur l'eau ?", "icon": "🌊", "yes": [["le bateau", "⛵"], ["le canard en plastique", "🦆"], ["la feuille", "🍃"]], "no": [["le caillou", "🪨"], ["la clé", "🔑"], ["la cuillère", "🥄"]], "why": "Les objets légers, en bois ou en plastique, flottent souvent. Les objets lourds coulent."}], "creole": [["kaz", "kaz", "la maison", "🏠"], ["zoizo", "zoizo", "l'oiseau", "🐦"], ["soley", "solèy", "le soleil", "☀️"], ["lapli", "lapli", "la pluie", "🌧️"], ["dlo", "dlo", "l'eau", "💧"], ["loto", "loto", "la voiture", "🚗"], ["marmay", "marmaille", "les enfants", "🧒"], ["manzé", "manzé", "manger", "🍽️"], ["dalon", "dalon", "le copain", "🤝"], ["bébèt", "bébète", "la petite bête", "🐞"], ["lamèr", "la mèr", "la mer", "🌊"], ["piman", "piman", "le piment", "🌶️"], ["sitron", "sitron", "le citron", "🍋"], ["bonzour", "bonzour", "bonjour", "👋"], ["kari", "kari", "le cari", "🍛"], ["sat", "sat", "le chat", "🐱"]]};
+
+const emo = (e, cls) => `<span class="${cls || "j3emo"}" aria-hidden="true">${e}</span>`;
+// ---------- les comptines de Vroumi ----------
+let rhymeRound = 0;
+function comptineGame(){
+  const g = gradeKey(); rhymeRound++;
+  if(g !== "PS" && rhymeRound % 3 === 0){
+    const up = g === "MS" ? 12 : 30, back = g !== "MS" && Math.random() < .4;
+    const len = 5, start = back ? 5 + rnd(6) : 1 + rnd(up - len + 1);
+    const seq = Array.from({length: len}, (_, i) => back ? start - i : start + i), hole = 1 + rnd(len - 2), ans = seq[hole];
+    const opts = shuffle([ans, ...shuffle([ans - 3, ans - 2, ans + 2, ans + 3, ans + 4].filter(v => v > 0 && !seq.includes(v))).slice(0, 2)]);
+    const said = seq.map((v, i) => i === hole ? "…" : numWord(v)).join(", ");
+    return choiceRound({
+      title: back ? "La fusée compte à l'envers !" : "Quel nombre manque ?",
+      line: back ? `Vroumi compte à l'envers, comme une fusée : ${said}. Quel nombre manque ?` : `Vroumi récite la comptine des nombres : ${said}. Quel nombre manque ?`,
+      scene: `<div class="j3seq">${seq.map((v, i) => `<span class="j3n${i === hole ? " hole" : ""}">${i === hole ? "?" : v}</span>`).join("")}</div>`,
+      choices: opts.map(v => ({label: String(v), html: `<span class="aninum">${v}</span>`})),
+      isRight: i => opts[i] === ans,
+      onRight: () => `Oui ! ${seq.map(numWord).join(", ")} !`,
+      onWrong: () => "Récite les nombres avec moi, doucement, en suivant avec ton doigt.",
+      game: "comptines", item: (back ? "à l'envers " : "nombres ") + ans, next: comptineGame, wait: 3000
+    });
+  }
+  const pool = J3.rhymes, t = pick(pool), n = g === "PS" ? 2 : 3;
+  const keys = shuffle([t, ...shuffle(pool.filter(x => x !== t && x[2] !== t[2])).slice(0, n - 1)]);
+  choiceRound({
+    title: "Que dit la comptine ?", line: `Écoute la comptine : « ${t[0]}… ». Qu'est-ce qui vient après ?`,
+    scene: `<div class="j3bubble">🎵 ${esc(t[0])}…</div>`,
+    choices: keys.map(x => ({label: x[1], html: emo(x[2])})),
+    isRight: i => keys[i] === t,
+    onRight: () => `Oui ! « ${t[0]} ${t[1]} ! » Chante-la avec moi !`,
+    onWrong: () => `Écoute encore : « ${t[0]}… ». Tu connais la suite ?`,
+    game: "comptines", item: t[1], next: comptineGame, wait: 3200
+  });
+}
+// ---------- le labo de Dédé : corps, sens, matières ----------
+let laboRound = 0;
+function laboGame(){
+  const g = gradeKey(); laboRound++;
+  const mode = g === "PS" ? ["corps", "sens"][laboRound % 2] : ["sens", "mat", "corps", "mat"][laboRound % 4];
+  if(mode === "corps"){
+    const n = g === "PS" ? 3 : 4, t = pick(J3.corps), keys = shuffle([t, ...shuffle(J3.corps.filter(x => x !== t)).slice(0, n - 1)]);
+    return choiceRound({
+      title: `Où est ${t[0]} ?`, line: `Touche ${t[0]}. Et toi, montre ${t[0]} sur ton corps !`, scene: `<div class="aniscene">🧍</div>`,
+      choices: keys.map(x => ({label: x[0], html: emo(x[1])})), isRight: i => keys[i] === t,
+      onRight: () => `Bravo ! C'est ${t[0]}.`, onWrong: i => `Ça, c'est ${keys[i][0]}. Cherche ${t[0]}.`,
+      game: "labo", item: "corps : " + t[0], next: laboGame, wait: 2400
+    });
+  }
+  if(mode === "sens"){
+    const t = pick(J3.sens), n = g === "PS" ? 3 : 4, keys = shuffle([t, ...shuffle(J3.sens.filter(x => x !== t)).slice(0, n - 1)]);
+    return choiceRound({
+      title: `Pour ${t[0]} ?`, line: `Avec quoi on peut ${t[0]} ?`, scene: `<div class="aniscene">🔬</div>`,
+      choices: keys.map(x => ({label: x[1], html: emo(x[2])})), isRight: i => keys[i] === t,
+      onRight: () => `Oui ! On utilise ${t[1]} pour ${t[0]}.`, onWrong: i => `Avec ${keys[i][1]}, on peut ${keys[i][0]}. Pour ${t[0]}, cherche encore.`,
+      game: "labo", item: "sens : " + t[1], next: laboGame, wait: 2600
+    });
+  }
+  const m = pick(J3.mat), y = pick(m.yes), others = shuffle(m.no).slice(0, g === "MS" ? 2 : 3), keys = shuffle([y, ...others]);
+  choiceRound({
+    title: m.q, line: `Dédé fait une expérience. ${m.q}`, scene: `<div class="aniscene">${emo(m.icon, "j3emo xl")}</div>`,
+    choices: keys.map(x => ({label: x[0], html: emo(x[1])})), isRight: i => keys[i] === y,
+    onRight: () => `Bravo ! C'est ${y[0]}. ${m.why}`, onWrong: i => `Non, pas ${keys[i][0]}. ${m.why}`,
+    game: "labo", item: m.q.replace(/ \?$/, "") + " : " + y[0], next: laboGame, wait: 3600
+  });
+}
+// ---------- le créole avec Vroumi ----------
+function creoleGame(){
+  const g = gradeKey(), n = g === "PS" ? 2 : g === "MS" ? 3 : 4, t = pick(J3.creole), keys = shuffle([t, ...shuffle(J3.creole.filter(x => x !== t)).slice(0, n - 1)]);
+  choiceRound({
+    title: `« ${t[0]} », c'est quoi ?`, line: `En créole, on dit « ${t[1]} ». « ${t[1]} », c'est quoi ?`,
+    scene: `<div class="j3bubble">🗣️ ${esc(t[0])}</div>`,
+    choices: keys.map(x => ({label: x[2], html: emo(x[3])})), isRight: i => keys[i] === t,
+    onRight: () => `Oui ! « ${t[1]} », c'est ${t[2]} !`, onWrong: i => `Non, ça, c'est ${keys[i][2]} : en créole, « ${keys[i][1]} ». Écoute encore : « ${t[1]} ».`,
+    game: "creole", item: t[0] + " = " + t[2], next: creoleGame, wait: 2800
+  });
+}
 // ---------- menu ----------
 function menu(page){
   navSeq++;
@@ -1969,6 +2062,21 @@ function menu(page){
         Les animaux de l'île
         <small>Tortue, caméléon, paille-en-queue…</small>
       </button>
+      <button class="mode" id="m33">
+        <span class="pic"><span class="j3menu">🎵</span></span>
+        Les comptines de Vroumi
+        <small>Chante et complète les comptines</small>
+      </button>
+      <button class="mode" id="m34">
+        <span class="pic"><span class="j3menu">🧪</span></span>
+        Le labo de Dédé
+        <small>Le corps, les sens, les matières</small>
+      </button>
+      <button class="mode" id="m35">
+        <span class="pic"><span class="j3menu">🌺</span></span>
+        Le créole avec Vroumi
+        <small>Kaz, zoizo, soley…</small>
+      </button>
     </div>
     ${page === "home" && moreList.length ? `<div class="morebar"><button class="daybtn morebtn" id="more"><span><b>Encore plus de jeux</b><small>${moreList.length} autres jeux</small></span></button></div>` : ""}
     <p class="parent">Pour les parents : le jeu parle à voix haute. Montez le son et jouez avec votre enfant : nommez les couleurs, comptez ensemble avec le doigt.</p>
@@ -2015,7 +2123,10 @@ function menu(page){
   document.getElementById("m30").onclick = () => { beep("honk"); halfGame(); };
   document.getElementById("m31").onclick = () => { beep("honk"); oppositeGame(); };
   document.getElementById("m32").onclick = () => { beep("honk"); animalGame(); };
-  [["m1","couleurs"],["m2","compter"],["m3","formes"],["m4","taille"],["m5","sons"],["m6","prenom"],["m7","feu"],["m8","suites"],["m9","espace"],["m10","bus"],["m11","semaine"],["m12","lavage"],["m13","trace"],["m14","histoires"],["m15","consignes"],["m16","memoire"],["m17","emotions"],["m18","puzzle"],["m19","ombres"],["m20","monnaie"],["m21","rythme"],["m22","rue"],["m23","peinture"],["m24","labyrinthe"],["m25","tri"],["m26","meteo"],["m27","metiers"],["m28","balance"],["m29","course"],["m30","moitie"],["m31","contraires"],["m32","animaux"]].forEach(([id, g]) => {
+  document.getElementById("m33").onclick = () => { beep("honk"); comptineGame(); };
+  document.getElementById("m34").onclick = () => { beep("honk"); laboGame(); };
+  document.getElementById("m35").onclick = () => { beep("honk"); creoleGame(); };
+  [["m1","couleurs"],["m2","compter"],["m3","formes"],["m4","taille"],["m5","sons"],["m6","prenom"],["m7","feu"],["m8","suites"],["m9","espace"],["m10","bus"],["m11","semaine"],["m12","lavage"],["m13","trace"],["m14","histoires"],["m15","consignes"],["m16","memoire"],["m17","emotions"],["m18","puzzle"],["m19","ombres"],["m20","monnaie"],["m21","rythme"],["m22","rue"],["m23","peinture"],["m24","labyrinthe"],["m25","tri"],["m26","meteo"],["m27","metiers"],["m28","balance"],["m29","course"],["m30","moitie"],["m31","contraires"],["m32","animaux"],["m33","comptines"],["m34","labo"],["m35","creole"]].forEach(([id, g]) => {
     const el = document.getElementById(id), f = el.onclick;
     el.insertAdjacentHTML("afterbegin", `<span class="mstars" aria-label="${starsBy[g] || 0} étoiles">${STAR}${starsBy[g] || 0}</span>`);
     if(gameResting(g)){ el.classList.add("resting"); el.insertAdjacentHTML("beforeend", '<span class="restbadge">💤 Au repos</span>'); }
@@ -3454,6 +3565,9 @@ const DEFIS = {
   course:"Fais la course avec tes peluches et dis qui est premier, deuxième, troisième.",
   moitie:"Plie une feuille en deux, dessine une moitié de papillon et un grand dessine l'autre.",
   contraires:"Joue aux contraires avec un grand : il dit « grand », tu dis « petit » !",
+  comptines:"Chantez ensemble une comptine chaque soir, et comptez jusqu'à 12 en montant l'escalier.",
+  labo:"Faites l'expérience : un glaçon au soleil, un aimant sur le frigo, des objets dans la bassine.",
+  creole:"Dites ensemble un mot en créole chaque jour : bonzour, mersi, dalon…",
   animaux:"Dans le jardin, cherche un margouillat, un papillon ou un oiseau. Comment s'appelle-t-il ?"
 };
 function skillScore(k){
@@ -3793,7 +3907,15 @@ const TRACES = {
   boucles:   {name:"des boucles", strokes:[loops(60)]},
   petites:   {name:"des petites boucles", strokes:[loops(130)]}
 };
-const TRACE_POOL = {PS:["ligne","descente","pont","rond"], MS:["vagues","montagnes","ponts","rond","pont"], GS:["boucles","ponts","lettre","lettre"], CP:["boucles","petites","lettre","lettre"]};
+const DIGIT_STROKES = {
+  1:["M28 38 L60 0 V140"], 2:["M12 32 Q18 0 50 0 Q88 0 88 38 Q88 66 12 140 H90"],
+  3:["M14 18 Q30 0 52 0 Q86 0 86 33 Q86 66 46 68 Q90 70 90 104 Q90 140 50 140 Q24 140 10 120"],
+  4:["M66 140 V0 L8 96 H94"], 5:["M86 0 H24 L16 64 Q34 52 56 54 Q92 58 92 97 Q92 140 50 140 Q24 140 10 120"],
+  6:["M82 12 Q66 0 50 0 Q8 0 8 80 Q8 140 50 140 Q92 140 92 98 Q92 58 50 58 Q14 58 9 92"], 7:["M10 0 H90 L40 140"],
+  8:["M50 70 Q12 62 12 33 Q12 0 50 0 Q88 0 88 33 Q88 62 50 70 Q8 78 8 106 Q8 140 50 140 Q92 140 92 106 Q92 78 50 70"],
+  9:["M90 44 Q90 82 50 82 Q10 82 10 42 Q10 0 50 0 Q90 0 90 44 V96 Q90 140 50 140 Q26 140 14 124"]
+};
+const TRACE_POOL = {PS:["ligne","descente","pont","rond"], MS:["vagues","montagnes","ponts","rond","chiffre","chiffre","lettre"], GS:["boucles","ponts","lettre","lettre","chiffre"], CP:["boucles","petites","lettre","lettre"]};
 let lastTrace = "";
 function letterTrace(L){
   const s = 1.25, ox = 200 - 50 * s, oy = 130 - 70 * s;
@@ -3804,7 +3926,7 @@ function letterTrace(L){
     const out = n.map((v,i) => (i % 2 ? oy + v * s : ox + v * s).toFixed(1));
     return cmd + out.join(" ") + " ";
   });
-  return {name: `la lettre ${LETTER_SAY[L] || L}`, strokes: LETTER_STROKES[L].map(tf), letter: L};
+  return {name: `la lettre ${LETTER_SAY[L] || L}`, strokes: (LETTER_STROKES[L] || DIGIT_STROKES[L]).map(tf), letter: L};
 }
 function traceGame(){
   const g = gradeKey();
@@ -3812,6 +3934,7 @@ function traceGame(){
   lastTrace = key;
   let tr;
   if(key === "lettre"){ const letters = [...getName()].filter(l => LETTER_STROKES[l]); tr = letterTrace(pick(letters.length ? letters : ["L"])); }
+  else if(key === "chiffre"){ const d = 1 + rnd(g === "MS" ? 6 : 9); tr = letterTrace(String(d)); tr.name = `le chiffre ${numWord(d)}`; }
   else tr = TRACES[key];
   const TOL = 26;
   let stroke = 0, prog = 0, dragging = false, done = false, pts = [];
@@ -3833,7 +3956,7 @@ function traceGame(){
   const svg = document.getElementById("tsvg");
   const line = `Pose ton doigt sur la voiture et trace ${tr.name}, sans sortir de la route !`;
   say(line);
-  const T = track("trace", key === "lettre" ? "lettre " + tr.letter : tr.name);
+  const T = track("trace", key === "lettre" ? "lettre " + tr.letter : key === "chiffre" ? "chiffre " + tr.letter : tr.name);
   document.getElementById("again").onclick = () => say(line);
   const carG = favSvg().replace(/^\s*<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "");
   const doneParts = [];
@@ -5137,6 +5260,9 @@ GAMES.course     = {label:"La grande course",        run:() => raceGame()};
 GAMES.moitie     = {label:"L'autre moitié",          run:() => halfGame()};
 GAMES.contraires = {label:"Les contraires",          run:() => oppositeGame()};
 GAMES.animaux = {label:"Les animaux de l'île", run:() => animalGame()};
+GAMES.comptines = {label:"Les comptines de Vroumi", run:() => comptineGame()};
+GAMES.labo = {label:"Le labo de Dédé", run:() => laboGame()};
+GAMES.creole = {label:"Le créole avec Vroumi", run:() => creoleGame()};
 
 // ====================== AMÉLIORATIONS ======================
 // défi de la semaine
@@ -5611,13 +5737,13 @@ function carnetSvg(){
 
 // ====================== LIVRET DE SUIVI POUR LA MAÎTRESSE ======================
 const LDOM = [
-  {t:"1. Le langage oral et écrit", c:"#2f6fe4", ids:["histoires","consignes","contraires","sons","prenom","lavage","trace"]},
-  {t:"4. Les premiers outils mathématiques", c:"#ff7a2f", ids:["compter","problemes","monnaie","course","bus","formes","taille","balance","suites","moitie","memoire"]},
+  {t:"1. Le langage oral et écrit", c:"#2f6fe4", ids:["histoires","consignes","contraires","sons","prenom","lavage","trace","creole"]},
   {t:"5. Se repérer dans le temps et l'espace", c:"#0fa3b1", ids:["semaine","meteo","espace","labyrinthe"]},
-  {t:"6. Découvrir le vivant, la matière et les objets", c:"#2fb36b", ids:["animaux","tri","ombres","metiers"]},
-  {t:"3. Les activités artistiques", c:"#8e5ae8", ids:["couleurs","rythme","puzzle"]},
-  {t:"2. Les activités physiques", c:"#f4a300", ids:["feu"]},
-  {t:"Vivre ensemble (dans tous les domaines)", c:"#e63946", ids:["emotions","rue"]}
+  {t:"Vivre ensemble (dans tous les domaines)", c:"#e63946", ids:["emotions","rue"]},
+  {t:"4. Les premiers outils mathématiques", c:"#ff7a2f", ids:["compter","problemes","monnaie","course","bus","formes","taille","balance","suites","moitie","memoire"]},
+  {t:"6. Découvrir le vivant, la matière et les objets", c:"#2fb36b", ids:["animaux","labo","tri","ombres","metiers"]},
+  {t:"3. Les activités artistiques", c:"#8e5ae8", ids:["comptines","couleurs","rythme","puzzle"]},
+  {t:"2. Les activités physiques", c:"#f4a300", ids:["feu"]}
 ];
 const LCOL = {g:"#2fb36b", m:"#ff9f1c", l:"#e85d5d", n:"#b8c0d0"};
 const LTXT = {g:"Acquis", m:"En cours d'acquisition", l:"À renforcer", n:"Pas encore observé"};
@@ -5648,7 +5774,7 @@ function livretPage(doms, page, info){
   let y = page === 1 ? 462 : page === 3 ? 170 : 150, body = "";
   const nRows = doms.reduce((a, d) => a + d.ids.filter(id => SKILLS.some(k => k.id === id)).length, 0);
   const used = doms.length * 90 + nRows * 56 + 0, room = (H - 120) - y - used;
-  const pitch = 56 + Math.max(0, Math.min(18, room / Math.max(1, nRows + doms.length)));
+  const pitch = 56 + Math.max(-8, Math.min(18, room / Math.max(1, nRows + doms.length)));
   doms.forEach(d => {
     body += `<rect x="90" y="${y - 44}" width="${W - 180}" height="58" rx="16" fill="${d.c}"/><text x="120" y="${y - 6}" font-size="29" font-weight="800" fill="#fff">${X(d.t)}</text>`;
     y += 60;
@@ -5689,7 +5815,7 @@ function livretPage(doms, page, info){
     ${head}${body}${foot}
     <text x="${W / 2}" y="${H - 64}" font-size="20" text-anchor="middle" fill="#8a94a8">Page ${page}/3</text></svg>`;
 }
-function livretPages(){ const info = livretInfo(); return [livretPage(LDOM.slice(0, 2), 1, info), livretPage(LDOM.slice(2), 2, info), livretPage([], 3, info)]; }
+function livretPages(){ const info = livretInfo(); return [livretPage(LDOM.slice(0, 3), 1, info), livretPage(LDOM.slice(3), 2, info), livretPage([], 3, info)]; }
 function svgToJpeg(svgText, w, h){
   return new Promise((res, rej) => { const img = new Image();
     img.onload = () => { const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0, w, h); c.toBlob(b => b ? res(b) : rej(new Error("jpg")), "image/jpeg", .9); };
