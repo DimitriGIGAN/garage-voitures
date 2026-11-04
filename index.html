@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 <title>Le Garage des Petites Voitures</title>
+<script>document.documentElement.lang = "fr";</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;800&display=swap">
@@ -914,6 +915,22 @@ html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 .party .row svg:nth-child(2){animation-delay:.15s}.party .row svg:nth-child(3){animation-delay:.3s}
 .big{font:800 1.4rem var(--display);background:var(--accent);color:#fff;border:4px solid var(--ink);border-radius:999px;padding:12px 28px;cursor:pointer;box-shadow:0 5px 0 var(--ink)}
 .parent{font-size:.9rem;color:var(--soft);text-align:center;margin:14px auto 10px;max-width:60ch}
+/* --- audit UX nov. 2026 --- */
+.homeextras{margin-top:22px}
+.has-bg .sub,.has-bg .parent{width:fit-content;max-width:min(92vw,60ch);margin-left:auto;margin-right:auto;padding:5px 16px;border-radius:999px;background:rgba(255,255,255,.86);color:var(--ink);text-shadow:none}
+.has-bg .parent{border-radius:16px;font-weight:700}
+.has-bg.c-nuit .sub,.has-bg.c-nuit .parent{background:rgba(15,22,48,.72);color:#fff;text-shadow:none}
+.daybtn,.big{background:#c84f0c}
+.gchk input{width:28px;height:28px;flex:none;accent-color:var(--ink)}
+@media (max-width:560px){
+  .homebar{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:420px;margin-left:auto;margin-right:auto}
+  .homebar .daybtn{grid-column:1/-1;justify-content:center}
+  .homebar .garbtn{margin:0;width:100%;padding-left:6px;padding-right:6px;font-size:.88rem;white-space:nowrap}
+  .has-bg .sub{font-size:1rem;border-radius:18px}
+  .homebar .ilebadge{top:-12px;right:-4px;width:22px;height:22px;font-size:.8rem;line-height:16px}
+  .homebar #ilebtn:last-child:nth-child(even){grid-column:1/-1}
+}
+
 @keyframes shake{20%{transform:translateX(-10px) rotate(-3deg)}40%{transform:translateX(10px) rotate(3deg)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
 @keyframes drive{from{transform:translateX(-120vw)}to{transform:none}}
 @keyframes leave{to{transform:translateY(-40px) scale(.4);opacity:0}}
@@ -2003,14 +2020,14 @@ function menu(page){
     <h1>${page === "home" ? "Le Garage des Petites Voitures" : "Encore plus de jeux"}</h1>
     <p class="sub">${page === "home" ? `Tes ${hasA("attention") ? 4 : 6} jeux du jour · ${grade().label}` : "Choisis un jeu !"}</p>
     ${limitReached() ? `<p class="closedbanner">Le garage est fermé pour aujourd'hui. À demain !</p>` : ""}
-    ${page === "home" ? `<div class="daybar">
+    ${page === "home" ? `<div class="daybar homebar">
       <button class="daybtn" id="day"><span class="dcar">${favSvg()}</span><span><b>Ma journée</b><small>${pdata.sessions[today()] ? "Déjà faite aujourd'hui · Rejouer" : "3 jeux choisis pour toi"}</small></span></button>
       ${duo ? `<button class="iconbtn garbtn" id="duo">À deux avec ${esc(duo.other)} · Arrêter</button>` : `<button class="iconbtn garbtn" id="duo">Jouer à deux</button>`}
       <button class="iconbtn garbtn" id="garage">Mon garage · ${carList().filter(c => pdata.earned >= c.cost).length}/${carList().length}</button>
       <button class="iconbtn garbtn" id="albbtn">📒 Mon album · ${(() => { try{ stkInit(); return pdata.stk.length; }catch(e){ return 0; } })()}/${ALB.length}${stkWaiting() ? '<span class="ilebadge" aria-label="nouvel autocollant">!</span>' : ""}</button>
       <button class="iconbtn garbtn" id="jukebtn">🎵 Mes chansons</button>
       <button class="iconbtn garbtn" id="ilebtn">🗺️ Mon tour de l'île${ileWaiting() ? '<span class="ilebadge" aria-label="nouveau voyage">!</span>' : ""}</button>
-    </div>${scheduleHtml()}${feteBanner()}${challengeHtml()}${riddleHtml()}${photoHtml()}` : `<div class="daybar"><button class="iconbtn garbtn" id="backhome">⟵ Mes 6 jeux du jour</button></div>`}
+    </div>${feteBanner()}<div class="homeextras">${scheduleHtml()}${challengeHtml()}${riddleHtml()}${photoHtml()}</div>` : `<div class="daybar"><button class="iconbtn garbtn" id="backhome">⟵ Mes 6 jeux du jour</button></div>`}
     <div class="menu">
       <button class="mode" id="m1">
         <span class="pic">${car("#e63946")}${car("#2f6fe4")}</span>
@@ -2191,6 +2208,7 @@ function menu(page){
     ${page === "home" && moreList.length ? `<div class="morebar"><button class="daybtn morebtn" id="more"><span><b>Encore plus de jeux</b><small>${moreList.length} autres jeux</small></span></button></div>` : ""}
     <p class="parent">Pour les parents : le jeu parle à voix haute. Montez le son et jouez avec votre enfant : nommez les couleurs, comptez ensemble avec le doigt.</p>
     <div class="parent-entry"><button class="iconbtn" id="parents">Espace parents : voir le bilan</button></div>`;
+  { const hx = app.querySelector(".homeextras"), mn = app.querySelector(".menu"); if(hx && mn) mn.after(hx); }
   wireTop();
   document.getElementById("parents").onclick = parentGate;
   const on = (id, fn) => { const e = document.getElementById(id); if(e) e.onclick = fn; };
