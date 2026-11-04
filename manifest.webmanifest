@@ -1,0 +1,16 @@
+{
+  "name": "Le Garage des Petites Voitures",
+  "short_name": "Garage",
+  "description": "Jeux éducatifs pour la maternelle, avec Vroumi.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#8fd0f5",
+  "theme_color": "#1f2a44",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

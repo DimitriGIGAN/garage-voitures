@@ -1,6 +1,14 @@
 <meta charset="utf-8">
 <title>Le Garage des Petites Voitures</title>
 <script>document.documentElement.lang = "fr";</script>
+<script>
+// Appli installable : seulement sur le site GitHub Pages (pas dans l'aperçu Claude)
+if(/\.github\.io$/.test(location.hostname)){
+  [["manifest","manifest.webmanifest"],["apple-touch-icon","icon-180.png"],["icon","icon-192.png"]].forEach(([r, h]) => { const l = document.createElement("link"); l.rel = r; l.href = h; document.head.appendChild(l); });
+  [["apple-mobile-web-app-capable","yes"],["mobile-web-app-capable","yes"],["apple-mobile-web-app-title","Garage"],["theme-color","#1f2a44"]].forEach(([n, c]) => { const m = document.createElement("meta"); m.name = n; m.content = c; document.head.appendChild(m); });
+  if("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
+</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;800&display=swap">
@@ -932,6 +940,41 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
   .iconbtn,.mode,.ans,.daybtn,.big{transition-duration:.01s!important}
   .mode:hover,.ans:hover,.iconbtn:hover,.daybtn:hover,.big:hover{transform:none}
 }
+/* --- maison, voix, intro --- */
+.phome{background:#fff7e8;border-radius:14px;padding:8px 12px;margin:8px 0;font-size:.95rem;text-wrap:pretty}
+.phomecard h3,.pvcard h3{margin:0 0 4px}
+.cremind{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;background:#e9f7ff;border:3px solid var(--ink);border-radius:20px;padding:10px 14px;margin:10px auto;max-width:640px;font-weight:700}
+.pvrow{display:flex;align-items:center;gap:10px;justify-content:center;margin:6px 0;font-weight:800}
+.pvrow .iconbtn{min-width:52px}
+.pvfile{display:inline-flex;align-items:center}
+.pvon{animation:ilepulse 1s ease-in-out infinite}
+.intro{position:fixed;inset:0;z-index:90;overflow:hidden;cursor:pointer;background:linear-gradient(#8fd0f5,#cdeeff 60%);transition:opacity .45s ease,transform .45s ease}
+.intro.iout{opacity:0;transform:scale(1.04)}
+.isun{position:absolute;right:12%;top:9%;width:min(18vw,130px);aspect-ratio:1;border-radius:50%;background:#ffd84a;box-shadow:0 0 0 14px rgba(255,216,74,.3);animation:isun 7s ease-in-out both}
+.icl{position:absolute;height:min(9vw,60px);width:min(26vw,190px);background:#fff;border-radius:999px;opacity:.95;animation:icloud 9s linear both}
+.icl::before{content:"";position:absolute;left:22%;bottom:40%;width:45%;height:120%;background:#fff;border-radius:50%}
+.icl.c1{top:12%;left:-30%}.icl.c2{top:25%;left:-50%;animation-duration:12s;transform:scale(.7)}.icl.c3{top:6%;left:-70%;animation-duration:10s}
+.ihill{position:absolute;bottom:22%;border-radius:50% 50% 0 0;background:#7cc96a}
+.ihill.h1{left:-10%;width:70%;height:34%;background:#6dbb5c}.ihill.h2{right:-12%;width:75%;height:28%}
+.iroad{position:absolute;left:0;right:0;bottom:0;height:24%;background:#3b4257;border-top:6px solid #1f2a44}
+.iroad i{position:absolute;left:0;right:0;top:46%;height:8px;background:repeating-linear-gradient(90deg,#ffd84a 0 60px,transparent 60px 120px);animation:iroad .6s linear infinite}
+.ivr{position:absolute;bottom:10%;width:min(36vw,300px);left:50%;transform:translateX(-50%);animation:ivr 2.2s cubic-bezier(.2,.9,.3,1.15) both,ibob .5s ease-in-out 2.2s infinite alternate}
+.idd{position:absolute;bottom:9%;width:min(18vw,150px);left:16%;animation:idd 2.6s cubic-bezier(.2,.9,.3,1.1) .9s both,ibob .45s ease-in-out 3.5s infinite alternate}
+.ititle{position:absolute;top:16%;left:0;right:0;text-align:center;color:var(--ink);animation:ititle .6s cubic-bezier(.2,.9,.3,1.4) 2.3s both}
+.ititle b{display:block;font:800 clamp(2.2rem,8vw,4.6rem)/1 var(--display);text-shadow:0 4px 0 #fff}
+.ititle span{display:inline-block;margin-top:10px;font:800 clamp(1.1rem,3.6vw,1.8rem) var(--display);background:#fff;border:4px solid var(--ink);border-radius:999px;padding:6px 20px;box-shadow:0 5px 0 var(--ink)}
+.istars i{position:absolute;font-style:normal;color:#ffc93c;font-size:clamp(1.6rem,5vw,3rem);text-shadow:0 3px 0 var(--ink);opacity:0;animation:istar 1.4s ease-out both}
+.istars i:nth-child(1){left:18%;top:44%;animation-delay:2.4s}.istars i:nth-child(2){left:76%;top:40%;animation-delay:2.6s}.istars i:nth-child(3){left:30%;top:8%;animation-delay:2.8s}
+.istars i:nth-child(4){left:62%;top:10%;animation-delay:3s}.istars i:nth-child(5){left:8%;top:22%;animation-delay:3.3s}.istars i:nth-child(6){left:88%;top:24%;animation-delay:3.5s}.istars i:nth-child(7){left:48%;top:36%;animation-delay:3.8s}
+.iskip{position:absolute;right:16px;bottom:16px;z-index:2}
+@keyframes ivr{from{transform:translateX(-50%) translateX(-90vw) rotate(-4deg)}70%{transform:translateX(-50%) translateX(3vw) rotate(3deg)}to{transform:translateX(-50%)}}
+@keyframes idd{from{transform:translateX(-80vw)}to{transform:none}}
+@keyframes ibob{to{translate:0 -8px}}
+@keyframes iroad{to{background-position:-120px 0}}
+@keyframes icloud{to{translate:180vw 0}}
+@keyframes isun{from{transform:translateY(60px) scale(.6);opacity:0}30%{transform:none;opacity:1}}
+@keyframes ititle{from{transform:scale(.3);opacity:0}}
+@keyframes istar{0%{opacity:0;transform:scale(.2) rotate(-40deg)}40%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:scale(.9) translateY(-30px) rotate(20deg)}}
 /* --- audit UX nov. 2026 --- */
 .homeextras{margin-top:22px}
 .has-bg .sub,.has-bg .parent{width:fit-content;max-width:min(92vw,60ch);margin-left:auto;margin-right:auto;padding:5px 16px;border-radius:999px;background:rgba(255,255,255,.86);color:var(--ink);text-shadow:none}
@@ -1552,6 +1595,8 @@ function parentPage(){
     <div class="pwrap">
       <h2 class="ptitle">Bilan de ${displayName()}</h2>
       ${weekSummaryHtml()}
+      ${carnetReminderHtml()}
+      ${homeActHtml()}
       <div class="pactions"><button class="iconbtn" id="classv">Tous les enfants · gérer les profils</button><button class="iconbtn" id="carnet">📘 Carnet de route du mois</button><button class="iconbtn" id="livret">🎓 Livret pour la maîtresse</button></div>
       <div class="addrow gradeline"><label for="pgrade" class="glab">Classe de ${displayName()}</label>${gradeSelect("pgrade", gradeKey())}</div>
       <p class="pnote">Les jeux commencent au niveau de cette classe, puis deviennent plus difficiles quand ${displayName()} réussit bien.</p>
@@ -1571,11 +1616,14 @@ function parentPage(){
             </dl>
             ${sparkHtml(g)}
             ${m ? `<p class="pmiss"><b>${sk.item} :</b> ${m}</p>` : ""}` : `<p class="pmiss">Pas encore joué.</p>`}
+            ${HOME_ACT[sk.id] && (v.cls === "l" || v.cls === "m") ? `<p class="phome">🏠 <b>À la maison :</b> ${HOME_ACT[sk.id]}</p>` : ""}
             <p class="prep">Repère : ${sk.repere}</p>
           </section>`;
         }).join("")}
       </div>
       <p class="pnote">« Acquis » = au moins 80 % de réussite du premier coup, après assez de parties. « En cours » = 50 à 79 %. « À travailler » = moins de 50 %.</p>
+      ${pvHtml()}
+      ${installHtml()}
       ${settingsHtml()}${a11ySettingsHtml()}
       ${syncHtml()}
       <div class="pactions">
@@ -1612,6 +1660,8 @@ function parentPage(){
   wireSync();
   document.getElementById("classv").onclick = classView;
   document.getElementById("carnet").onclick = () => carnetScreen();
+  const crm = document.getElementById("crem"); if(crm) crm.onclick = () => carnetScreen(true);
+  pvWire(); installWire();
   document.getElementById("livret").onclick = () => livretScreen();
   document.getElementById("pgrade").onchange = e => { curProfile().grade = e.target.value; curProfile().gradeYear = schoolYear(); saveProfiles(); loadProfile(curProfile().id); parentPage(); };
 }
@@ -2226,6 +2276,7 @@ function menu(page){
     <p class="parent">Pour les parents : le jeu parle à voix haute. Montez le son et jouez avec votre enfant : nommez les couleurs, comptez ensemble avec le doigt.</p>
     <div class="parent-entry"><button class="iconbtn" id="parents">Espace parents : voir le bilan</button></div>`;
   { const hx = app.querySelector(".homeextras"), mn = app.querySelector(".menu"); if(hx && mn) mn.after(hx); }
+  if(page === "home" && introWanted()) window.setTimeout(introShow, 250);
   wireTop();
   document.getElementById("parents").onclick = parentGate;
   const on = (id, fn) => { const e = document.getElementById(id); if(e) e.onclick = fn; };
@@ -2934,6 +2985,7 @@ function celebrate(next){
   if(md && (pm || u)) pendingMedal = true;
   const partyAdd = !pc && !lv && !md && !pm && !u;
   if(partyAdd && duoOK()){ const g0 = sayGen + 1; window.setTimeout(() => { if(sayGen === g0 && document.body.contains(d)) say(pick(DUO.party)); }, 3200); }
+  parentCheer(d);
   say(pc ? pc.say : lv ? `Bravo ! Tu passes au niveau supérieur dans ${GAMES[lv.game].label} !` : md && !pm && !u ? "Bravo ! Tu as réussi le défi de la semaine. Voici ta médaille !" : pm ? `Bravo ! Tu as gagné ton permis de conduire : ${pm.label} !` : u ? `Bravo ! Tu as gagné une nouvelle voiture : ${u.name} !` : `Tut tut ! Bravo, tu as gagné ${shownStars()} étoiles !`);
   d.querySelector("#go").onclick = () => { d.remove(); next(); };
   d.querySelector("#go").focus();
@@ -5915,8 +5967,8 @@ function companionHtml(){
 }
 const VTALK = ["Tut tut ! Je suis content de te voir !", "Tu sais quoi ? Tu deviens très fort !", "On fait la course ? Vroum vroum !", "Merci de prendre soin de moi !", "J'adore quand on joue ensemble !", "Je grandis grâce à tes étoiles !", "J'adore quand tu trouves la bonne réponse !", "On fait encore un jeu ?", "Tu veux voir mon garage ?", "Vroum vroum, je suis prêt !", "Tu es mon meilleur copain !", "Attention, j'arrive ! Tut tut !", "J'ai trop hâte de gagner une nouvelle voiture !", "Merci de jouer avec moi !", "Hi hi, ça chatouille !", "Regarde, je fais un petit saut !"];
 // ---- 5. Le carnet de route du mois (image à garder ou imprimer) ----
-function carnetSvg(){
-  const d = new Date(), month = MOIS[d.getMonth()] + " " + d.getFullYear(), pre = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+function carnetSvg(prev){
+  const d = prev ? new Date(new Date().getFullYear(), new Date().getMonth() - 1, 15) : new Date(), month = MOIS[d.getMonth()] + " " + d.getFullYear(), pre = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
   const rows = SKILLS.map(sk => { const g = stats[sk.id]; let r = 0, f = 0; Object.entries((g && g.days) || {}).forEach(([k, v]) => { if(k.startsWith(pre)){ r += v[0]; f += v[1]; } }); return {sk, r, f, p: r ? f / r : 0}; }).filter(x => x.r >= 3).sort((a, b) => b.r - a.r).slice(0, 8);
   const permits = SKILLS.filter(sk => pdata.permits && pdata.permits[sk.id]).map(sk => sk.label);
   const days = Object.keys(pdata.time || {}).filter(k => k.startsWith(pre)), mins = Math.round(days.reduce((a, k) => a + (pdata.time[k] || 0), 0) / 60);
@@ -6102,19 +6154,145 @@ async function saveFile(name, blob){
   if(dl){ try{ await dl.save({filename: name, data: blob}); return; }catch(err){ if(err && err.code === "declined") throw err; } }
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
 }
-function carnetScreen(){
+// ---------- Activités à faire à la maison ----------
+const HOME_ACT = {"couleurs": "Pendant le rangement, demandez-lui de mettre ensemble tous les jouets rouges, puis tous les bleus.", "compter": "Au goûter, comptez ensemble les biscuits en touchant chacun du doigt. « Il y en a combien ? »", "problemes": "Avec 5 petites voitures : « J'en ai 3, j'en ajoute 1, combien maintenant ? » Puis on en retire une.", "formes": "Cherchez les ronds, les carrés et les triangles dans la maison : assiette, fenêtre, part de pizza…", "taille": "Rangez 4 chaussures de la famille de la plus petite à la plus grande.", "sons": "Les yeux fermés, il écoute : clés, porte, robinet, voiture dehors. Il devine ce que c'est.", "prenom": "Écrivez son prénom en grosses lettres. Il cherche les mêmes lettres sur les boîtes de céréales ou les plaques.", "suites": "Faites un collier de pâtes : une grosse, une petite, une grosse… Il continue la suite.", "espace": "Cachez un jouet et guidez-le avec des mots : devant, derrière, sur, sous, à côté.", "bus": "Avec des peluches dans un « bus » en carton : 2 montent, 1 descend. Combien dans le bus ?", "semaine": "Chaque matin, dites ensemble le jour qu'on est, puis celui d'hier et de demain.", "lavage": "Il vous aide à mettre la table dans l'ordre : assiette, fourchette, verre. Laissez-le dire l'ordre.", "trace": "Dans un plateau de farine ou de sable, il trace des routes avec le doigt, puis des chiffres.", "histoires": "Après une histoire, posez une question : « Qui ? Où ? Et après, qu'est-ce qui s'est passé ? »", "consignes": "Jeu de Jacques a dit avec 2 consignes : « Touche ton nez puis saute. »", "memoire": "Posez 3 objets sur la table, cachez-en un avec un torchon. Lequel a disparu ?", "emotions": "Faites des grimaces à tour de rôle : content, triste, en colère, surpris. L'autre devine.", "puzzle": "Découpez une image de magazine en 4 morceaux. Il la reconstitue.", "comptines": "Chantez une comptine dans la voiture et laissez-le finir chaque phrase.", "labo": "Dans la cuisine : qu'est-ce qui flotte dans l'eau ? Un bouchon, une cuillère, une feuille…", "creole": "Dites un mot créole par jour pendant le repas : « manzé », « dlo », « marmay »… Il le répète.", "animaux": "Au jardin ou au marché, cherchez un animal et demandez : il vit dans la mer ou sur la terre ?", "ombres": "Le soir, faites des ombres avec les mains et une lampe. Il devine l'animal.", "monnaie": "Jouez à la marchande avec de vraies pièces de 1 € et 2 € : un fruit coûte 3 €, il paie.", "rythme": "Tapez un rythme dans les mains (lent-lent-vite-vite). Il le refait. Puis c'est lui qui invente.", "rue": "À chaque passage piéton, c'est lui qui dit quand on peut traverser et regarde des deux côtés.", "labyrinthe": "Tracez un petit chemin à la craie ou au scotch par terre. Il le suit sans sortir.", "tri": "Il vous aide à trier les déchets de la cuisine : emballages, verre, épluchures.", "meteo": "Le matin à la fenêtre : il fait quel temps ? Quels habits on met ?", "metiers": "En voiture, montrez les véhicules : qui conduit le camion poubelle, l'ambulance, le bus ?", "balance": "Une pomme dans chaque main : laquelle est la plus lourde ? Vérifiez sur la balance de cuisine.", "course": "Alignez 4 peluches pour une course : qui est premier, deuxième, dernier ?", "moitie": "Coupez un fruit en deux devant lui, mélangez les moitiés de 2 fruits et il les rassemble.", "contraires": "Jeu des contraires pendant le bain : chaud ou froid ? Plein ou vide ? Mouillé ou sec ?", "feu": "Jeu « 1, 2, 3, soleil » ou « feu rouge, feu vert » en courant dans le jardin."};
+function homeActHtml(){
+  const weak = SKILLS.map(sk => ({sk, g: stats[sk.id], v: verdict(sk, stats[sk.id])})).filter(x => HOME_ACT[x.sk.id] && (x.v.cls === "l" || x.v.cls === "m"))
+    .sort((a, b) => (a.g.first / a.g.rounds) - (b.g.first / b.g.rounds)).slice(0, 2);
+  if(!weak.length) return "";
+  return `<section class="pcard phomecard"><h3>🏠 Cette semaine, à la maison</h3><p class="pnote">5 minutes, sans écran, pour aider ${esc(displayName())} là où ça coince encore.</p>
+    ${weak.map(x => `<p class="phome"><b>${x.sk.label} :</b> ${HOME_ACT[x.sk.id]}</p>`).join("")}</section>`;
+}
+// ---------- Rappel du carnet en début de mois ----------
+function carnetReminderHtml(){
+  const n = new Date(); if(n.getDate() > 10) return "";
+  const p = new Date(n.getFullYear(), n.getMonth() - 1, 15), key = `carnet-de-route-${cleanName(displayName()).toLowerCase()}-${p.getFullYear()}-${String(p.getMonth() + 1).padStart(2, "0")}`;
+  if(pdata.carnetSeen === key) return "";
+  const pre = p.getFullYear() + "-" + String(p.getMonth() + 1).padStart(2, "0");
+  const any = Object.values(stats).some(g => Object.keys((g && g.days) || {}).some(k => k.startsWith(pre)));
+  if(!any) return "";
+  return `<div class="cremind"><span>📘 Le carnet de route de <b>${MOIS[p.getMonth()]}</b> est prêt.</span><button class="iconbtn" id="crem">Le voir et l'envoyer</button></div>`;
+}
+// ---------- Voix des parents ----------
+const PV = {db: null, rec: null, chunks: [], timer: 0};
+function pvOpen(){
+  if(!PV.db) PV.db = new Promise((res, rej) => { try{ const r = indexedDB.open("garage-voix-parents", 1); r.onupgradeneeded = () => r.result.createObjectStore("clips", {keyPath: "id"}); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }catch(e){ rej(e); } });
+  return PV.db;
+}
+async function pvAll(){
+  try{ const db = await pvOpen(); return await new Promise(res => { const q = db.transaction("clips").objectStore("clips").getAll(); q.onsuccess = () => res((q.result || []).filter(c => c.pid === profiles.current).sort((a, b) => a.at - b.at)); q.onerror = () => res([]); }); }catch(e){ return []; }
+}
+async function pvStore(mode, val){
+  const db = await pvOpen();
+  await new Promise((res, rej) => { const t = db.transaction("clips", "readwrite"); const st = t.objectStore("clips"); mode === "put" ? st.put(val) : st.delete(val); t.oncomplete = res; t.onerror = () => rej(t.error); });
+}
+function pvHtml(){
+  return `<section class="pcard pvcard" id="pvcard"><h3>🎙️ Vos encouragements</h3>
+    <p class="pnote">Enregistrez quelques phrases courtes (« Bravo ${esc(displayName())} ! », « Je suis fier de toi ! »). Le jeu en fait entendre une de temps en temps à la fin d'une partie. Elles restent sur cet appareil.</p>
+    <div class="pactions"><button class="big" id="pvrec">🎙️ Enregistrer</button><label class="iconbtn pvfile">📁 Choisir un son<input type="file" id="pvfile" accept="audio/*" hidden></label></div>
+    <p class="pnote" id="pvmsg" aria-live="polite"></p><div class="pvlist" id="pvlist"></div></section>`;
+}
+async function pvRender(){
+  const el = document.getElementById("pvlist"); if(!el) return;
+  const list = await pvAll();
+  el.innerHTML = list.length ? list.map((c, i) => `<div class="pvrow"><span>Message ${i + 1}</span><button class="iconbtn" data-play="${c.id}" aria-label="Écouter le message ${i + 1}">▶</button><button class="iconbtn" data-del="${c.id}" aria-label="Supprimer le message ${i + 1}">🗑</button></div>`).join("") : `<p class="pnote">Aucun message pour l'instant.</p>`;
+  el.querySelectorAll("[data-play]").forEach(b => b.onclick = () => { const c = list.find(x => x.id === b.dataset.play); if(c) pvPlay(c); });
+  el.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => { await pvStore("del", b.dataset.del).catch(() => {}); pvRender(); });
+}
+function pvPlay(c){ try{ speechSynthesis.cancel(); }catch(e){} const u = URL.createObjectURL(c.blob), a = new Audio(u); a.onended = () => URL.revokeObjectURL(u); a.play().catch(() => {}); }
+async function pvSave(blob){
+  const msg = document.getElementById("pvmsg");
+  if(!blob || blob.size < 500){ if(msg) msg.textContent = "L'enregistrement est vide, réessayez."; return; }
+  if(blob.size > 3e6){ if(msg) msg.textContent = "Ce son est trop long : gardez des messages de quelques secondes."; return; }
+  try{ await pvStore("put", {id: "c" + Date.now(), pid: profiles.current, at: Date.now(), blob}); if(msg) msg.textContent = "Message enregistré ✓"; }
+  catch(e){ if(msg) msg.textContent = "Impossible d'enregistrer sur cet appareil."; }
+  pvRender();
+}
+function pvWire(){
+  const rb = document.getElementById("pvrec"), fi = document.getElementById("pvfile"), msg = document.getElementById("pvmsg");
+  if(!rb) return;
+  pvRender();
+  if(fi) fi.onchange = () => { const f = fi.files && fi.files[0]; if(f) pvSave(f); fi.value = ""; };
+  if(!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder)){ rb.hidden = true; return; }
+  rb.onclick = async () => {
+    if(PV.rec){ PV.rec.stop(); return; }
+    let stream;
+    try{ stream = await navigator.mediaDevices.getUserMedia({audio: true}); }
+    catch(e){ if(msg) msg.textContent = "Le micro n'est pas accessible ici. Utilisez « Choisir un son » (sur téléphone, il propose d'enregistrer), ou l'appli installée."; return; }
+    try{ musicStop(); }catch(e){}
+    PV.chunks = []; const r = new MediaRecorder(stream); PV.rec = r;
+    r.ondataavailable = e => { if(e.data && e.data.size) PV.chunks.push(e.data); };
+    r.onstop = () => { stream.getTracks().forEach(t => t.stop()); clearTimeout(PV.timer); PV.rec = null; rb.textContent = "🎙️ Enregistrer"; rb.classList.remove("pvon"); pvSave(new Blob(PV.chunks, {type: r.mimeType || "audio/webm"})); };
+    r.start(); rb.textContent = "⏹ Arrêter"; rb.classList.add("pvon"); if(msg) msg.textContent = "Parlez maintenant… (8 secondes au plus)";
+    PV.timer = setTimeout(() => { if(PV.rec) PV.rec.stop(); }, 8000);
+  };
+}
+let pvLast = 0;
+async function parentCheer(d){
+  if(!soundOn || Date.now() - pvLast < 120000 || Math.random() > .5) return;
+  const list = await pvAll(); if(!list.length) return;
+  const c = pick(list);
+  window.setTimeout(() => { if(!document.body.contains(d)) return; pvLast = Date.now(); pvPlay(c); }, 4200);
+}
+// ---------- Installer sur la tablette ----------
+let installEvt = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; });
+function installHtml(){
+  const onSite = /\.github\.io$/.test(location.hostname);
+  return `<section class="pcard"><h3>📲 Le jeu sur la tablette</h3>
+    ${onSite ? `<p class="pnote">Installez le jeu comme une appli : il aura son icône et marchera même sans internet.</p>
+      <div class="pactions"><button class="big" id="instbtn" ${installEvt ? "" : "hidden"}>📲 Installer l'appli</button></div>
+      <p class="pnote">iPad ou iPhone : bouton Partager de Safari, puis « Sur l'écran d'accueil ». Android : menu ⋮ de Chrome, puis « Installer l'application ».</p>`
+    : `<p class="pnote">Pour avoir une icône sur la tablette et jouer sans internet, ouvrez le jeu sur <b>dimitrigigan.github.io/garage-voitures</b>, puis ajoutez-le à l'écran d'accueil. Les progrès d'ici ne passent pas automatiquement là-bas : créez le profil une nouvelle fois.</p>`}</section>`;
+}
+function installWire(){
+  const b = document.getElementById("instbtn"); if(!b) return;
+  b.onclick = async () => { if(!installEvt) return; installEvt.prompt(); try{ await installEvt.userChoice; }catch(e){} installEvt = null; b.hidden = true; };
+}
+// ---------- Dessin animé d'ouverture ----------
+function introWanted(){
+  try{ if(matchMedia("(prefers-reduced-motion: reduce)").matches || hasA("attention")) return false; }catch(e){}
+  return !!(IMG.vroumi_happy && pdata && pdata.introDay !== today());
+}
+function introShow(){
+  pdata.introDay = today(); try{ saveProfileData(); }catch(e){}
+  const d = document.createElement("div"); d.className = "intro"; d.setAttribute("role", "dialog"); d.setAttribute("aria-label", "C'est parti !");
+  const nm = esc(displayName());
+  d.innerHTML = `<div class="isky"><span class="isun"></span><span class="icl c1"></span><span class="icl c2"></span><span class="icl c3"></span></div>
+    <div class="ihill h1"></div><div class="ihill h2"></div><div class="iroad"><i></i></div>
+    <img class="ivr" src="${IMG.vroumi_joy || IMG.vroumi_happy}" alt="">
+    ${IMG.dede_body ? `<img class="idd" src="${IMG.dede_body}" alt="">` : ""}
+    <div class="ititle"><b>Bonjour ${nm} !</b><span>On part à l'aventure ?</span></div>
+    <div class="istars">${"<i>★</i>".repeat(7)}</div>
+    <button class="iconbtn iskip">Passer ⏭</button>`;
+  document.body.appendChild(d);
+  let gone = false; const close = () => { if(gone) return; gone = true; d.classList.add("iout"); window.setTimeout(() => d.remove(), 450); };
+  d.onclick = close;
+  window.setTimeout(() => { if(!gone) beep("honk"); }, 900);
+  window.setTimeout(() => { if(!gone) say(`Bonjour ${displayName()} ! On part à l'aventure ?`); }, 2300);
+  window.setTimeout(close, 7600);
+}
+
+function carnetScreen(prev){
   const d = document.createElement("div"); d.className = "party livretov";
-  const sv = carnetSvg(), base = `carnet-de-route-${cleanName(displayName()).toLowerCase()}-${today().slice(0, 7)}`;
+  const sv = carnetSvg(prev), md = prev ? new Date(new Date().getFullYear(), new Date().getMonth() - 1, 15) : new Date(), base = `carnet-de-route-${cleanName(displayName()).toLowerCase()}-${md.getFullYear()}-${String(md.getMonth() + 1).padStart(2, "0")}`;
+  try{ if(prev){ pdata.carnetSeen = base; saveProfileData(); } }catch(e){}
   d.innerHTML = `<div class="card lvcard" role="dialog" aria-label="Carnet de route du mois">
     <h2>Carnet de route du mois</h2>
     <p class="pnote">Une page A4 à garder, à imprimer ou à envoyer à la famille.</p>
-    <div class="pactions"><button class="big" id="cpdf">📄 Télécharger en PDF</button><button class="iconbtn" id="cpng">🖼️ En image</button><button class="iconbtn" id="cprint">🖨️ Imprimer</button><button class="iconbtn" id="cclose">Fermer</button></div>
+    <div class="pactions"><button class="big" id="cpdf">📄 Télécharger en PDF</button>${navigator.share ? '<button class="iconbtn" id="cshare">📤 Partager</button>' : ""}<button class="iconbtn" id="cpng">🖼️ En image</button><button class="iconbtn" id="cprint">🖨️ Imprimer</button><button class="iconbtn" id="cclose">Fermer</button></div>
     <div class="lvpages cvprev"><img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(sv)}" alt="Carnet de route"></div></div>`;
   document.body.appendChild(d);
   d.querySelector("#cclose").onclick = () => d.remove();
   const run = async (btn, fn) => { const t = btn.textContent; btn.disabled = true; btn.textContent = "Préparation…";
     try{ await fn(); btn.textContent = "Enregistré ✓"; }catch(err){ btn.textContent = err && err.code === "declined" ? t : "Réessayez dans un instant"; } btn.disabled = false; };
   d.querySelector("#cpdf").onclick = e => run(e.currentTarget, async () => saveFile(base + ".pdf", await jpegsToPdf([await svgToJpeg(sv, 1240, 1754)], 1240, 1754)));
+  const sh = d.querySelector("#cshare");
+  if(sh) sh.onclick = e => run(e.currentTarget, async () => {
+    const pdf = await jpegsToPdf([await svgToJpeg(sv, 1240, 1754)], 1240, 1754), f = new File([pdf], base + ".pdf", {type: "application/pdf"});
+    if(navigator.canShare && navigator.canShare({files: [f]})) await navigator.share({files: [f], title: "Carnet de route de " + displayName()});
+    else await saveFile(base + ".pdf", pdf);
+  });
   d.querySelector("#cpng").onclick = e => run(e.currentTarget, async () => saveFile(base + ".png", await svgToPng(sv, 1240, 1754)));
   d.querySelector("#cprint").onclick = () => { const w = d.querySelector(".lvpages"); document.documentElement.classList.add("printlivret"); try{ window.print(); }catch(e){} window.setTimeout(() => document.documentElement.classList.remove("printlivret"), 800); };
 }
