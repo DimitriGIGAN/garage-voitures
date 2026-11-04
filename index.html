@@ -915,6 +915,23 @@ html:has(.spage) #mascot,html:has(.storylist) #mascot{display:none}
 .party .row svg:nth-child(2){animation-delay:.15s}.party .row svg:nth-child(3){animation-delay:.3s}
 .big{font:800 1.4rem var(--display);background:var(--accent);color:#fff;border:4px solid var(--ink);border-radius:999px;padding:12px 28px;cursor:pointer;box-shadow:0 5px 0 var(--ink)}
 .parent{font-size:.9rem;color:var(--soft);text-align:center;margin:14px auto 10px;max-width:60ch}
+/* --- finitions nov. 2026 : toucher, mouvement, texte --- */
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.mode small,.parent,.pnote{text-wrap:pretty}
+.iconbtn,.mode,.ans,.daybtn,.big,.again{transition-property:transform,box-shadow;transition-duration:.14s;transition-timing-function:cubic-bezier(.2,.8,.2,1)}
+.iconbtn:active,.mode:active,.ans:active,.daybtn:active,.big:active{transition-duration:.06s}
+.big:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+@media (hover:hover) and (pointer:fine){
+  .mode:hover{transform:translateY(-3px);box-shadow:0 10px 0 var(--ink)}
+  .iconbtn:hover,.daybtn:hover,.big:hover{transform:translateY(-2px)}
+  .ans:hover{transform:translateY(-2px);box-shadow:0 8px 0 var(--ink)}
+}
+.stars b,#stars,.star-count,.daybtn small,.garbtn{font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){
+  #decor *,.ilebadge,.menu > .mode,.stage > *,.daybtn .dcar{animation:none!important}
+  .iconbtn,.mode,.ans,.daybtn,.big{transition-duration:.01s!important}
+  .mode:hover,.ans:hover,.iconbtn:hover,.daybtn:hover,.big:hover{transform:none}
+}
 /* --- audit UX nov. 2026 --- */
 .homeextras{margin-top:22px}
 .has-bg .sub,.has-bg .parent{width:fit-content;max-width:min(92vw,60ch);margin-left:auto;margin-right:auto;padding:5px 16px;border-radius:999px;background:rgba(255,255,255,.86);color:var(--ink);text-shadow:none}
