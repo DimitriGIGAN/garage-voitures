@@ -1,5 +1,5 @@
 // Le Garage des Petites Voitures — fonctionne sans internet.
-const V = "garage-v1";
+const V = "garage-v2";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "voix/index.json"];
 self.addEventListener("install", e => {
   e.waitUntil((async () => {
@@ -8,6 +8,7 @@ self.addEventListener("install", e => {
     // voix et sons : on les met de côté en arrière-plan, sans bloquer l'installation
     const extra = [];
     for(const h of "0123456789abcdef") extra.push("voix/p" + h + ".json");
+    ["img/jeux.json","img/album-ile.json","img/histoires.json"].forEach(u => extra.push(u));
     ["bonne","bravo","erreur","fanfare","musique-jour","musique-matin","musique-nuit","musique-soir","niveau"].forEach(n => extra.push("son/" + n + ".mp3"));
     extra.forEach(u => c.add(u).catch(() => {}));
     self.skipWaiting();
