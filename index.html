@@ -2641,7 +2641,7 @@ function soundGame(){
       const k = b.dataset.k;
       if(k === target){
         done = true; b.classList.add("right"); T.right(soundLevel);
-        soundStreak++; if(soundStreak >= 4 && soundLevel < 5){ soundLevel++; soundStreak = 0; }
+        soundStreak++; if(soundStreak >= 4 && soundLevel < 5){ soundLevel++; soundStreak = 0; } soundLevel = ladDown("sound", soundLevel, T.errors, Math.max(2, grade().sound - 1)); if(T.errors >= 2) soundStreak = 0; ladSave();
         const party = addStar();
         say(`Oui ! C'est ${VEH[k].name} : ${VEH[k].cry} !`);
         setTimeout(() => party ? celebrate(flow(soundsEntry)) : flow(soundsEntry)(), 3000);
@@ -2696,7 +2696,7 @@ function sizeGame(){
         b.disabled = true; b.classList.add("gone");
         next++;
         if(next === n){
-          T.right(n); sizeStreak++; if(sizeStreak >= 2 && sizeN < 5){ sizeN++; sizeStreak = 0; }
+          T.right(n); sizeStreak++; if(sizeStreak >= 2 && sizeN < 5){ sizeN++; sizeStreak = 0; } sizeN = ladDown("size", sizeN, T.errors, Math.max(2, grade().size - 1)); if(T.errors >= 2) sizeStreak = 0; ladSave();
           const party = addStar();
           say("Bravo ! Tu as rangé toutes les voitures, de la plus petite à la plus grande !");
           setTimeout(() => party ? celebrate(flow(sizeEntry)) : flow(sizeEntry)(), 2600);
@@ -2792,7 +2792,7 @@ function shapeGame(){
         done = true; b.classList.add("right"); beep("good"); T.right(shapeLevel);
         const hero = document.getElementById("hero");
         hero.innerHTML = scene(target, true, carHex);
-        shapeStreak++; if(shapeStreak >= 4 && shapeLevel < 5){ shapeLevel++; shapeStreak = 0; }
+        shapeStreak++; if(shapeStreak >= 4 && shapeLevel < 5){ shapeLevel++; shapeStreak = 0; } shapeLevel = ladDown("shape", shapeLevel, T.errors, Math.max(2, grade().shape - 1)); if(T.errors >= 2) shapeStreak = 0; ladSave();
         const party = addStar();
         say(`Bravo ! C'est ${info.name}. La voiture est réparée !`);
         setTimeout(() => { hero.classList.add("go"); beep("honk"); }, 1300);
@@ -2897,7 +2897,7 @@ function countGame(){
       const v = +b.dataset.v;
       if(v === n){
         done = true; b.classList.add("right"); beep("good"); T.right(g === "CP" ? 100 : level);
-        streak++; if(streak >= 4 && level < grade().countMax){ level++; streak = 0; }
+        streak++; if(streak >= 4 && level < grade().countMax){ level++; streak = 0; } level = ladDown("count", level, T.errors, Math.max(2, grade().count - 1)); if(T.errors >= 2) streak = 0; ladSave();
         const party = addStar();
         say(big ? `Oui ! ${numWord(rows)} dizaines et ${numWord(units)}, ça fait ${n} voitures !` : `Oui ! Il y a ${nCars(n)} !`);
         setTimeout(() => party ? celebrate(flow(countGame)) : flow(countGame)(), big ? 3200 : 1800);
@@ -3081,7 +3081,7 @@ function trainGame(){
       if(tkey(c) === tkey(tr.ans)){
         done = true; b.classList.add("right"); beep("good"); T.right(null);
         document.getElementById("tslot").outerHTML = tcar(tr.ans);
-        trainStreak++; if(trainStreak >= 4 && trainLvl < TRAIN_MAX[gradeKey()]){ trainLvl++; trainStreak = 0; }
+        trainStreak++; if(trainStreak >= 4 && trainLvl < TRAIN_MAX[gradeKey()]){ trainLvl++; trainStreak = 0; } trainLvl = ladDown("train", trainLvl, T.errors, Math.max(0, TRAIN_START[gradeKey()] - 1)); if(T.errors >= 2) trainStreak = 0; ladSave();
         const party = addStar();
         say(numbers ? `Oui ! ${tr.shown.map(x => x.num).join(", ")}, ${tr.ans.num}. On avance de ${tr.step} à chaque fois !` : "Bravo ! Le train est complet. Tchou tchou !");
         setTimeout(() => { document.getElementById("train").classList.add("go"); beep("honk"); }, 1400);
@@ -3664,7 +3664,8 @@ function fixPdata(d){
   return {earned: d.earned || 0, fav: d.fav || "bleue", settings: Object.assign(b.settings, d.settings || {}), time: d.time || {}, sessions: d.sessions || {},
     storyNext: d.storyNext || 0, storiesDone: d.storiesDone || [], permits: d.permits || {},
     challenge: d.challenge || null, medals: d.medals || 0, custom: d.custom || null,
-    boost: d.boost || {}, recent: d.recent || {}, seen: d.seen || {}, gtime: d.gtime || {}, ileSeen: d.ileSeen || null, stk: d.stk, stkBase: d.stkBase, stkNew: d.stkNew || [], ileView: d.ileView === undefined ? -1 : d.ileView};
+    boost: d.boost || {}, recent: d.recent || {}, seen: d.seen || {}, gtime: d.gtime || {}, ileSeen: d.ileSeen || null, stk: d.stk, stkBase: d.stkBase, stkNew: d.stkNew || [], ileView: d.ileView === undefined ? -1 : d.ileView,
+    hunt: d.hunt || undefined, aiStory: d.aiStory || undefined, lad: d.lad || null, introDay: d.introDay || null, carnetSeen: d.carnetSeen || null};
 }
 const capFirst = t => t.charAt(0).toUpperCase() + t.slice(1);
 
@@ -5626,14 +5627,24 @@ function weekSummaryHtml(){
 
 // ====================== LE JEU ÉVOLUE AVEC L'ENFANT ======================
 let pendingLevel = null;
+// Échelle dans la partie : deux manches de suite avec beaucoup d'erreurs = un cran plus facile
+const LADMISS = {};
+function ladDown(key, cur, errs, floor){
+  if(duo) return cur;
+  if(errs >= 2){ LADMISS[key] = (LADMISS[key] || 0) + 1; if(LADMISS[key] >= 2 && cur > floor){ LADMISS[key] = 0; return cur - 1; } }
+  else LADMISS[key] = 0;
+  return cur;
+}
+function ladSave(){ try{ pdata.lad = {g: baseGradeKey(), count: level, shape: shapeLevel, size: sizeN, sound: soundLevel, train: trainLvl}; saveProfileData(); }catch(e){} }
 function adaptLevel(game, errs){
   if(NO_ADAPT.includes(game) || !GAMES[game] || duo) return;
   pdata.boost = pdata.boost || {}; pdata.recent = pdata.recent || {};
-  const r = (pdata.recent[game] = (pdata.recent[game] || []).concat(errs ? 0 : 1).slice(-8));
+  // une manche sans erreur compte 1, avec une erreur 0,5, avec plus d'erreurs 0
+  const r = (pdata.recent[game] = (pdata.recent[game] || []).concat(errs ? (errs === 1 ? .5 : 0) : 1).slice(-8));
   const ok = r.reduce((a,b) => a + b, 0), b = pdata.boost[game] || 0;
   const before = effGrade(game);
   if(r.length >= 8 && ok >= 7 && b < 1){ pdata.boost[game] = b + 1; pdata.recent[game] = []; if(effGrade(game) !== before) pendingLevel = {game, up:true}; }
-  else if(r.length >= 6 && ok <= 2 && b > -1){ pdata.boost[game] = b - 1; pdata.recent[game] = []; }
+  else if(r.length >= 6 && r.slice(-6).reduce((a,c) => a + c, 0) <= 2.5 && b > -1){ pdata.boost[game] = b - 1; pdata.recent[game] = []; }
   saveProfileData();
 }
 function levelNote(){
@@ -6075,7 +6086,7 @@ function livretRow(sk, y){
   const miss = g && sk.item ? Object.entries(g.missed || {}).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0]).join(", ") : "";
   return `<text x="120" y="${y - 12}" font-size="25" font-weight="800" fill="#1f2a44">${X(lfit(sk.skill, 25, true, 690))}</text>
     <text x="120" y="${y + 14}" font-size="19" fill="#5a6a8a">${X(lfit(sk.label + " · " + det + (miss ? " · à revoir : " + miss : ""), 19, false, 690))}</text>
-    ${dots}<text x="1120" y="${y - 2}" font-size="21" font-weight="700" text-anchor="end" fill="${col}">${X(v.cls === "m" ? "En cours" : v.cls === "n" ? "Pas encore" : LTXT[v.cls])}</text>
+    ${dots}<text x="1120" y="${y - 2}" font-size="21" font-weight="700" text-anchor="end" fill="${col}">${X(v.cls === "m" ? "En cours" : v.cls === "n" ? (g && g.rounds ? "Trop tôt" : "Pas encore") : LTXT[v.cls])}</text>
     <line x1="110" y1="${y + 28}" x2="1130" y2="${y + 28}" stroke="#e5e9f2" stroke-width="2"/>`;
 }
 function livretPage(doms, page, info){
@@ -6124,7 +6135,93 @@ function livretPage(doms, page, info){
     ${head}${body}${foot}
     <text x="${W / 2}" y="${H - 64}" font-size="20" text-anchor="middle" fill="#8a94a8">Page ${page}/3</text></svg>`;
 }
-function livretPages(){ const info = livretInfo(); return [livretPage(LDOM.slice(0, 3), 1, info), livretPage(LDOM.slice(3), 2, info), livretPage([], 3, info)]; }
+function livretPages(){
+  const info = livretInfo(), X = s => esc(s), W = 1240, H = 1754, BOTTOM = H - 105, nm = curProfile().name;
+  const all = SKILLS.map(sk => ({sk, g: stats[sk.id], v: verdict(sk, stats[sk.id])}));
+  const by = c => all.filter(x => x.v.cls === c);
+  const det = x => { const g = x.g; return g && g.rounds ? `${pct(g.first, g.rounds)} de réussite du premier coup sur ${g.rounds} partie${g.rounds > 1 ? "s" : ""}${x.sk.lvl && g.level ? " · " + x.sk.lvl(g.level) : ""}` : ""; };
+  const miss = x => x.g && x.sk.item ? Object.entries(x.g.missed || {}).sort((a, b) => b[1] - a[1]).slice(0, 3).map(m => m[0]).join(", ") : "";
+  const pages = []; let body = "", y = 0;
+  const newPage = top => { if(body) pages.push(body); body = ""; y = top; };
+  const need = h => { if(y + h > BOTTOM) newPage(140); };
+  // ---------- page 1 : la synthèse ----------
+  newPage(0);
+  body += `${IMG.vroumi_happy ? `<image href="${IMG.vroumi_happy}" x="96" y="84" width="190" height="175"/>` : ""}
+    <text x="310" y="150" font-size="56" font-weight="800" fill="#1f2a44">Livret de suivi</text>
+    <text x="310" y="200" font-size="34" font-weight="800" fill="#ff7a2f">${X(nm)} · ${X(grade().label)}</text>
+    <text x="310" y="244" font-size="22" fill="#5a6a8a">${info.from ? `Du ${X(info.from)} au ${X(info.to)}` : `Édité le ${X(info.to)}`} · ${info.n} jour${info.n > 1 ? "s" : ""} de jeu à la maison · ${pdata.earned || 0} étoiles</text>`;
+  const tiles = [["g", "acquises"], ["m", "en cours"], ["l", "à renforcer"], ["n", "pas encore vues"]];
+  tiles.forEach(([c, t], i) => { const x = 96 + i * 266;
+    body += `<rect x="${x}" y="290" width="246" height="126" rx="22" fill="#fff" stroke="${LCOL[c]}" stroke-width="5"/>
+      <text x="${x + 123}" y="350" font-size="50" font-weight="800" text-anchor="middle" fill="${c === "n" ? "#8a94a8" : LCOL[c]}">${by(c).length}</text>
+      <text x="${x + 123}" y="380" font-size="18" text-anchor="middle" fill="#5a6a8a">compétence${by(c).length > 1 ? "s" : ""}</text>
+      <text x="${x + 123}" y="403" font-size="20" font-weight="800" text-anchor="middle" fill="#1f2a44">${t}</text>`; });
+  y = 480;
+  // bilan par domaine
+  body += `<rect x="96" y="${y - 40}" width="10" height="46" rx="5" fill="#1f2a44"/><text x="124" y="${y}" font-size="32" font-weight="800" fill="#1f2a44">Par domaine du programme</text>`; y += 50;
+  LDOM.forEach(d => {
+    const n = {g: 0, m: 0, l: 0, n: 0}; d.ids.forEach(id => { const sk = SKILLS.find(k => k.id === id); if(sk) n[verdict(sk, stats[id]).cls]++; });
+    const tot = n.g + n.m + n.l + n.n || 1; let x = 700;
+    body += `<rect x="110" y="${y - 22}" width="14" height="28" rx="5" fill="${d.c}"/><text x="138" y="${y}" font-size="20" font-weight="800" fill="#1f2a44">${X(lfit(d.t, 20, true, 545))}</text>`;
+    ["g", "m", "l", "n"].forEach(c => { const w = Math.round(420 * n[c] / tot); if(w) body += `<rect x="${x}" y="${y - 20}" width="${w}" height="24" fill="${LCOL[c]}"/>`; x += w; });
+    body += `<rect x="700" y="${y - 20}" width="420" height="24" rx="6" fill="none" stroke="#1f2a44" stroke-width="2"/>`;
+    y += 46;
+  });
+  body += `<g transform="translate(690 ${y})">${[["g","Acquis"],["m","En cours"],["l","À renforcer"],["n","Pas encore"]].map(([c, t], i) => `<circle cx="${i * 118 + 8}" cy="-6" r="8" fill="${LCOL[c]}"/><text x="${i * 118 + 22}" y="0" font-size="17" fill="#1f2a44">${t}</text>`).join("")}</g>`;
+  y += 40;
+  y += 10;
+  const section = (title, col, list, max, extra) => {
+    if(!list.length) return;
+    need(70 + Math.min(list.length, max) * 66);
+    body += `<rect x="96" y="${y - 40}" width="10" height="46" rx="5" fill="${col}"/><text x="124" y="${y}" font-size="32" font-weight="800" fill="#1f2a44">${X(title)}</text>`;
+    y += 52;
+    list.slice(0, max).forEach(x => {
+      need(66);
+      body += `<circle cx="132" cy="${y - 9}" r="13" fill="${col}"/><text x="132" y="${y - 2}" font-size="17" font-weight="800" text-anchor="middle" fill="#fff">${col === LCOL.g ? "✓" : col === LCOL.m ? "…" : "!"}</text>
+        <text x="162" y="${y}" font-size="25" font-weight="800" fill="#1f2a44">${X(lfit(x.sk.skill, 25, true, 960))}</text>
+        <text x="162" y="${y + 28}" font-size="19" fill="#5a6a8a">${X(lfit(x.sk.label + " · " + det(x) + (extra && miss(x) ? " · à revoir : " + miss(x) : ""), 19, false, 960))}</text>`;
+      y += 66;
+    });
+    if(list.length > max){ body += `<text x="162" y="${y}" font-size="19" fill="#5a6a8a">et ${list.length - max} autre${list.length - max > 1 ? "s" : ""} (voir le détail)</text>`; y += 30; }
+    y += 34;
+  };
+  const sortBest = l => l.sort((a, b) => (b.g.first / b.g.rounds) - (a.g.first / a.g.rounds));
+  if(!all.some(x => x.g && x.g.rounds)){
+    body += `<text x="${W / 2}" y="${y + 40}" font-size="28" text-anchor="middle" fill="#5a6a8a">Pas encore assez de parties pour faire un bilan.</text>`; y += 100;
+  }
+  section(`Ce que ${nm} sait faire`, LCOL.g, sortBest(by("g")), 7, false);
+  section("Ce qui est en train de venir", LCOL.m, sortBest(by("m")), 5, true);
+  section("Ce qu'on travaille encore", LCOL.l, sortBest(by("l")), 4, true);
+  // ---------- détail par domaine ----------
+  need(260);
+  body += `<text x="${W / 2}" y="${y + 10}" font-size="40" font-weight="800" text-anchor="middle" fill="#1f2a44">Le détail, compétence par compétence</text>`; y += 90;
+  LDOM.forEach(d => {
+    const sks = d.ids.map(id => SKILLS.find(k => k.id === id)).filter(Boolean), seen = sks.filter(sk => (stats[sk.id] || {}).rounds), not = sks.filter(sk => !(stats[sk.id] || {}).rounds);
+    const nl = not.length ? (lfit("Pas encore observé dans les jeux : " + not.map(sk => sk.label).join(", "), 18, false, 1000).endsWith("…") ? 2 : 1) : 0;
+    need(56 + Math.min(2, seen.length) * 58 + nl * 26 + 10);
+    body += `<rect x="90" y="${y - 40}" width="${W - 180}" height="52" rx="14" fill="${d.c}"/><text x="120" y="${y - 6}" font-size="26" font-weight="800" fill="#fff">${X(d.t)}</text>`;
+    y += 56;
+    seen.forEach(sk => { need(58); body += livretRow(sk, y); y += 58; });
+    if(not.length){ const t = "Pas encore observé dans les jeux : " + not.map(sk => sk.label).join(", "), a = lfit(t, 18, false, 1000);
+      need(60); body += `<text x="120" y="${y - 12}" font-size="18" fill="#8a94a8">${X(a.replace(/…$/, ""))}</text>`; y += 26;
+      if(a.endsWith("…")){ const rest = t.slice(a.length - 1).replace(/^[\s,]+/, ""); body += `<text x="120" y="${y - 12}" font-size="18" fill="#8a94a8">${X(lfit(rest, 18, false, 1000))}</text>`; y += 26; } }
+    y += 26;
+  });
+  // observations
+  need(470);
+  body += `<rect x="90" y="${y}" width="${W - 180}" height="300" rx="24" fill="#fff" stroke="#1f2a44" stroke-width="3"/>
+    <text x="120" y="${y + 50}" font-size="28" font-weight="800" fill="#1f2a44">Observations de l'enseignant(e)</text>
+    ${[0, 1, 2, 3].map(i => `<line x1="120" y1="${y + 104 + i * 52}" x2="${W - 120}" y2="${y + 112 + i * 54}" stroke="#c9d1e0" stroke-width="2" stroke-dasharray="6 8"/>`).join("")}`;
+  y += 340;
+  ["« Acquis » : au moins 80 % de réussite du premier coup, après assez de parties. « En cours » : de 50 à 79 %.",
+   "Ce livret résume les jeux faits à la maison : il complète, sans la remplacer, l'observation faite en classe.",
+   "Domaines du programme de l'école maternelle (BO n° 41 du 31 octobre 2024 et BO n° 19 du 7 mai 2026).",
+   "Les activités physiques se pratiquent surtout en vrai : le jeu ne travaille que l'attention et le contrôle du geste."].forEach(t => { body += `<text x="120" y="${y}" font-size="19" fill="#5a6a8a">${X(t)}</text>`; y += 30; });
+  if(body) pages.push(body);
+  return pages.map((b, i) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="Nunito, Arial, sans-serif">
+    <rect width="${W}" height="${H}" fill="#fff"/><rect x="40" y="40" width="${W - 80}" height="${H - 80}" rx="36" fill="none" stroke="#1f2a44" stroke-width="5"/>
+    ${b}<text x="${W / 2}" y="${H - 64}" font-size="20" text-anchor="middle" fill="#8a94a8">${X(nm)} · Livret de suivi · page ${i + 1}/${pages.length}</text></svg>`);
+}
 function svgToJpeg(svgText, w, h){
   return new Promise((res, rej) => { const img = new Image();
     img.onload = () => { const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0, w, h); c.toBlob(b => b ? res(b) : rej(new Error("jpg")), "image/jpeg", .9); };
@@ -6170,7 +6267,7 @@ function livretScreen(){
   const pages = livretPages();
   d.innerHTML = `<div class="card lvcard" role="dialog" aria-label="Livret pour la maîtresse">
     <h2>Livret pour la maîtresse</h2>
-    <p class="pnote">Trois pages A4, rangées selon les domaines du programme de maternelle 2026. À imprimer ou à envoyer.</p>
+    <p class="pnote">${pages.length} pages A4 : la synthèse d'abord (ce que ${esc(displayName())} sait faire), puis le détail selon les domaines du programme de maternelle 2026. À imprimer ou à envoyer.</p>
     <div class="lvpages">${pages.map(p => `<img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(p)}" alt="Page du livret">`).join("")}</div>
     <div class="pactions"><button class="big" id="lvpdf">📄 Télécharger en PDF</button><button class="iconbtn" id="lvprint">🖨️ Imprimer</button><button class="iconbtn" id="lvclose">Fermer</button></div></div>`;
   document.body.appendChild(d);
@@ -6743,6 +6840,11 @@ function loadProfile(id){
   const G = grade();
   level = G.count; streak = 0; shapeLevel = G.shape; shapeStreak = 0; sizeN = G.size; sizeStreak = 0; soundLevel = G.sound; soundStreak = 0;
   trainLvl = TRAIN_START[gradeKey()]; trainStreak = 0; gpsStreak = 0;
+  // on reprend là où l'enfant s'était arrêté (même classe), sans repartir de zéro
+  try{ const L = pdata.lad; if(L && L.g === baseGradeKey()){
+    if(L.count) level = Math.max(2, Math.min(G.countMax, L.count)); if(L.shape) shapeLevel = Math.max(2, Math.min(5, L.shape));
+    if(L.size) sizeN = Math.max(2, Math.min(5, L.size)); if(L.sound) soundLevel = Math.max(2, Math.min(5, L.sound));
+    if(L.train != null) trainLvl = Math.max(0, Math.min(TRAIN_MAX[baseGradeKey()], L.train)); } }catch(e){}
 }
 function whoPlays(){
   navSeq++;
