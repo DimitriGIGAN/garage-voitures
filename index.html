@@ -948,6 +948,20 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 }
 /* Vroumi ne doit pas couvrir le bouton Menu sur téléphone */
 @media (max-width:560px){ #mascot:not(.m-visit){top:80px;width:52px} }
+/* --- histoires : ordre, partie à deux --- */
+.seqrow{display:flex;gap:14px;justify-content:center;margin:6px auto 16px}
+.seqslot{width:min(26vw,170px);aspect-ratio:800/457;border:4px dashed #9aa6bf;border-radius:16px;display:grid;place-items:center;font:800 2rem var(--display);color:#9aa6bf;background:rgba(255,255,255,.6);overflow:hidden}
+.seqslot.on{border-style:solid;border-color:var(--ink);padding:0}
+.seqslot img{width:100%;height:100%;object-fit:cover}
+.seqpics{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.seqpic{width:min(28vw,220px);padding:6px!important}
+.seqpic img{width:100%;border-radius:12px;display:block}
+.seqpic:disabled{opacity:.35}
+#snext.nudge{animation:ilepulse 1.1s ease-in-out 3}
+.duomodes .duomode{display:flex;flex-direction:column;gap:4px;padding:14px 20px;min-width:200px}
+.duomode small{font-weight:600;color:var(--soft)}
+.duoend{font-size:1.4rem}
+@media (prefers-reduced-motion:reduce){ #snext.nudge{animation:none} }
 /* --- maison, voix, intro --- */
 .phome{background:#fff7e8;border-radius:14px;padding:8px 12px;margin:8px 0;font-size:.95rem;text-wrap:pretty}
 .phomecard h3,.pvcard h3{margin:0 0 4px}
@@ -1430,6 +1444,7 @@ function track(game, item, noTime){
       if(closed) return; closed = true;
       const g = gstat(game);
       g.rounds++; if(!errs) g.first++; g.errors += errs;
+      try{ pdata.updatedAt = Date.now(); syncSoon(); }catch(e){}
       const ms = Date.now() - t0;
       if(!noTime && ms < 60000){ g.ms += ms; g.timed++; }
       if(lvl != null) g.level = Math.max(g.level || 0, lvl);
@@ -1638,6 +1653,7 @@ function parentPage(){
       })()}
       <p class="pnote">« Acquis » = au moins 80 % de réussite du premier coup, après assez de parties. « En cours » = 50 à 79 %. « À travailler » = moins de 50 %.</p>
       ${pvHtml()}
+      ${shareHtml()}
       ${installHtml()}
       <details class="psect"><summary>⚙️ Réglages, aides et sauvegarde</summary>
       ${settingsHtml()}${a11ySettingsHtml()}
@@ -1678,7 +1694,7 @@ function parentPage(){
   document.getElementById("classv").onclick = classView;
   document.getElementById("carnet").onclick = () => carnetScreen();
   const crm = document.getElementById("crem"); if(crm) crm.onclick = () => carnetScreen(true);
-  pvWire(); installWire();
+  pvWire(); installWire(); shareWire();
   document.getElementById("livret").onclick = () => livretScreen();
   document.getElementById("pgrade").onchange = e => { curProfile().grade = e.target.value; curProfile().gradeYear = schoolYear(); saveProfiles(); loadProfile(curProfile().id); parentPage(); };
 }
@@ -2314,7 +2330,7 @@ function menu(page){
   on("ilebtn", () => { beep("tap"); withWipe(() => islandScreen()); });
   on("albbtn", () => { beep("tap"); withWipe(() => albumScreen()); });
   on("jukebtn", () => { beep("tap"); withWipe(() => jukeboxScreen()); });
-  on("duo", () => { beep("tap"); if(duo){ duo = null; menu(); } else duoSetup(); });
+  on("duo", () => { beep("tap"); if(duo){ duoEnd(); } else duoSetup(); });
   on("more", () => { beep("tap"); menu("more"); window.scrollTo(0, 0); });
   on("backhome", () => { beep("tap"); menu(); window.scrollTo(0, 0); });
   document.getElementById("m1").onclick = () => { beep("honk"); EN() ? colorEN() : colorGame(); };
@@ -3665,7 +3681,7 @@ function fixPdata(d){
     storyNext: d.storyNext || 0, storiesDone: d.storiesDone || [], permits: d.permits || {},
     challenge: d.challenge || null, medals: d.medals || 0, custom: d.custom || null,
     boost: d.boost || {}, recent: d.recent || {}, seen: d.seen || {}, gtime: d.gtime || {}, ileSeen: d.ileSeen || null, stk: d.stk, stkBase: d.stkBase, stkNew: d.stkNew || [], ileView: d.ileView === undefined ? -1 : d.ileView,
-    hunt: d.hunt || undefined, aiStory: d.aiStory || undefined, lad: d.lad || null, introDay: d.introDay || null, carnetSeen: d.carnetSeen || null};
+    hunt: d.hunt || undefined, aiStory: d.aiStory || undefined, lad: d.lad || null, introDay: d.introDay || null, carnetSeen: d.carnetSeen || null, updatedAt: d.updatedAt || 0};
 }
 const capFirst = t => t.charAt(0).toUpperCase() + t.slice(1);
 
@@ -4372,13 +4388,14 @@ function storyRead(si, pi){
     </div>`;
   wireTop();
   say(kidName(pg[0]));
+  { const nb = document.getElementById("snext"), t = setTimeout(() => { if(document.body.contains(nb)) nb.classList.add("nudge"); }, 2500 + kidName(pg[0]).length * 70); nb.addEventListener("click", () => clearTimeout(t), {once: true}); }
   document.getElementById("sagain").onclick = () => say(kidName(pg[0]));
   if(pi) document.getElementById("sprev").onclick = () => storyRead(si, pi - 1);
   document.getElementById("snext").onclick = () => { beep("tap"); last ? storyQuiz(si, 0) : storyRead(si, pi + 1); };
 }
 function storyQuiz(si, qi){
   const st = STORIES[si], nq = gradeKey() === "PS" ? 2 : 3;
-  if(qi >= nq) return storyEnd(si);
+  if(qi >= nq) return gradeKey() === "PS" ? storyEnd(si) : storySeq(si);
   const [q, opts] = st.qs[qi], order = shuffle(opts.map((o,i) => i));
   curGame = "histoires";
   choiceRound({
@@ -4386,8 +4403,37 @@ function storyQuiz(si, qi){
     choices: order.map(i => ({label: kidName(opts[i][1]), html: `<span class="qart">${artHtml(opts[i][0])}</span><span class="clab">${esc(kidName(opts[i][1]))}</span>`})),
     isRight: j => order[j] === 0,
     onRight: () => `Bravo ! ${kidName(opts[0][1])}.`,
-    onWrong: () => "Ce n'est pas ça. Repense à l'histoire.",
+    onWrong: () => { const key = [].concat(opts[0][0])[0], pg = st.pages.find(p => p[1].includes(key)); return pg ? `Écoute encore : ${kidName(pg[0])}` : "Ce n'est pas ça. Repense à l'histoire."; },
     game: "histoires", item: `${st.title}, question ${qi + 1}`, next: () => storyQuiz(si, qi + 1), wait: 2200
+  });
+}
+// remettre l'histoire dans l'ordre : début, milieu, fin
+function storySeq(si){
+  const st = STORIES[si], idx = [0, 2, st.pages.length - 1];
+  if(!idx.every(i => IMG["s" + si + "p" + i])) return storyEnd(si);
+  curGame = "histoires";
+  const T = track("histoires", `${st.title}, l'ordre`), order = shuffle(idx.slice()); let next = 0;
+  app.innerHTML = `${topBar(true)}
+    <div class="prompt"><span>Qu'est-ce qui s'est passé en premier ?</span><button class="again" id="again" aria-label="Réécouter">🔊</button></div>
+    <div class="stage"><p class="enhint">${st.title} · remets l'histoire dans l'ordre</p>
+      <div class="seqrow">${[0, 1, 2].map(n => `<span class="seqslot" id="sq${n}">${n + 1}</span>`).join("")}</div>
+      <div class="seqpics">${order.map(i => `<button class="ans seqpic" data-p="${i}" aria-label="${esc(kidName(st.pages[i][0]))}">${illu("s" + si + "p" + i, "")}</button>`).join("")}</div></div>`;
+  wireTop();
+  const ask = ["Qu'est-ce qui s'est passé en premier ?", "Et après ?", "Et à la fin ?"];
+  say("Remets l'histoire dans l'ordre. " + ask[0]);
+  document.getElementById("again").onclick = () => say(ask[next]);
+  app.querySelectorAll(".seqpic").forEach(b => b.onclick = () => {
+    if(b.disabled) return;
+    if(+b.dataset.p === idx[next]){
+      beep("good"); b.disabled = true; b.classList.add("right");
+      const slot = document.getElementById("sq" + next); slot.innerHTML = illu("s" + si + "p" + b.dataset.p, ""); slot.classList.add("on");
+      next++;
+      if(next === 3){ T.right(null); addStar(); say(`Bravo ! Tu as remis toute l'histoire dans l'ordre !`); return setTimeout(() => storyEnd(si), 2600); }
+      say(ask[next]);
+    } else {
+      T.wrong(); beep("bad"); b.classList.remove("wrong"); void b.offsetWidth; b.classList.add("wrong");
+      const want = st.pages[idx[next]][0]; say(`Pas encore. Écoute : ${kidName(want)}`);
+    }
   });
 }
 function storyEnd(si){
@@ -4530,7 +4576,28 @@ function svgToPng(svgText, w, h){
 let duo = null;
 function duoBar(){
   const names = [curProfile().name, duo.other];
-  return `<div class="sbar duobar">Au tour de <b>${esc(names[duo.turn])}</b> · ${esc(names[0])} ${duo.score[0]}★ · ${esc(names[1])} ${duo.score[1]}★</div>`;
+  return duo.team ? `<div class="sbar duobar">Au tour de <b>${esc(names[duo.turn])}</b> · 🤝 Notre équipe : ${duo.score[0] + duo.score[1]}★</div>`
+    : `<div class="sbar duobar">Au tour de <b>${esc(names[duo.turn])}</b> · ${esc(names[0])} ${duo.score[0]}★ · ${esc(names[1])} ${duo.score[1]}★</div>`;
+}
+function duoGradeFor(name){
+  const sib = profiles.list.find(p => p.id !== profiles.current && p.name === name);
+  if(sib && GRADES[sib.grade]) return sib.grade;
+  const i = GORDER.indexOf(baseGradeKey());
+  if(name === "Papa" || name === "Maman") return "CP";
+  return GORDER[Math.min(3, i + 1)];
+}
+function duoEnd(){
+  const d = duo; duo = null;
+  if(!d || d.score[0] + d.score[1] === 0) return menu();
+  const a = curProfile().name, b = d.other, s0 = d.score[0], s1 = d.score[1];
+  const txt = d.team ? `Bravo l'équipe ! ${a} et ${b}, vous avez gagné ${s0 + s1} étoiles ensemble !`
+    : s0 === s1 ? `Égalité ! ${s0} étoiles chacun. Bravo à vous deux !` : `Bravo à vous deux ! ${a} : ${s0} étoiles, ${b} : ${s1} étoiles.`;
+  app.innerHTML = `${topBar(true)}<div class="endcard"><span class="sart">${artHtml(["hero","balloon"])}</span><h2>${d.team ? "🤝 Bravo l'équipe !" : "Fin de la partie à deux"}</h2>
+    <p class="duoend"><b>${esc(a)}</b> ${s0}★ ${d.team ? "+" : "·"} <b>${esc(b)}</b> ${s1}★${d.team ? ` = ${s0 + s1}★` : ""}</p>
+    <div class="pactions"><button class="big" id="duoagain">Rejouer à deux</button><button class="iconbtn" id="duomenu">Retour au menu</button></div></div>`;
+  wireTop(); beep("good"); say(txt);
+  document.getElementById("duoagain").onclick = () => { duo = {other: d.other, turn: 0, score: [0, 0], team: d.team, g: d.g}; menu(); };
+  document.getElementById("duomenu").onclick = () => menu();
 }
 function showTurn(fn){
   const name = duo.turn === 0 ? curProfile().name : duo.other;
@@ -4554,10 +4621,120 @@ function duoSetup(){
     </div>`;
   wireTop();
   say(`Qui joue avec ${curProfile().name} ?`);
-  app.querySelectorAll(".duoopt").forEach(b => b.onclick = () => { duo = {other: b.dataset.n, turn: 0, score: [0,0]}; beep("honk"); menu(); say(`C'est parti pour jouer à deux ! Choisissez un jeu.`); });
+  app.querySelectorAll(".duoopt").forEach(b => b.onclick = () => { beep("tap"); duoMode(b.dataset.n); });
+}
+function duoMode(other){
+  const me = curProfile().name, g = duoGradeFor(other), harder = g !== baseGradeKey();
+  app.innerHTML = `${topBar(true)}
+    <div class="endcard">
+      <h2>${esc(me)} et ${esc(other)}</h2>
+      <p>Comment voulez-vous jouer ?</p>
+      <div class="duoopts duomodes">
+        <button class="iconbtn duomode" data-t="1"><b>🤝 En équipe</b><small>On additionne nos étoiles</small></button>
+        <button class="iconbtn duomode" data-t="0"><b>🏁 Chacun ses étoiles</b><small>On compte pour chacun</small></button>
+      </div>
+      ${harder ? `<p class="pnote">Pour que ce soit juste, les questions ${other === "Un grand" ? "du grand" : "de " + esc(other)} seront un peu plus difficiles (niveau ${g === "CP" ? "CP" : GRADES[g].label.toLowerCase()}).</p>` : ""}
+    </div>`;
+  wireTop();
+  say(`${me} et ${other}, vous jouez en équipe, ou chacun ses étoiles ?`);
+  app.querySelectorAll(".duomode").forEach(b => b.onclick = () => { duo = {other, turn: 0, score: [0, 0], team: b.dataset.t === "1", g}; beep("honk"); menu(); say(duo.team ? "C'est parti, en équipe ! Choisissez un jeu." : "C'est parti pour jouer à deux ! Choisissez un jeu."); });
 }
 
 // ---------- sauvegarde en ligne (facultative) ----------
+function shareHtml(){
+  return `<section class="pcard" id="sharebox"><h3>🔄 Les progrès sur tous les appareils</h3>
+    <p class="pnote" id="autosyncmsg">${window.claude && window.claude.use ? "Ici, les progrès se sauvegardent tout seuls sur votre compte Claude et se retrouvent sur vos autres appareils connectés à Claude." : "Pour passer les progrès d'un appareil à l'autre (par exemple de l'aperçu Claude vers l'appli de la tablette), utilisez un fichier de progrès."}</p>
+    <div class="pactions"><button class="iconbtn" id="shexp">📤 Envoyer les progrès (fichier)</button><label class="iconbtn pvfile">📥 Récupérer un fichier<input type="file" id="shimp" accept=".json,application/json" hidden></label></div>
+    <p class="pnote" id="shmsg" aria-live="polite"></p>
+    <div id="shask" class="pconfirm" hidden><p id="shasktxt"></p><button class="iconbtn" id="shyes">Oui, récupérer</button><button class="iconbtn" id="shno">Annuler</button></div>
+  </section>`;
+}
+// ---------- Progrès partagés ----------
+function profileBundle(){
+  try{ saveProfileData(); }catch(e){}
+  const data = {}; profiles.list.forEach(p => { data[p.id] = lsGet("gv_p_" + p.id) || "{}"; });
+  return {app: "garage-petites-voitures", v: 1, at: Date.now(), profiles: profiles.list.map(p => Object.assign({}, p)), data};
+}
+const rawAt = raw => { try{ return (JSON.parse(raw) || {}).updatedAt || 0; }catch(e){ return 0; } };
+const rawRounds = raw => { try{ return Object.values((JSON.parse(raw) || {}).stats || {}).reduce((a, g) => a + ((g && g.rounds) || 0), 0); }catch(e){ return 0; } };
+function sameKid(a, b){ return a.id === b.id || cleanName(a.name || "").toLowerCase() === cleanName(b.name || "").toLowerCase(); }
+// ce qui changerait si on récupérait ce paquet (le plus récent gagne, profil par profil)
+function bundlePlan(b){
+  const plan = [];
+  (b && b.profiles || []).forEach(rp => {
+    const raw = (b.data || {})[rp.id]; if(!raw) return;
+    const lp = profiles.list.find(p => sameKid(p, rp));
+    if(!lp){ plan.push({kind: "add", rp, raw}); return; }
+    const lraw = lsGet("gv_p_" + lp.id) || "{}", ra = rawAt(raw), la = rawAt(lraw);
+    if(ra > la || (!ra && !la && rawRounds(raw) > rawRounds(lraw))) plan.push({kind: "update", rp, lp, raw});
+  });
+  return plan;
+}
+function applyPlan(plan){
+  plan.forEach(x => {
+    if(x.kind === "add"){ profiles.list.push(Object.assign({}, x.rp)); lsSet("gv_p_" + x.rp.id, x.raw); }
+    else { Object.keys(x.rp).forEach(k => { if(k !== "id") x.lp[k] = x.rp[k]; }); lsSet("gv_p_" + x.lp.id, x.raw); }
+  });
+  if(plan.length){ if(!profiles.current && profiles.list.length) profiles.current = profiles.list[0].id; saveProfiles(); if(curProfile()) loadProfile(curProfile().id); }
+}
+function mergeBundles(a, b){ // a = distant, b = local ; garde le plus récent de chaque enfant
+  const out = {app: "garage-petites-voitures", v: 1, at: Date.now(), profiles: [], data: {}};
+  [a, b].forEach(x => (x && x.profiles || []).forEach(p => {
+    const raw = (x.data || {})[p.id]; if(!raw) return;
+    const i = out.profiles.findIndex(q => sameKid(q, p));
+    if(i < 0){ out.profiles.push(Object.assign({}, p)); out.data[p.id] = raw; }
+    else if(rawAt(raw) >= rawAt(out.data[out.profiles[i].id])){ const old = out.profiles[i].id; delete out.data[old]; out.profiles[i] = Object.assign({}, p); out.data[p.id] = raw; }
+  }));
+  return out;
+}
+let syncTimer = 0, syncBusy = false;
+function syncSoon(){ clearTimeout(syncTimer); syncTimer = setTimeout(syncPush, 20000); }
+async function syncPush(){
+  if(syncBusy) return; syncBusy = true;
+  try{
+    const ref = await syncRef(); if(!ref) return;
+    let remote = null; try{ const sn = await ref.get(); if(sn.exists){ const d = sn.data(); remote = d.bundle ? JSON.parse(d.bundle) : (d.profiles ? {profiles: JSON.parse(d.profiles).list, data: d.data} : null); } }catch(e){}
+    const merged = mergeBundles(remote, profileBundle());
+    await ref.set({bundle: JSON.stringify(merged), savedAt: Date.now(), profiles: JSON.stringify({list: merged.profiles, current: null}), data: merged.data});
+  }catch(e){} finally{ syncBusy = false; }
+}
+async function syncPull(){
+  try{
+    const ref = await syncRef(); if(!ref) return 0;
+    const sn = await ref.get(); if(!sn.exists) return 0;
+    const d = sn.data(), b = d.bundle ? JSON.parse(d.bundle) : (d.profiles ? {profiles: JSON.parse(d.profiles).list, data: d.data} : null);
+    const plan = bundlePlan(b); if(!plan.length) return 0;
+    applyPlan(plan); return plan.length;
+  }catch(e){ return 0; }
+}
+function shareWire(){
+  const ex = document.getElementById("shexp"), im = document.getElementById("shimp"), msg = document.getElementById("shmsg");
+  if(!ex) return;
+  ex.onclick = async () => {
+    const b = profileBundle(), name = `progres-garage-${today()}.json`, blob = new Blob([JSON.stringify(b)], {type: "application/json"});
+    try{
+      const f = new File([blob], name, {type: "application/json"});
+      if(navigator.canShare && navigator.canShare({files: [f]})) await navigator.share({files: [f], title: "Progrès du Garage"});
+      else await saveFile(name, blob);
+      msg.textContent = "Fichier prêt. Ouvrez le jeu sur l'autre appareil, puis « Récupérer un fichier ».";
+    }catch(e){ if(!(e && (e.name === "AbortError" || e.code === "declined"))) msg.textContent = "L'envoi n'a pas marché. Réessayez."; }
+  };
+  let pending = null;
+  im.onchange = async () => {
+    const f = im.files && im.files[0]; im.value = ""; if(!f) return;
+    try{
+      const b = JSON.parse(await f.text());
+      if(!b || b.app !== "garage-petites-voitures"){ msg.textContent = "Ce fichier n'est pas un fichier de progrès du Garage."; return; }
+      pending = bundlePlan(b);
+      if(!pending.length){ msg.textContent = "Rien de nouveau : cet appareil a déjà les progrès les plus récents."; return; }
+      document.getElementById("shasktxt").textContent = "Récupérer : " + pending.map(x => (x.kind === "add" ? "nouveau profil " : "progrès plus récents de ") + x.rp.name).join(", ") + " ?";
+      document.getElementById("shask").hidden = false;
+    }catch(e){ msg.textContent = "Impossible de lire ce fichier."; }
+  };
+  document.getElementById("shno").onclick = () => { document.getElementById("shask").hidden = true; pending = null; };
+  document.getElementById("shyes").onclick = () => { document.getElementById("shask").hidden = true; if(!pending) return; applyPlan(pending); pending = null; syncSoon(); parentPage(); const m = document.getElementById("shmsg"); if(m) m.textContent = "Progrès récupérés ✓"; };
+}
+
 function syncHtml(){
   return `<section class="settings" id="syncbox" hidden>
       <h3>Sauvegarde en ligne</h3>
@@ -6817,6 +6994,7 @@ function baseGradeKey(){ const p = curProfile(); return (p && GRADES[p.grade]) ?
 const GORDER = ["PS","MS","GS","CP"];
 const NO_ADAPT = ["compter","formes","taille","sons","suites","espace","histoires","peinture","prenom","couleurs"];
 function effGrade(game){
+  if(duo && duo.turn === 1 && duo.g && game){ let i = GORDER.indexOf(duo.g); const ok = GAMES[game] && GAMES[game].grades; while(ok && !ok.includes(GORDER[i]) && i > 0) i--; return GORDER[i]; }
   const b = baseGradeKey();
   if(!game || NO_ADAPT.includes(game) || !GAMES[game] || typeof pdata === "undefined" || !pdata || !pdata.boost) return b;
   let i = Math.max(0, Math.min(3, GORDER.indexOf(b) + (pdata.boost[game] || 0)));
@@ -6894,5 +7072,7 @@ function whoPlays(){
 
 if(profiles.list.length) loadProfile(curProfile().id);
 if(profiles.list.length === 1) menu(); else whoPlays();
+// progrès venus d'un autre appareil (compte Claude) : on les reprend tant que l'enfant n'a pas commencé à jouer
+syncPull().then(n => { if(!n) return; if(!curGame && !document.querySelector(".party")){ if(profiles.list.length === 1) menu(); else whoPlays(); } try{ mascotBubble("Progrès récupérés !"); }catch(e){} });
 })();
 </script>
