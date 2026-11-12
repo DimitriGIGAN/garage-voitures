@@ -948,6 +948,13 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 }
 /* Vroumi ne doit pas couvrir le bouton Menu sur téléphone */
 @media (max-width:560px){ #mascot:not(.m-visit){top:80px;width:52px} }
+/* --- observations, sélection, vérification --- */
+.obsq{display:grid;gap:6px;margin:8px 0}
+.obstxt{width:100%;font:600 1rem var(--body);border:3px solid var(--ink);border-radius:14px;padding:10px;resize:vertical;box-sizing:border-box}
+.obsrow{background:#f4f7fc;border-radius:12px;padding:8px 12px;margin:6px 0;font-size:.95rem}
+.devrow{display:flex;gap:10px;align-items:flex-start;margin:8px 0}
+.devi{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;background:#8a94a8}
+.devi.ok{background:#2fb36b}.devi.ko{background:#c84f0c}
 /* --- histoires : ordre, partie à deux --- */
 .seqrow{display:flex;gap:14px;justify-content:center;margin:6px auto 16px}
 .seqslot{width:min(26vw,170px);aspect-ratio:800/457;border:4px dashed #9aa6bf;border-radius:16px;display:grid;place-items:center;font:800 2rem var(--display);color:#9aa6bf;background:rgba(255,255,255,.6);overflow:hidden}
@@ -1431,6 +1438,31 @@ function saveStats(){ saveProfileData(); }
 function blankStat(){ return {rounds:0, first:0, errors:0, ms:0, timed:0, level:0, missed:{}, days:{}}; }
 function gstat(game){ if(!stats[game]) stats[game] = blankStat(); return stats[game]; }
 function today(){ const d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+// ---------- Révision espacée : ce qui a été raté revient 1, 3 puis 7 jours plus tard ----------
+const REV_STEPS = [1, 3, 7];
+const dayNum = () => Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5);
+function reviewMiss(game, item){
+  const R = pdata.review = pdata.review || {}, q = R[game] = R[game] || {};
+  q[item] = {d: dayNum() + REV_STEPS[0], s: 0};
+  const ks = Object.keys(q); if(ks.length > 12) delete q[ks[0]];
+  saveProfileData();
+}
+function reviewDone(game, item, errs){
+  const q = pdata.review && pdata.review[game], e = q && q[item];
+  if(!e || errs || e.d > dayNum()) return;
+  e.s++; if(e.s >= REV_STEPS.length) delete q[item]; else e.d = dayNum() + REV_STEPS[e.s];
+  saveProfileData();
+}
+// renvoie un élément à revoir aujourd'hui parmi ceux possibles (une fois sur deux), sinon null
+function reviewPick(game, possible, avoid){
+  try{
+    if(duo) return null;
+    const q = (pdata.review || {})[game]; if(!q) return null;
+    const due = possible.filter(it => q[String(it)] && q[String(it)].d <= dayNum() && it !== avoid);
+    return due.length && Math.random() < .5 ? pick(due) : null;
+  }catch(e){ return null; }
+}
+function reviewCount(){ try{ const t = dayNum(); return Object.values(pdata.review || {}).reduce((a, q) => a + Object.values(q).filter(e => e.d <= t).length, 0); }catch(e){ return 0; } }
 function track(game, item, noTime){
   if(duo && duo.turn === 1){ let e = 0; return {get errors(){ return e; }, wrong(){ e++; }, right(){}}; }
   const t0 = Date.now(); let errs = 0, closed = false;
@@ -1438,13 +1470,14 @@ function track(game, item, noTime){
     get errors(){ return errs; },
     wrong(){
       if(closed) return; errs++;
-      if(item != null){ const g = gstat(game); g.missed[item] = (g.missed[item]||0) + 1; saveStats(); }
+      if(item != null){ const g = gstat(game); g.missed[item] = (g.missed[item]||0) + 1; saveStats(); try{ reviewMiss(game, item); }catch(e){} }
     },
     right(lvl){
       if(closed) return; closed = true;
       const g = gstat(game);
       g.rounds++; if(!errs) g.first++; g.errors += errs;
       try{ pdata.updatedAt = Date.now(); syncSoon(); }catch(e){}
+      try{ if(item != null) reviewDone(game, item, errs); }catch(e){}
       const ms = Date.now() - t0;
       if(!noTime && ms < 60000){ g.ms += ms; g.timed++; }
       if(lvl != null) g.level = Math.max(g.level || 0, lvl);
@@ -1622,10 +1655,12 @@ function parentPage(){
       ${weekSummaryHtml()}
       ${carnetReminderHtml()}
       ${homeActHtml()}
+      ${obsHtml()}
       <div class="pactions"><button class="iconbtn" id="classv">Tous les enfants · gérer les profils</button><button class="iconbtn" id="carnet">📘 Carnet de route du mois</button><button class="iconbtn" id="livret">🎓 Livret pour la maîtresse</button></div>
       <div class="addrow gradeline"><label for="pgrade" class="glab">Classe de ${displayName()}</label>${gradeSelect("pgrade", gradeKey())}</div>
       <p class="pnote">Les jeux démarrent au niveau de cette classe et deviennent plus durs quand ${displayName()} réussit. Le bilan montre ce qui est appris dans ces jeux, pas l'intelligence : comparez sur plusieurs jours.</p>
       <div class="psum"><span><b>${stars}</b> étoiles</span><span><b>${played}</b> parties</span><span><b>${days.size}</b> jour${days.size>1?"s":""} joué${days.size>1?"s":""}</span></div>
+      ${reviewCount() ? `<p class="pnote">🔁 ${reviewCount()} élément${reviewCount() > 1 ? "s" : ""} raté${reviewCount() > 1 ? "s" : ""} ces derniers jours reviendr${reviewCount() > 1 ? "ont" : "a"} dans les jeux aujourd'hui.</p>` : ""}
       <div class="plegend"><span class="pill l">À travailler</span><span class="pill m">En cours</span><span class="pill g">Acquis</span><span class="pnote">sur la réussite du premier coup</span></div>
       ${(() => {
         const card = sk => {
@@ -1652,9 +1687,11 @@ function parentPage(){
           ${rest.length ? `<details class="psect"><summary>Pas encore joués · ${rest.length}</summary><div class="plist">${rest.map(card).join("")}</div></details>` : ""}`;
       })()}
       <p class="pnote">« Acquis » = au moins 80 % de réussite du premier coup, après assez de parties. « En cours » = 50 à 79 %. « À travailler » = moins de 50 %.</p>
+      ${focusHtml()}
       ${pvHtml()}
       ${shareHtml()}
       ${installHtml()}
+      ${deviceHtml()}
       <details class="psect"><summary>⚙️ Réglages, aides et sauvegarde</summary>
       ${settingsHtml()}${a11ySettingsHtml()}
       ${syncHtml()}
@@ -1694,7 +1731,7 @@ function parentPage(){
   document.getElementById("classv").onclick = classView;
   document.getElementById("carnet").onclick = () => carnetScreen();
   const crm = document.getElementById("crem"); if(crm) crm.onclick = () => carnetScreen(true);
-  pvWire(); installWire(); shareWire();
+  pvWire(); installWire(); shareWire(); retroWire();
   document.getElementById("livret").onclick = () => livretScreen();
   document.getElementById("pgrade").onchange = e => { curProfile().grade = e.target.value; curProfile().gradeYear = schoolYear(); saveProfiles(); loadProfile(curProfile().id); parentPage(); };
 }
@@ -2488,6 +2525,7 @@ function nameGame(){
   function lineFor(){ return `Trouve la lettre ${LETTER_SAY[name[idx]]} !`; }
   let lock = false;
   function round(){
+    if(!document.body.contains(ask)) return; // l'enfant est déjà retourné au menu
     lock = false;
     slots.forEach((s,i) => { s.classList.toggle("cur", i === idx); });
     const target = name[idx];
@@ -2623,6 +2661,7 @@ function playVeh(id){
 function soundGame(){
   const pool = ["voiture","pompiers","moto","velo","train"].slice(0, soundLevel);
   let target; do { target = pick(pool); } while(target === lastSound && pool.length > 1);
+  { const lab = reviewPick("sons", pool.map(k => VEH[k].label), VEH[lastSound] && VEH[lastSound].label), k = lab && pool.find(x => VEH[x].label === lab); if(k) target = k; }
   lastSound = target;
   const others = shuffle(pool.filter(k => k !== target)).slice(0,2);
   const choices = shuffle([target, ...others]);
@@ -2780,6 +2819,7 @@ function scene(target, done, hex){
 function shapeGame(){
   const pool = ["cercle","carre","triangle","rectangle","etoile"].slice(0, shapeLevel);
   let target; do { target = pick(pool); } while(target === lastShape && pool.length > 1);
+  target = reviewPick("formes", pool, lastShape) || target;
   lastShape = target;
   const others = shuffle(["cercle","carre","triangle","rectangle","etoile"].filter(k => k !== target)).slice(0,2);
   const choices = shuffle([target, ...others]);
@@ -2823,7 +2863,7 @@ function shapeGame(){
 
 // ---------- colour game ----------
 function colorGame(){
-  const target = pick(COLORS);
+  const target = (id => COLORS.find(c => c.id === id))(reviewPick("couleurs", COLORS.map(c => c.id))) || pick(COLORS);
   const others = shuffle(COLORS.filter(c=>c!==target)).slice(0,2);
   const choices = shuffle([target, ...others]);
   app.innerHTML = `${topBar(true)}
@@ -2872,7 +2912,7 @@ function countGame(){
   if(g === "MS" && countRound % 3 === 0) return problemGame(g);
   let n;
   if(g === "CP"){ do { n = 11 + rnd(89); } while(n === lastCount); }
-  else { do { n = 1 + rnd(level); } while(n === lastCount && level > 1); }
+  else { do { n = 1 + rnd(level); } while(n === lastCount && level > 1); const rv = reviewPick("compter", Array.from({length: level}, (_, i) => String(i + 1)), String(lastCount)); if(rv) n = +rv; }
   lastCount = n;
   const big = n > 10, max = big ? 100 : 10;
   const opts = new Set([n]);
@@ -3681,7 +3721,8 @@ function fixPdata(d){
     storyNext: d.storyNext || 0, storiesDone: d.storiesDone || [], permits: d.permits || {},
     challenge: d.challenge || null, medals: d.medals || 0, custom: d.custom || null,
     boost: d.boost || {}, recent: d.recent || {}, seen: d.seen || {}, gtime: d.gtime || {}, ileSeen: d.ileSeen || null, stk: d.stk, stkBase: d.stkBase, stkNew: d.stkNew || [], ileView: d.ileView === undefined ? -1 : d.ileView,
-    hunt: d.hunt || undefined, aiStory: d.aiStory || undefined, lad: d.lad || null, introDay: d.introDay || null, carnetSeen: d.carnetSeen || null, updatedAt: d.updatedAt || 0};
+    hunt: d.hunt || undefined, aiStory: d.aiStory || undefined, lad: d.lad || null, introDay: d.introDay || null, carnetSeen: d.carnetSeen || null, updatedAt: d.updatedAt || 0,
+    review: d.review || {}, obs: d.obs || [], actDone: d.actDone || {}};
 }
 const capFirst = t => t.charAt(0).toUpperCase() + t.slice(1);
 
@@ -6459,12 +6500,108 @@ async function saveFile(name, blob){
 }
 // ---------- Activités à faire à la maison ----------
 const HOME_ACT = {"couleurs": "Pendant le rangement, demandez-lui de mettre ensemble tous les jouets rouges, puis tous les bleus.", "compter": "Au goûter, comptez ensemble les biscuits en touchant chacun du doigt. « Il y en a combien ? »", "problemes": "Avec 5 petites voitures : « J'en ai 3, j'en ajoute 1, combien maintenant ? » Puis on en retire une.", "formes": "Cherchez les ronds, les carrés et les triangles dans la maison : assiette, fenêtre, part de pizza…", "taille": "Rangez 4 chaussures de la famille de la plus petite à la plus grande.", "sons": "Les yeux fermés, il écoute : clés, porte, robinet, voiture dehors. Il devine ce que c'est.", "prenom": "Écrivez son prénom en grosses lettres. Il cherche les mêmes lettres sur les boîtes de céréales ou les plaques.", "suites": "Faites un collier de pâtes : une grosse, une petite, une grosse… Il continue la suite.", "espace": "Cachez un jouet et guidez-le avec des mots : devant, derrière, sur, sous, à côté.", "bus": "Avec des peluches dans un « bus » en carton : 2 montent, 1 descend. Combien dans le bus ?", "semaine": "Chaque matin, dites ensemble le jour qu'on est, puis celui d'hier et de demain.", "lavage": "Il vous aide à mettre la table dans l'ordre : assiette, fourchette, verre. Laissez-le dire l'ordre.", "trace": "Dans un plateau de farine ou de sable, il trace des routes avec le doigt, puis des chiffres.", "histoires": "Après une histoire, posez une question : « Qui ? Où ? Et après, qu'est-ce qui s'est passé ? »", "consignes": "Jeu de Jacques a dit avec 2 consignes : « Touche ton nez puis saute. »", "memoire": "Posez 3 objets sur la table, cachez-en un avec un torchon. Lequel a disparu ?", "emotions": "Faites des grimaces à tour de rôle : content, triste, en colère, surpris. L'autre devine.", "puzzle": "Découpez une image de magazine en 4 morceaux. Il la reconstitue.", "comptines": "Chantez une comptine dans la voiture et laissez-le finir chaque phrase.", "labo": "Dans la cuisine : qu'est-ce qui flotte dans l'eau ? Un bouchon, une cuillère, une feuille…", "creole": "Dites un mot créole par jour pendant le repas : « manzé », « dlo », « marmay »… Il le répète.", "animaux": "Au jardin ou au marché, cherchez un animal et demandez : il vit dans la mer ou sur la terre ?", "ombres": "Le soir, faites des ombres avec les mains et une lampe. Il devine l'animal.", "monnaie": "Jouez à la marchande avec de vraies pièces de 1 € et 2 € : un fruit coûte 3 €, il paie.", "rythme": "Tapez un rythme dans les mains (lent-lent-vite-vite). Il le refait. Puis c'est lui qui invente.", "rue": "À chaque passage piéton, c'est lui qui dit quand on peut traverser et regarde des deux côtés.", "labyrinthe": "Tracez un petit chemin à la craie ou au scotch par terre. Il le suit sans sortir.", "tri": "Il vous aide à trier les déchets de la cuisine : emballages, verre, épluchures.", "meteo": "Le matin à la fenêtre : il fait quel temps ? Quels habits on met ?", "metiers": "En voiture, montrez les véhicules : qui conduit le camion poubelle, l'ambulance, le bus ?", "balance": "Une pomme dans chaque main : laquelle est la plus lourde ? Vérifiez sur la balance de cuisine.", "course": "Alignez 4 peluches pour une course : qui est premier, deuxième, dernier ?", "moitie": "Coupez un fruit en deux devant lui, mélangez les moitiés de 2 fruits et il les rassemble.", "contraires": "Jeu des contraires pendant le bain : chaud ou froid ? Plein ou vide ? Mouillé ou sec ?", "feu": "Jeu « 1, 2, 3, soleil » ou « feu rouge, feu vert » en courant dans le jardin."};
+function actOfDay(){
+  const withAct = SKILLS.filter(sk => HOME_ACT[sk.id]);
+  const weak = withAct.map(sk => ({sk, g: stats[sk.id], v: verdict(sk, stats[sk.id])})).filter(x => x.v.cls === "l" || x.v.cls === "m")
+    .sort((a, b) => (a.g.first / a.g.rounds) - (b.g.first / b.g.rounds)).map(x => x.sk);
+  const pool = weak.length ? weak.slice(0, 4) : withAct, n = dayNum();
+  return {sk: pool[n % pool.length], weak: weak.length > 0};
+}
 function homeActHtml(){
-  const weak = SKILLS.map(sk => ({sk, g: stats[sk.id], v: verdict(sk, stats[sk.id])})).filter(x => HOME_ACT[x.sk.id] && (x.v.cls === "l" || x.v.cls === "m"))
-    .sort((a, b) => (a.g.first / a.g.rounds) - (b.g.first / b.g.rounds)).slice(0, 2);
-  if(!weak.length) return "";
-  return `<section class="pcard phomecard"><h3>🏠 Cette semaine, à la maison</h3><p class="pnote">5 minutes, sans écran, pour aider ${esc(displayName())} là où ça coince encore.</p>
-    ${weak.map(x => `<p class="phome"><b>${x.sk.label} :</b> ${HOME_ACT[x.sk.id]}</p>`).join("")}</section>`;
+  const a = actOfDay(); if(!a.sk) return "";
+  const done = (pdata.actDone || {})[today()], total = Object.keys(pdata.actDone || {}).length;
+  return `<section class="pcard phomecard"><h3>🏠 L'activité du jour, sans écran</h3>
+    <p class="pnote">5 minutes avec ${esc(displayName())}${a.weak ? ", là où ça coince encore dans les jeux" : ""}. C'est en parlant avec vous qu'il apprend le plus.</p>
+    <p class="phome"><b>${a.sk.label} :</b> ${HOME_ACT[a.sk.id]}</p>
+    <div class="pactions"><button class="${done ? "iconbtn" : "big"}" id="actdone" ${done ? "disabled" : ""}>${done ? "✓ Fait aujourd'hui" : "C'est fait ✓"}</button>${total ? `<span class="pnote">${total} activité${total > 1 ? "s" : ""} faite${total > 1 ? "s" : ""} en tout</span>` : ""}</div></section>`;
+}
+// ---------- Observations des parents ----------
+function obsHtml(){
+  const list = (pdata.obs || []).slice(-5).reverse();
+  return `<section class="pcard" id="obscard"><h3>📝 Mes observations</h3>
+    <p class="pnote">Après une séance, notez en deux mots ce que vous avez vu. C'est ce qui permet d'améliorer le jeu pour ${esc(displayName())}.</p>
+    <div class="obsq">
+      <label class="glab" for="obslike">Le jeu qu'il a préféré</label><select id="obslike" class="gsel"><option value="">—</option>${Object.entries(GAMES).map(([k, g]) => `<option value="${k}">${g.label}</option>`).join("")}</select>
+      <label class="glab" for="obshard">Le jeu où il a bloqué</label><select id="obshard" class="gsel"><option value="">—</option>${Object.entries(GAMES).map(([k, g]) => `<option value="${k}">${g.label}</option>`).join("")}</select>
+      <label class="glab" for="obstxt">Ce que j'ai remarqué</label><textarea id="obstxt" class="obstxt" rows="2" maxlength="300" placeholder="Il a compris seul ? Il a demandé de l'aide ? Il s'est lassé ?"></textarea>
+    </div>
+    <div class="pactions"><button class="big" id="obssave">Enregistrer</button><button class="iconbtn" id="obscopy" ${list.length ? "" : "hidden"}>📋 Copier mes notes</button></div>
+    <p class="pnote" id="obsmsg" aria-live="polite"></p>
+    ${list.map(o => `<p class="obsrow"><b>${esc(o.d)}</b>${o.like && GAMES[o.like] ? ` · 💚 ${GAMES[o.like].label}` : ""}${o.hard && GAMES[o.hard] ? ` · 🧩 ${GAMES[o.hard].label}` : ""}${o.t ? `<br>${esc(o.t)}` : ""}</p>`).join("")}</section>`;
+}
+function obsText(){ return (pdata.obs || []).map(o => `${o.d}${o.like && GAMES[o.like] ? " | préféré : " + GAMES[o.like].label : ""}${o.hard && GAMES[o.hard] ? " | a bloqué : " + GAMES[o.hard].label : ""}${o.t ? " | " + o.t : ""}`).join("\n"); }
+function retroWire(){
+  const ad = document.getElementById("actdone"); if(ad) ad.onclick = () => { pdata.actDone = pdata.actDone || {}; pdata.actDone[today()] = 1; saveProfileData(); parentPage(); };
+  const sv = document.getElementById("obssave");
+  if(sv) sv.onclick = () => {
+    const like = document.getElementById("obslike").value, hard = document.getElementById("obshard").value, t = document.getElementById("obstxt").value.trim();
+    if(!like && !hard && !t){ document.getElementById("obsmsg").textContent = "Choisissez un jeu ou écrivez un mot."; return; }
+    pdata.obs = (pdata.obs || []).concat({d: today(), like, hard, t}).slice(-40); pdata.updatedAt = Date.now(); saveProfileData(); try{ syncSoon(); }catch(e){}
+    parentPage(); const m = document.getElementById("obsmsg"); if(m) m.textContent = "Noté ✓";
+  };
+  const cp = document.getElementById("obscopy");
+  if(cp) cp.onclick = async () => { const m = document.getElementById("obsmsg"); try{ await navigator.clipboard.writeText(obsText()); m.textContent = "Notes copiées : collez-les dans la conversation avec Claude."; }catch(e){ m.textContent = obsText(); } };
+  const fp = document.getElementById("focusprop"); if(fp) fp.onclick = () => focusPropose();
+  const fa = document.getElementById("focusall"); if(fa) fa.onclick = () => { pdata.settings.hidden = []; saveProfileData(); parentPage(); };
+  deviceCheck();
+}
+// ---------- Resserrer : une sélection de jeux d'après les vraies parties ----------
+function focusPlan(){
+  const ok = Object.keys(GAMES).filter(k => gradeOK(k) && !a11yHidden().includes(k));
+  const played = ok.filter(k => (stats[k] || {}).rounds >= 3), days = new Set(); Object.values(stats).forEach(g => Object.keys((g && g.days) || {}).forEach(d => days.add(d)));
+  if(played.length < 8 || days.size < 4) return {ready: false, played: played.length, days: days.size};
+  const liked = new Set((pdata.obs || []).map(o => o.like).filter(Boolean)), hard = new Set((pdata.obs || []).map(o => o.hard).filter(Boolean));
+  const score = k => { const g = stats[k] || {}, p = g.rounds ? g.first / g.rounds : 0; return (g.rounds || 0) + (liked.has(k) ? 15 : 0) + (p >= .4 && p < .85 ? 8 : 0) - (hard.has(k) && p < .3 ? 6 : 0); };
+  const keep = new Set(played.slice().sort((a, b) => score(b) - score(a)).slice(0, 12));
+  // au moins un jeu par domaine du programme
+  LDOM.forEach(d => { const c = d.ids.filter(k => ok.includes(k)); if(c.length && !c.some(k => keep.has(k))) keep.add(c.slice().sort((a, b) => score(b) - score(a))[0]); });
+  if(GAMES.histoires && ok.includes("histoires")) keep.add("histoires");
+  return {ready: true, keep: [...keep], hide: ok.filter(k => !keep.has(k))};
+}
+function focusHtml(){
+  const hid = (pdata.settings.hidden || []).length;
+  return `<section class="pcard" id="focuscard"><h3>🎯 Moins de jeux, mieux choisis</h3>
+    <p class="pnote">${hid ? `${hid} jeu${hid > 1 ? "x" : ""} masqué${hid > 1 ? "s" : ""} en ce moment. Rien n'est supprimé.` : `D'après les vraies parties de ${esc(displayName())}, le jeu peut proposer une douzaine de jeux et masquer les autres. Rien n'est supprimé.`}</p>
+    <div class="pactions"><button class="iconbtn" id="focusprop">Proposer une sélection</button>${hid ? `<button class="iconbtn" id="focusall">Tout réafficher</button>` : ""}</div>
+    <div id="focusout" aria-live="polite"></div></section>`;
+}
+function focusPropose(){
+  const out = document.getElementById("focusout"), p = focusPlan();
+  if(!p.ready){ out.innerHTML = `<p class="pnote">Pas encore assez de parties pour choisir : il faut au moins 8 jeux essayés sur 4 jours différents (pour l'instant ${p.played} jeu${p.played > 1 ? "x" : ""} sur ${p.days} jour${p.days > 1 ? "s" : ""}).</p>`; return; }
+  out.innerHTML = `<p class="phome"><b>À garder (${p.keep.length}) :</b> ${p.keep.map(k => GAMES[k].label).join(", ")}</p>
+    <p class="pnote"><b>À masquer (${p.hide.length}) :</b> ${p.hide.map(k => GAMES[k].label).join(", ") || "aucun"}</p>
+    <div class="pactions"><button class="big" id="focusyes">Appliquer</button><button class="iconbtn" id="focusno">Annuler</button></div>`;
+  document.getElementById("focusno").onclick = () => { out.innerHTML = ""; };
+  document.getElementById("focusyes").onclick = () => { pdata.settings.hidden = p.hide; saveProfileData(); parentPage(); };
+}
+// ---------- Vérification de l'appareil ----------
+function deviceHtml(){
+  return `<section class="pcard" id="devcard"><h3>🩺 Cet appareil est-il prêt ?</h3><div id="devlist"><p class="pnote">Vérification…</p></div></section>`;
+}
+async function deviceCheck(){
+  const el = document.getElementById("devlist"); if(!el) return;
+  const rows = [], add = (ok, t, tip) => rows.push(`<p class="devrow"><span class="devi ${ok === true ? "ok" : ok === false ? "ko" : "na"}">${ok === true ? "✓" : ok === false ? "!" : "–"}</span><span><b>${t}</b>${tip ? `<br><span class="pnote">${tip}</span>` : ""}</span></p>`);
+  const onSite = /\.github\.io$/.test(location.hostname), standalone = matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches || navigator.standalone === true;
+  // stockage
+  let stOK = false; try{ localStorage.setItem("gv_t", "1"); stOK = localStorage.getItem("gv_t") === "1"; localStorage.removeItem("gv_t"); }catch(e){}
+  let persisted = null; try{ if(navigator.storage && navigator.storage.persist) persisted = (await navigator.storage.persisted()) || (await navigator.storage.persist()); }catch(e){}
+  add(stOK, "Les progrès s'enregistrent sur cet appareil", !stOK ? "Le navigateur bloque l'enregistrement (navigation privée ?)." : persisted ? "Et l'appareil a promis de ne pas les effacer tout seul." : "Pensez à « Envoyer les progrès » de temps en temps : le navigateur peut les effacer s'il manque de place.");
+  // appli + hors ligne
+  if(onSite){
+    add(standalone, "Le jeu est installé comme une appli", standalone ? "" : "Ajoutez-le à l'écran d'accueil (voir « Le jeu sur la tablette »).");
+    let n = 0, sw = false; try{ sw = !!(await navigator.serviceWorker.getRegistration()); for(const k of await caches.keys()) n += (await (await caches.open(k)).keys()).length; }catch(e){}
+    add(sw && n >= 20, "Le jeu marche sans internet", sw && n >= 20 ? `${n} fichiers gardés sur l'appareil.` : "Laissez le jeu ouvert une minute avec internet, puis revenez voir.");
+  } else add(null, "Appli et mode sans internet", "Disponibles sur la version tablette (dimitrigigan.github.io/garage-voitures).");
+  // micro
+  let mic = null; try{ if(!(navigator.mediaDevices && window.MediaRecorder)) mic = false; else if(navigator.permissions){ const st = await navigator.permissions.query({name: "microphone"}); mic = st.state === "denied" ? false : st.state === "granted" ? true : null; } }catch(e){}
+  add(mic, "Le micro pour vos encouragements", mic === false ? "Micro bloqué ici : utilisez « Choisir un son »." : mic === true ? "" : "Il demandera l'autorisation au premier enregistrement.");
+  // voix
+  let nv = 0; try{ nv = (await pvAll()).length; }catch(e){}
+  add(nv > 0 ? true : null, `Vos messages enregistrés : ${nv}`, nv ? "" : "Aucun pour l'instant.");
+  // sauvegarde compte
+  let ref = null; try{ ref = await syncRef(); }catch(e){}
+  add(ref ? true : null, "Sauvegarde automatique sur le compte Claude", ref ? "" : "Pas disponible ici : utilisez le fichier de progrès pour passer d'un appareil à l'autre.");
+  if(document.body.contains(el)) el.innerHTML = rows.join("");
 }
 // ---------- Rappel du carnet en début de mois ----------
 function carnetReminderHtml(){
@@ -7070,6 +7207,13 @@ function whoPlays(){
   });
 }
 
+// Crochet pour les tests automatiques (outils/tests) : actif seulement avec ?test dans l'adresse
+if(/[?&]test\b/.test(location.search)) window.__garage = {
+  games: () => Object.keys(GAMES), run: k => { curGame = k; play = {game: k, count: 0}; GAMES[k].run(); }, home: () => menu(), parents: () => parentPage(),
+  stats: () => stats, pdata: () => pdata, levels: () => ({level, shapeLevel, sizeN, soundLevel, trainLvl}),
+  ladDown, adaptLevel, reviewMiss, reviewDone, reviewPick, reviewCount, dayNum, focusPlan, bundlePlan, mergeBundles, profileBundle, livretPages, carnetSvg, effGrade,
+  duo: v => { if(v !== undefined) duo = v; return duo; }, save: () => saveProfileData()
+};
 if(profiles.list.length) loadProfile(curProfile().id);
 if(profiles.list.length === 1) menu(); else whoPlays();
 // progrès venus d'un autre appareil (compte Claude) : on les reprend tant que l'enfant n'a pas commencé à jouer
