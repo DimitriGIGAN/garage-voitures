@@ -948,6 +948,37 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 }
 /* Vroumi ne doit pas couvrir le bouton Menu sur téléphone */
 @media (max-width:560px){ #mascot:not(.m-visit){top:80px;width:52px} }
+.welcome{display:grid;gap:6px;max-width:560px;margin:4px auto 14px;background:rgba(255,255,255,.92);border:3px solid var(--ink);border-radius:20px;padding:12px 18px;text-align:left;font-size:.98rem}
+.welcome b{font-family:var(--display);font-size:1.1rem}
+/* --- histoires composées, mot du jour, missions --- */
+.sart.comp{position:relative;aspect-ratio:800/457;background:linear-gradient(#bfe6ff,#e9f7ff)}
+.sart.comp .cbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:none}
+.sart.comp.nobg{background:linear-gradient(#ffe9c7,#fff6e8)}
+.sart.comp .crow{position:absolute;left:0;right:0;bottom:4%;display:flex;justify-content:center;align-items:flex-end;gap:2%;padding:0 4%}
+.sart.comp .crow img{animation:none;width:auto;aspect-ratio:auto;max-height:52%;max-width:30%;filter:drop-shadow(0 4px 0 rgba(31,42,68,.35))}
+.sart.comp .crow{height:100%}
+.sart.comp .cside{position:absolute;bottom:5%;width:27%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:90%}
+.sart.comp .cl{left:2%}.sart.comp .cr{right:2%}
+.sart.comp .cside img{animation:none;width:100%;height:42%;max-height:none;aspect-ratio:auto;object-fit:contain;filter:drop-shadow(0 4px 0 rgba(31,42,68,.35))}
+.sart.comp .cside .cob{background:rgba(255,255,255,.88);border-radius:16px;padding:4px;height:34%;box-sizing:border-box}
+.sart.comp .crow img{object-fit:contain;height:auto}
+.sart.comp .cvr{max-height:46%!important}.sart.comp .cdd{max-height:42%!important}.sart.comp .ckid{max-height:50%!important}
+.sart.comp .cob{max-height:40%!important;background:rgba(255,255,255,.85);border-radius:18px;padding:4px}
+.seqpic .sart,.seqslot .sart,.tellpic .sart{border:0;border-radius:10px}
+.artimg img{width:64px;height:64px;object-fit:contain;display:block}
+.artimg.artwide img{width:110px;height:64px;object-fit:cover;border-radius:10px}
+.qart .artimg img{width:min(18vw,96px);height:min(18vw,96px)}
+.qart .artimg.artwide img{width:min(26vw,150px);height:min(15vw,86px)}
+.motrow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:6px auto 4px}
+.motcard{display:flex;align-items:center;gap:10px;background:#fff;border:4px solid var(--ink);border-radius:20px;padding:6px 16px 6px 8px;box-shadow:0 5px 0 var(--ink);font:inherit;cursor:pointer;text-align:left;min-height:56px}
+.motcard b{display:block;font-family:var(--display);font-size:1.05rem}.motcard small{color:var(--soft);font-weight:700}
+.motpic{width:48px;height:48px;display:grid;place-items:center;font-size:1.8rem}.motpic img{width:48px;height:48px;object-fit:contain}
+.misscard{background:#fff4c2}
+.motbig img{width:min(46vw,220px);height:min(46vw,220px);object-fit:contain;display:block;margin:0 auto}
+.motend h2{font-size:clamp(2rem,6vw,3rem);margin:6px 0}
+.motopt{width:min(18vw,96px);height:min(18vw,96px);object-fit:contain}
+.missbig{font:800 1.3rem var(--body);max-width:30ch;margin:8px auto}
+@media (prefers-reduced-motion:no-preference){ .motcard:hover{transform:translateY(-2px)} }
 /* --- temps d'écran --- */
 .stnow{font-size:1.15rem;margin:4px 0 8px}
 .stbar{height:16px;border:3px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden;margin-bottom:10px}
@@ -1287,7 +1318,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 <script>
 (() => {
 // ====================== IMAGES (ComfyUI) ======================
-const VOICE_KEYS = new Set(["010d6bf4","01179b9f","015c1ed7","01f16448","022414c3","02e90ade","030d78d8","0356c494","038653d6","03923012","03a71232","03e00ab3","0413f758","048f5a9b","04cc5c8e","04d6f13a","0541a0ae","05c2af6e","060c3a31","0615d054","069d008c","07148945","077442dc","0781932f","07e63f63","07ece5b0","0806d6ba","093a9ec1","0971bf18","09db8e8e","0a10ae1d","0ad5eeae","0afaaf2a","0b01dc7d","0b52c302","0bd13a52","0d0507aa","0e14dcdf","0ec3e44f","0f89f3fb","0f92ae40","0fcaa15f","0fdfa5e6","101e3d34","105ec6cd","10874241","10f89a53","11089f69","11b567d0","1203f690","135dd8df","13a6f4ed","141c2ad0","143f889f","14da008f","15215560","152f81f1","15463f23","154a4667","154f0f6b","159747cd","15c6108d","15ee7985","15ef9c89","15f977f7","15fce4ab","16d899b6","16f0d05f","172a58f5","1782deda","17f36b40","17f370f3","185f5690","186b75d7","18d0f814","192b7679","19888f23","1a49f03e","1a8d6f7a","1aea659e","1b1d3c87","1b5ac67e","1b5fc1ee","1b9105eb","1bf1b3e9","1ca1c615","1cd6166b","1ce574c1","1cf3ebe5","1d2e24a7","1dee4d82","1e0d175a","1e4ef209","1e69b87f","1eb0ac10","1ee40405","1f00356a","1f72d942","1f9530f8","1f9c65a8","1fbc1e71","1fc1d5bf","20eb8117","20ef5590","21636e7c","21a8be6a","21eeed83","22003fa8","22045fbb","22650ee7","22edc9dd","23468097","24679c6d","2569a72c","258ef3a7","25cf5ad7","26b61cf7","26e3ee84","2708e3b1","277cddb4","27957cbc","27a9042f","282496b8","28c84d22","2921d7b0","2942d3b6","297020fe","298185f4","29bdbaac","2a210484","2a3209d8","2a6b3376","2aacbf88","2aaec826","2ab4cffe","2af07a80","2b13e113","2b3bc5a5","2b858327","2ba57dad","2bd90c2b","2c4cdf4e","2cd97c67","2d14cc7d","2d7e1fae","2da7fd5e","2db1fa3f","2e1efebe","2f1e24f3","2f9ef7b7","2ff77e4b","30a56dc6","312a6142","3176a309","31bdc4d2","31d0d874","327227c5","328c0cb9","32f81ba8","32ff2ee3","33191bde","34c315be","34da365b","3551e61b","355f1381","359bca3b","35c656ff","35cce5dc","35f96d12","3605cc1c","3644ebcf","364d4e10","374eaca6","37ae1597","39831b98","3a1787de","3a21bc56","3a26711f","3a39f26a","3a5dac7c","3a6b2ab9","3a8f1c76","3a949481","3b66898d","3b96d2f8","3be9da67","3c485dbb","3c89ebfc","3cef2872","3de62e37","3de8c3eb","3e060890","3e6da6b8","3f3eeafd","3f855fbe","3faec876","404b3aaa","40540d39","41a65833","41aea321","41f906c4","42296db7","42aa5e31","42fd12f1","43127e44","43363cde","4339d9c6","4404eade","4477569f","44c8ca3c","44e266fc","44f8767c","45542207","4560494b","459dee7b","45bfe991","45e0acb1","460f7c59","46136786","46496013","464f3a22","466d4374","486b4c38","48a19117","48e2c6fb","49125fbd","496de6f9","4992ce5a","49db9625","49e65a09","49ed20b2","4a36a34a","4a3f13da","4a4555c7","4a7540d9","4adef8c3","4b59d528","4b5ada73","4b90904c","4c0c99d7","4c12ee22","4c77b3ce","4d60414f","4def74e1","4ea20812","4edce7bb","4ee2a735","4f38c893","4f9b2d67","4fedb2a4","50007dfa","5079812e","508cb713","50a8a95c","50d47300","51175898","51275280","513ca8ee","516b6704","5255d911","526e3c4f","52b95902","52f4fb8c","5322baeb","53871261","53bf2ec5","54aa8ed9","552fda1b","55513084","55e218ca","56197828","566b7ae3","5697fcee","5722370c","572d6e8d","573e3c2f","5741adb3","57a4de86","57a6695b","57f392ee","583bd0da","586f3dcf","58806f9a","58a28835","58a51906","58f10ec4","591b2d48","5927c087","597fbac9","59d4f3c2","59e05407","5a136c7f","5a3dc639","5a42136b","5a659aa6","5a9383d8","5ad7f0c0","5b144473","5ba35891","5c297c0b","5c3cab63","5ca7135e","5d01f4ea","5d3f1a48","5d714873","5f47ca4f","5fd100b9","5ff823ed","601b0807","60bde241","60e1da3b","61433a5a","619bba7c","61f35e74","624e41d5","626f0f4f","6292d8b6","62d7b114","62f4ebc8","6373d881","639281a4","639c52c9","63db947e","6407d9ac","641ad3bf","649d705c","64a6faae","64ed8e8e","650e0066","65e51955","65e8be6d","6621cf7e","66c44134","66d25cc1","66de2554","6720914b","67416472","67a72feb","67e5ceec","67f6e685","68398741","68ec3365","6933b59f","694168cc","69a79f7e","69e2c3fd","69fd3fce","6aa43fdb","6aebe02b","6c59c2a9","6c9db81f","6cf9f486","6d017001","6d7ec49e","6da741e8","6debc3f5","6e0dcab8","6e1a9186","6e756c0b","6f89d1ff","6f8ba7cb","6f9f8c23","6ff7440c","7009431f","7050e6f4","7055ba5f","70d2f63f","70e01ec4","70f847d9","7203d60f","72084b04","725d7215","737b76f4","738baf53","7407a4a0","7416f2ab","741da553","74716dfd","749a2c98","753db5e7","75831d69","75bb0358","7609e99b","761161de","761391c0","7684157d","76b5bca3","76bc4d18","76ebf61e","76f4884b","76fa10d9","772682c3","77827e7e","779d2f30","780c1ae4","7828a126","7836295e","7862d6ac","790ed501","7937c176","7957e6a0","7ab872dd","7ad59f92","7afa2a23","7b981822","7b9f35aa","7c49cb99","7c66776b","7c8d9f71","7d178a1a","7d30c30b","7d3af5a4","7dbf931f","7dc4c36d","7e5cc60e","7eab6725","7eff7110","7f343d1f","7f64cde8","7fc820e5","7ff79b6b","80451c8a","80cc88a1","813242ea","81ba7758","8220cf4a","82288bc8","8279b6fa","8368f4f3","8385f42e","839c59ee","8401692d","842d8d66","84cfd18d","8541a4ad","86545644","86b57f32","86df1a00","872d3437","87498df9","87add592","87f06117","87fd4d5d","880ce8ac","88815a25","888bd281","88ac7c16","891d32c9","89a65ffd","89ae32cb","89bea96f","89c97f91","8a1553d2","8aa1665b","8ae9c700","8b4583fb","8ba7a6a5","8bb3f7a6","8bd56b50","8bdfa867","8c1a25c8","8c3d3345","8cf1868c","8d46e90f","8d7a4b82","8e52724f","8edc64e0","8f9384cc","8fb89a4a","8fc2bc60","8ffc0b4e","903a9097","9087e9ff","90b09182","90fe763f","911f5219","9147afff","91556c8b","9173557f","92441ab8","92bb808d","92d5d9c6","92e2e53d","931680a2","93bb9f6c","93c3afee","93f02394","947fdaa3","9493262f","949d16d2","950797e6","9521356d","9588a01a","95b417f7","95b9412f","967aef7f","9683f95b","96ae549b","976aa621","97ba79ac","985aecdf","9875128c","994118d4","9a90dd9a","9ac0b441","9b3a4f3a","9b51f50d","9b9db8fd","9bbe66c4","9c12bac8","9c5a7cc0","9cc3c648","9d38ab57","9d885a75","9d930e47","9df180b7","9e42a9ed","9e8bed6e","a0002f4a","a0175f63","a05c0bd3","a0f47a2d","a0f7a2c9","a10a52a5","a15b90c1","a16570d4","a19572b4","a210a877","a217ef43","a21adf33","a23d8ff9","a24a96c1","a2aa5acd","a2f5581e","a31d78d6","a36fa0e0","a39e57cb","a3b65f14","a420af43","a4377a84","a43da09b","a47ca343","a539a5a3","a53b2b8f","a53d354c","a596c1ec","a5ce6391","a66c67f0","a676450e","a693374d","a6d1c371","a73429a6","a74bb55c","a75bd1a2","a7bd77ec","a7c8a01d","a7d309f7","a8b0283d","a8dc3c43","a909345e","a92fd6c3","a94d979b","a98dea5e","a9c443e3","a9fdaab3","aa030d1d","aa4f4182","aa5e9fd1","aa647b38","aa8dc0c9","aab59164","ab4687cb","abc00ac6","abdb2e86","abe8b550","ac2410bc","ac43efbb","ac45d6e8","ac7a9181","ac7a9192","acf804cc","ad07be29","ad5c3258","adccc2ac","adce6fc7","ae29ff19","ae677ff4","ae6ad79c","aea0ec60","af716420","b0024b09","b07b2832","b089e91b","b09cab2a","b1dd800f","b24a852b","b28c06c5","b2cfcffc","b483b706","b4c28760","b4dc6402","b4e54c5c","b6090bb0","b6d4e2b2","b70e7308","b79ee854","b7b25faa","b7c3233a","b8f7064f","b8fc8e51","b9b635e7","ba284be7","ba7041ba","bad1bd2c","bb038685","bb228397","bb5025da","bb6e05bb","bb99a472","bbd75d0c","bc0b3217","bc1a1dfa","bc6e8441","bc94c353","bc98a319","bccf7ab8","bce5d330","bd08f9cc","bd30663b","bd362352","bd6833c3","bd801dea","bddd6f4c","be4216a1","be718df1","bebe32a5","bec1ddcf","bec74fa6","bf557b9a","bf7b9f2b","c02a0621","c02fc729","c03871fc","c0afaa8d","c0ba34c8","c15b57d3","c1de3769","c21c7af8","c25dca0e","c2c3605b","c310de17","c3480c73","c3b32ca1","c3f7be4b","c41d957e","c4a11489","c4b57975","c4bb666c","c4d7663f","c4eebf5d","c524d503","c54432b3","c5e036cd","c5e8f908","c6277f68","c672d068","c6a15cf5","c6dc4c2f","c6e438b3","c7169d48","c71ecb5b","c7e52dc7","c7e7bf40","c81774c1","c85c0f77","c876aac0","c8bce0d6","c8eaf68b","c8f05475","c931d368","c94d6fdb","c97fa8d1","c9be70d9","c9da7d2a","c9e7a824","ca2ae028","cb045612","cb65a61f","cc66dcdf","cc78e3f5","cd171163","cdc1f911","cdc6c42c","cdd6e0f1","ce3fa5af","ce49ceda","ce515102","cf0db587","cf2e5136","cf4baeb1","cf589373","d0739549","d0f3d3da","d1031404","d12e70f9","d16225e9","d1a82f4b","d23a9f7b","d31a3e5f","d3309dc9","d36e405a","d370ad7f","d39ea837","d3f123ee","d412e7fd","d4e5b83c","d51c5f67","d52bf62f","d5b5684c","d5c3a895","d6f20d04","d6fb0abb","d77c3fd6","d7ac4ced","d7cf3c42","d7d19e37","d7f5b069","d8502c9d","d8b41752","d90bcde0","d91ac09c","d944186f","d9473f7b","d98c82bc","da74e3c6","daabf41b","dafcef35","db7758d8","dbb9d0af","dbff55f7","dc1cb5a6","dc673fe6","dcd935cf","dd1b3265","dd220911","dd2ab969","dd42a7ec","dd9989a2","ddbce3db","dded4ad8","de1e0c92","de2f7c34","de9c1c4a","de9c5a8b","decc0eba","dee935ea","dffed9b6","e01d5a2d","e07c029d","e0c4d2b8","e0e69105","e11d47c0","e16bbb80","e17d0c8d","e2234cdd","e22d3b39","e242d461","e2733b9d","e2b41f2c","e2cfd9a4","e42d9829","e44aeff6","e4a4ef9e","e4e2f04c","e4ed5274","e508065b","e5438a31","e563ae9b","e58ae276","e6b1500a","e6b97d5c","e6be49dd","e6f11e53","e6f3f71b","e751b824","e7806607","e7870cd6","e7ae0ba7","e7e155ee","e8785987","e8d25503","e8e36d38","e9322fa9","e979f157","e9c95d39","ea070377","ea0fef4f","eb78793d","ebfc3e57","ec3bf069","ecdd37e4","ecf6f4fe","ed2559ad","ee252d45","ee796472","ee85fe98","eedc436b","ef3248db","ef8a7db2","f0036f49","f04bf670","f06efd49","f0eec9bc","f12e794f","f1351371","f27c809a","f299ad9e","f37c579f","f3ca4205","f3dca9cc","f4004fba","f46a9c60","f47a4a18","f4ce2ab4","f50c9260","f53b8d8f","f53d8764","f5958d62","f5bcf3e0","f5efd637","f609d930","f7951700","f8530399","f889d4ff","f892c0e8","f8954f54","f8e0b1b4","fb3a26f8","fb3f7265","fb41d082","fbd99feb","fbe035eb","fc7b0451","fc821b39","fc8f4cc0","fcb9da91","fcbc738b","fcda3979","fce4011f","fdbce9ca","fe67fe01","fea01f79","ff154e89","ffb18aea","ffd98e76"]);
+const VOICE_KEYS = new Set(["010d6bf4","01179b9f","015c1ed7","01f16448","020a323e","022414c3","02e90ade","030d78d8","0356c494","038653d6","03923012","03a71232","03c46867","03e00ab3","0413f758","0465883f","048f5a9b","04cc5c8e","04d6f13a","0541a0ae","05c2af6e","05cafd0f","060c3a31","0615d054","069d008c","07148945","07589602","077442dc","0781932f","07e63f63","07ece5b0","07f9b894","0806d6ba","093a9ec1","0971bf18","09db8e8e","0a10ae1d","0ad5eeae","0afaaf2a","0afc87e3","0b01dc7d","0b52c302","0bd13a52","0c177d93","0d0507aa","0d95b582","0de948f3","0e14dcdf","0ec3e44f","0edbeea9","0f03aa9b","0f89f3fb","0f92ae40","0fcaa15f","0fdfa5e6","101e3d34","1040e335","105ec6cd","1066c56b","10874241","108a8642","10f89a53","11089f69","11b567d0","1203f690","1228598a","12e21e97","135dd8df","13a6f4ed","141c2ad0","143f889f","145c0aff","14da008f","15215560","152f81f1","15463f23","154a4667","154f0f6b","159747cd","15c6108d","15ee7985","15ef9c89","15f977f7","15fce4ab","16453246","16d899b6","16f0d05f","170f9a84","172a58f5","1782deda","17f36b40","17f370f3","185f5690","186b75d7","187bd4a0","18d0f814","192b7679","195cb268","19888f23","1a49f03e","1a62b1f9","1a8d6f7a","1aea659e","1b1d3c87","1b5ac67e","1b5fc1ee","1b9105eb","1bbae108","1bbc89b0","1bf1b3e9","1c9e381f","1ca1c615","1cd1a7e1","1cd6166b","1ce574c1","1cf3ebe5","1d2e24a7","1dee4d82","1e0d175a","1e4ef209","1e5c1623","1e69b87f","1eb0ac10","1ee40405","1f00356a","1f72d942","1f749f11","1f9530f8","1f9c65a8","1fa626f7","1fb5ffa8","1fbc1e71","1fc1d5bf","2009d531","20d3181a","20eb8117","20ef5590","215472c1","21636e7c","2164aa55","21a8be6a","21eeed83","22003fa8","22045fbb","22650ee7","22edc9dd","23468097","239b5dda","23b03a18","24290f75","24679c6d","2569a72c","258ef3a7","25cdecbe","25cf5ad7","25e94794","26b61cf7","26e3ee84","2708e3b1","277cddb4","27957cbc","27a9042f","282496b8","28c84d22","2921d7b0","2942d3b6","297020fe","298185f4","29bdbaac","29f06187","2a210484","2a3209d8","2a503d82","2a6b3376","2aacbf88","2aaec826","2ab4cffe","2af05f26","2af07a80","2b13e113","2b3bc5a5","2b858327","2ba57dad","2bd90c2b","2c4cdf4e","2c4d300c","2ca44c48","2cd97c67","2d14cc7d","2d2c8af5","2d5d67b5","2d7e1fae","2da7fd5e","2db1fa3f","2e1efebe","2f1e24f3","2f9ce981","2f9ef7b7","2fe98784","2ff77e4b","305046e4","3095bd2c","309ec433","30a56dc6","312a6142","3176a309","317fd242","31bdc4d2","31d0d874","320b6ba6","327227c5","328c0cb9","32b1acd1","32f81ba8","32ff2ee3","33191bde","34324873","3441dc37","34c315be","34da365b","3551e61b","355f1381","359bca3b","35c656ff","35cce5dc","35f96d12","3605cc1c","362a7922","3644ebcf","364d4e10","374eaca6","37a44fed","37ae1597","37db260d","38a7b9af","38ea2f72","39831b98","3a1787de","3a21bc56","3a26711f","3a39f26a","3a5dac7c","3a6b2ab9","3a8f1c76","3a949481","3a9d33d5","3b66898d","3b96d2f8","3be9da67","3c00a66d","3c485dbb","3c6899a1","3c89ebfc","3c8ede1d","3ca29cee","3cef2872","3db579d5","3dccdbba","3de62e37","3de8c3eb","3e060890","3e6da6b8","3ea972b6","3f218331","3f3eeafd","3f855fbe","3faec876","3fd4e7ae","404b3aaa","40540d39","410b8ded","41a65833","41aea321","41f906c4","42296db7","426f3665","42aa5e31","42afbd5d","42fd12f1","43127e44","43363cde","4339d9c6","436ef1c1","4404eade","44061c59","4477569f","44c8ca3c","44e266fc","44f8767c","4548f36c","45542207","4560494b","459dee7b","45bfe991","45e0acb1","45f53b86","460f7c59","46136786","46496013","464f3a22","466d4374","4746cc94","47ddd3cb","486b4c38","48712fe0","48a19117","48e2c6fb","49125fbd","4945f45b","496d6077","496de6f9","4992ce5a","49db9625","49e65a09","49ed20b2","4a2ba73c","4a36a34a","4a3f13da","4a4555c7","4a7540d9","4adef8c3","4b356569","4b59d528","4b5ada73","4b85a2f1","4b90904c","4bc4b163","4bcb9d8b","4c065e65","4c0c99d7","4c12ee22","4c77b3ce","4d60414f","4dcbdd0d","4def74e1","4e6138f2","4ea20812","4edce7bb","4ee2a735","4f38c893","4f9b2d67","4fedb2a4","50007dfa","503b3177","5079812e","508cb713","50a8a95c","50d47300","51175898","511e48f4","51275280","513ca8ee","516b6704","51ccd28b","5255d911","526e3c4f","52b95902","52e79305","52f4fb8c","5322baeb","53871261","5397df5c","53bf2ec5","5457b467","54aa8ed9","550eab89","552fda1b","55513084","55d5bd6c","55e218ca","56197828","565a7b38","566b7ae3","5697fcee","5722370c","572d6e8d","573e3c2f","5741adb3","57a4de86","57a6695b","57b635a8","57f392ee","583bd0da","586f3dcf","58806f9a","58a28835","58a51906","58d0b1db","58f10ec4","591b2d48","5927c087","597fbac9","5992a139","59d4f3c2","59e05407","5a136c7f","5a3dc639","5a42136b","5a659aa6","5a9383d8","5a993bbf","5ad7f0c0","5aea8282","5b144473","5ba35891","5c297c0b","5c3cab63","5ca7135e","5d01f4ea","5d3f1a48","5d714873","5e517996","5ed1d8fc","5efcf416","5f47ca4f","5f59e3ce","5fc9e16e","5fd100b9","5ff823ed","601b0807","607cadda","60858786","60b0eee2","60bde241","60c81f82","60e1da3b","60fd38fa","61433a5a","615d0b79","619bba7c","61f35e74","624e41d5","626f0f4f","6292d8b6","62d7b114","62f4ebc8","6373d881","639281a4","639c52c9","63db947e","6407d9ac","641ad3bf","649d705c","64a6faae","64ed8e8e","650e0066","654c29a2","656a63fd","65badb07","65e51955","65e8be6d","6609e592","660b14d5","6621cf7e","6644aa69","66c44134","66d25cc1","66de2554","6720914b","673270fa","67416472","67a72feb","67e5ceec","67f3d488","67f6e685","68398741","68c54632","68ec3365","6933b59f","694168cc","6955e6cc","69a79f7e","69e2c3fd","69e3e49c","69fd3fce","6aa43fdb","6aebe02b","6ba05c39","6bc1c004","6bc321be","6c44bc32","6c59c2a9","6c9db81f","6cdd44a3","6cf9f486","6d017001","6d3a0228","6d7ec49e","6da741e8","6debc3f5","6e0dcab8","6e1a9186","6e756c0b","6f89d1ff","6f8ba7cb","6f9f8c23","6ff7440c","7009431f","7050e6f4","7055ba5f","70bf724c","70d2f63f","70e01ec4","70f847d9","71265fe4","7144f710","71f3baf0","7203d60f","72084b04","725d7215","737b76f4","738baf53","7407a4a0","7416f2ab","741da553","74716dfd","749a2c98","74c2f8b5","74e14456","753db5e7","753e97df","75831d69","75bb0358","7609e99b","761161de","761391c0","7684157d","7694c9b1","76b5bca3","76bc4d18","76c8efa3","76ebf61e","76f4884b","76fa10d9","772682c3","774a7171","77827e7e","779d2f30","780c1ae4","7828a126","7836295e","7862d6ac","78819e64","790ed501","791dd2e2","7937c176","7957e6a0","795c70da","79a8edaf","7aa462c4","7ab872dd","7ad59f92","7aeea60c","7afa2a23","7b981822","7b9f35aa","7c49cb99","7c66776b","7c8d9f71","7ceaad7d","7d0749bf","7d178a1a","7d30c30b","7d3af5a4","7d53bc9c","7dbf931f","7dc4c36d","7e3e5264","7e5cc60e","7eab6725","7ed7e457","7eff7110","7f023f84","7f343d1f","7f64cde8","7fc820e5","7fd2efe2","7ff79b6b","80451c8a","80665723","80cc88a1","80d8ff9b","811532bf","813242ea","81781d78","81ba7758","8220cf4a","82288bc8","824f7160","8279b6fa","8368f4f3","8385f42e","839c59ee","8401692d","842d8d66","84cfd18d","84ed8683","84f237f2","8541a4ad","85a8a0b7","86545644","8693b4ae","86b57f32","86df1a00","872d3437","873856c8","87498df9","874f8c68","87add592","87f06117","87fd4d5d","880ce8ac","88815a25","888bd281","88ac7c16","8900e797","891d32c9","89a65ffd","89ae32cb","89bea96f","89c97f91","8a1553d2","8aa1665b","8aa52f8d","8ae9c700","8b4583fb","8ba7a6a5","8bb3f7a6","8bd56b50","8bdfa867","8c1a25c8","8c3d3345","8cb81385","8cef68a0","8cf1868c","8d46e90f","8d7a4b82","8e50b477","8e52724f","8edc64e0","8f9384cc","8fb89a4a","8fc2bc60","8ffc0b4e","90216462","903a9097","9087e9ff","90b09182","90cf166e","90fe763f","90ff1874","911f5219","9147afff","91556c8b","9173557f","92014cf3","92441ab8","9286010b","92bb808d","92d5d9c6","92e2e53d","931680a2","939f459e","93bb9f6c","93c3afee","93ebd0af","93f02394","942171c4","947fdaa3","9493262f","949d16d2","950797e6","9521356d","95223fc5","9588a01a","95b417f7","95b9412f","967aef7f","9683f95b","96ae549b","96c01306","976aa621","97ba79ac","97fc07ad","985aecdf","9875128c","98754e9a","990673ec","994118d4","9a90dd9a","9ac0b441","9b3a4f3a","9b51f50d","9b9db8fd","9bbe66c4","9c12bac8","9c5a7cc0","9cc3c648","9d38ab57","9d885a75","9d930e47","9df180b7","9e42a9ed","9e7df065","9e8bed6e","9f32be9f","9f6d6d85","a0002f4a","a0175f63","a05c0bd3","a0f47a2d","a0f7a2c9","a10a52a5","a129bde6","a14511e7","a15b90c1","a16570d4","a19572b4","a1a799a9","a1cb0916","a210a877","a217ef43","a21adf33","a23d8ff9","a24a96c1","a2aa5acd","a2f5581e","a31d78d6","a33d5e39","a350c5e7","a36fa0e0","a39e57cb","a3b65f14","a420af43","a4377a84","a43da09b","a47ca343","a539a5a3","a53b2b8f","a53d354c","a59519c1","a596c1ec","a5ce6391","a66c67f0","a676450e","a693374d","a6d1c371","a72011be","a73429a6","a74bb55c","a75bd1a2","a79e7303","a7bd77ec","a7c8a01d","a7d309f7","a87d420c","a88d44d0","a8b0283d","a8cf1e3e","a8dc3c43","a909345e","a92fd6c3","a9434af2","a94d979b","a98dea5e","a9c443e3","a9fdaab3","aa030d1d","aa4f4182","aa5e9fd1","aa647b38","aa8dc0c9","aab59164","aac8102f","ab4687cb","abc00ac6","abd59793","abdb2e86","abe8b550","ac2410bc","ac43efbb","ac45d6e8","ac7a9181","ac7a9192","acf308d1","acf804cc","ad014e88","ad07be29","ad38095c","ad5c3258","adccc2ac","adce6fc7","adeca29e","ae29ff19","ae677ff4","ae6ad79c","aea0ec60","af716420","af8ebf93","b0024b09","b07b2832","b089e91b","b09cab2a","b0c28c31","b1531487","b19984c3","b1dd800f","b1f75c16","b21fff63","b24a852b","b2866bbc","b28c06c5","b29414d8","b2ba93fa","b2cfcffc","b39480b6","b3e5ec44","b43f49c7","b483b706","b4c28760","b4c4cac4","b4dc6402","b4e54c5c","b524e465","b5339217","b5de5084","b6090bb0","b68e0ed8","b6d4e2b2","b70e7308","b79ee854","b7b25faa","b7c3233a","b864b559","b8f7064f","b8fc8e51","b90072da","b9b635e7","b9ef86bf","ba284be7","ba7041ba","bad17cf3","bad1bd2c","bb038685","bb228397","bb5025da","bb66f79f","bb6e05bb","bb99a472","bbd75d0c","bc0b3217","bc1a1dfa","bc6e8441","bc94c353","bc98a319","bccf7ab8","bce5d330","bd08f9cc","bd30663b","bd362352","bd6833c3","bd801dea","bddd6f4c","be4216a1","be718df1","bebe32a5","bec1ddcf","bec74fa6","beca3134","bf557b9a","bf6d7309","bf7b9f2b","c0160436","c02a0621","c02fc729","c03871fc","c08f5d9b","c0afaa8d","c0ba34c8","c15b57d3","c1de3769","c21c7af8","c25dca0e","c2c3605b","c2f7ba2c","c310de17","c32a2352","c3480c73","c39a335e","c3b32ca1","c3f7be4b","c41d957e","c43bb8ea","c4a11489","c4b57975","c4bb666c","c4d7663f","c4eebf5d","c4f98617","c509699a","c524d503","c54432b3","c5e036cd","c5e8f908","c6277f68","c672d068","c6a15cf5","c6dc4c2f","c6e438b3","c7169d48","c71ecb5b","c7e52dc7","c7e7bf40","c7fedf59","c81774c1","c85c0f77","c876aac0","c8bce0d6","c8eaf68b","c8f05475","c90d8c8a","c931d368","c94d6fdb","c954ee81","c97fa8d1","c9be70d9","c9caf33d","c9da7d2a","c9e7a824","c9f87f16","ca2ae028","cad23973","cb045612","cb65a61f","cc66dcdf","cc78e3f5","ccbb23a0","cd171163","cd18fbd5","cd23da4d","cdc1f911","cdc6c42c","cdd6e0f1","cde08f67","ce3fa5af","ce49ceda","ce515102","cf0db587","cf2e5136","cf4baeb1","cf589373","cf99dd33","d0739549","d0f3d3da","d1031404","d12e70f9","d16225e9","d1a82f4b","d23a9f7b","d257ccd4","d31a3e5f","d3309dc9","d36e405a","d370ad7f","d39ea837","d3ebef36","d3f123ee","d412e7fd","d4e5b83c","d5175579","d51c5f67","d52bf62f","d57f3ee5","d5959940","d5b5684c","d5c3a895","d5ea9659","d5f77cfc","d6f20d04","d6fb0abb","d73736f8","d776fb6b","d77c3fd6","d7ac4ced","d7cf3c42","d7d19e37","d7f5b069","d8502c9d","d8b41752","d8e71acb","d90bcde0","d91ac09c","d9325ccf","d944186f","d9473f7b","d98c82bc","d9b74125","d9de354b","da74e3c6","da758359","daabf41b","dafcef35","db1fb423","db3cd6e6","db7758d8","dbb9d0af","dbff55f7","dc1cb5a6","dc673fe6","dca64bea","dcd89d88","dcd935cf","dd1b3265","dd220911","dd2ab969","dd356385","dd42a7ec","dd9989a2","ddbce3db","ddc1479a","dded4ad8","de1e0c92","de2f7c34","de9c1c4a","de9c5a8b","decc0eba","dee935ea","df76f221","dfb9b5ae","dffed9b6","e01d5a2d","e07c029d","e0c4d2b8","e0e69105","e11d47c0","e15ca9ae","e163a5ba","e16bbb80","e17d0c8d","e1ce02de","e1fdf15a","e2234cdd","e22d3b39","e242d461","e25aa56f","e2733b9d","e2b41f2c","e2cfd9a4","e42d9829","e44aeff6","e4a4ef9e","e4e2f04c","e4ed5274","e508065b","e5438a31","e563ae9b","e566decb","e58ae276","e62885b8","e63305b7","e6566361","e6b1500a","e6b97d5c","e6be49dd","e6f11e53","e6f3f71b","e751b824","e7806607","e7870cd6","e7ae0ba7","e7e155ee","e8785987","e8d25503","e8d7f7cc","e8e36d38","e9322fa9","e979f157","e97fc43c","e982ca51","e9c95d39","ea070377","ea0fef4f","eb66b804","eb78793d","ebfc3e57","ec3bf069","ec401fa6","ecdd37e4","ecf6f4fe","ed2559ad","ed49005c","edf4582e","ee252d45","ee796472","ee85fe98","eedc436b","ef03d703","ef3248db","ef603aba","ef8a7db2","f0036f49","f04bf670","f06efd49","f0ea61c8","f0eec9bc","f12e794f","f1351371","f164fc8c","f16dd752","f176f8a4","f22b5a8e","f27c809a","f293cc84","f299ad9e","f2b003fe","f37c579f","f3ca4205","f3dca9cc","f4004fba","f46a9c60","f47a4a18","f4ce2ab4","f50c9260","f53b8d8f","f53d8764","f5958d62","f5bcf3e0","f5efd637","f609d930","f66d8466","f6f267d2","f7951700","f8510dfb","f8530399","f889d4ff","f892c0e8","f8954f54","f8e0b1b4","f8ea4f81","f91de5f7","f978aad0","fb013fbc","fb3a26f8","fb3f7265","fb41d082","fb77ef87","fba26a2b","fbd99feb","fbe035eb","fbe483f9","fc7b0451","fc821b39","fc8f4cc0","fcb9da91","fcbc738b","fcda3979","fce4011f","fd14d033","fd2e1677","fd8aed09","fdbce9ca","fe67fe01","fea01f79","feadfb7d","fef0a315","ff154e89","ffb18aea","ffd98e76"]);
 
 // ---- voix enregistrée, bruitages, musique ----
 const VDATA = {}, VPACK = {};
@@ -1297,7 +1328,10 @@ function voiceKey(t){ const h = vhash(vnorm(t)); return VOICE_KEYS.has(h) ? h : 
 function voiceOn(){ try{ return !(pdata && pdata.settings && pdata.settings.vvoice === false); }catch(e){ return true; } }
 function loadPack(p){ if(!VPACK[p]) VPACK[p] = fetch("voix/p" + p + ".json").then(r => r.ok ? r.json() : null).then(d => { if(d) VDATA[p] = d; return d; }).catch(() => null); return VPACK[p]; }
 let packsStarted = false;
-function loadAllPacks(){ if(packsStarted || !VOICE_KEYS.size) return; packsStarted = true; let i = 0; const next = () => { if(i < 16) loadPack((i++).toString(16)).then(() => window.setTimeout(next, 120)); }; next(); }
+// 32 paquets : les deux derniers caractères du code de la phrase (0-f puis 0 ou 1)
+const packOf = k => k.slice(-1) + (parseInt(k.slice(-2, -1), 16) & 1);
+const PACKS = [...Array(32)].map((_, i) => (i >> 1).toString(16) + (i & 1));
+function loadAllPacks(){ if(packsStarted || !VOICE_KEYS.size) return; packsStarted = true; let i = 0; const next = () => { if(i < PACKS.length) loadPack(PACKS[i++]).then(() => window.setTimeout(next, 120)); }; next(); }
 let curVoice = null;
 function stopVoice(){ if(curVoice){ const a = curVoice; curVoice = null; a.onended = a.onerror = null; try{ a.pause(); }catch(e){} try{ mascotTalk(false); }catch(e){} } }
 function playVoice(src, text, cb){
@@ -1428,7 +1462,7 @@ function say(text, cb, noVoice){
   let called = false;
   const fin = () => { if(!called){ called = true; cb && cb(); } };
   if(!soundOn){ try{ stopVoice(); }catch(e){} fin(); return; }
-  if(!noVoice && speakLang !== "en"){ try{ if(voiceOn()){ const k = voiceKey(text); if(k){ const d = VDATA[k.slice(-1)]; if(d && d[k]){ playVoice(d[k], text, cb ? fin : null); return; } loadPack(k.slice(-1)); } } }catch(e){} }
+  if(!noVoice && speakLang !== "en"){ try{ if(voiceOn()){ const k = voiceKey(text); if(k){ const d = VDATA[packOf(k)]; if(d && d[k]){ playVoice(d[k], text, cb ? fin : null); return; } loadPack(packOf(k)); } } }catch(e){} }
   try{ stopVoice(); }catch(e){}
   try{
     speechSynthesis.cancel();
@@ -1724,6 +1758,7 @@ function parentPage(){
       ${pvHtml()}
       ${shareHtml()}
       ${installHtml()}
+      ${shareGameHtml()}
       ${deviceHtml()}
       <details class="psect"><summary>⚙️ Réglages, aides et sauvegarde</summary>
       ${settingsHtml()}${a11ySettingsHtml()}
@@ -2184,7 +2219,7 @@ function laboGame(){
 }
 // ---------- le créole avec Vroumi ----------
 function creoleGame(){
-  const g = gradeKey(), n = g === "PS" ? 2 : g === "MS" ? 3 : 4, t = pick(J3.creole), keys = shuffle([t, ...shuffle(J3.creole.filter(x => x !== t)).slice(0, n - 1)]);
+  const g = gradeKey(), n = g === "PS" ? 2 : g === "MS" ? 3 : 4, t = (rv => J3.creole.find(x => x[0] + " = " + x[2] === rv))(reviewPick("creole", J3.creole.map(x => x[0] + " = " + x[2]))) || pick(J3.creole), keys = shuffle([t, ...shuffle(J3.creole.filter(x => x !== t)).slice(0, n - 1)]);
   choiceRound({
     title: `« ${t[0]} », c'est quoi ?`, line: `En créole, on dit « ${t[1]} ». « ${t[1]} », c'est quoi ?`,
     scene: `<div class="j3bubble">🗣️ ${esc(t[0])}</div>`,
@@ -2211,7 +2246,7 @@ function menu(page){
       <button class="iconbtn garbtn" id="albbtn">📒 Mon album · ${(() => { try{ stkInit(); return pdata.stk.length; }catch(e){ return 0; } })()}/${ALB.length}${stkWaiting() ? '<span class="ilebadge" aria-label="nouvel autocollant">!</span>' : ""}</button>
       <button class="iconbtn garbtn" id="jukebtn">🎵 Mes chansons</button>
       <button class="iconbtn garbtn" id="ilebtn">🗺️ Mon tour de l'île${ileWaiting() ? '<span class="ilebadge" aria-label="nouveau voyage">!</span>' : ""}</button>
-    </div>${feteBanner()}<div class="homeextras">${scheduleHtml()}${challengeHtml()}${riddleHtml()}${photoHtml()}</div>` : `<div class="daybar"><button class="iconbtn garbtn" id="backhome">⟵ Mes 6 jeux du jour</button></div>`}
+    </div>${feteBanner()}<div class="motrow">${missionHtml()}${motHtml()}</div><div class="homeextras">${scheduleHtml()}${challengeHtml()}${riddleHtml()}${photoHtml()}</div>` : `<div class="daybar"><button class="iconbtn garbtn" id="backhome">⟵ Mes 6 jeux du jour</button></div>`}
     <div class="menu">
       <button class="mode" id="m1">
         <span class="pic">${car("#e63946")}${car("#2f6fe4")}</span>
@@ -2400,6 +2435,8 @@ function menu(page){
   on("day", () => { beep("honk"); startSession(); });
   on("garage", () => { beep("tap"); garageScreen(); });
   on("ilebtn", () => { beep("tap"); withWipe(() => islandScreen()); });
+  on("motbtn", () => { beep("tap"); withWipe(() => lazyReady(motScreen)()); });
+  on("missbtn", () => { beep("tap"); withWipe(() => missionScreen()); });
   on("albbtn", () => { beep("tap"); withWipe(() => albumScreen()); });
   on("jukebtn", () => { beep("tap"); withWipe(() => jukeboxScreen()); });
   on("duo", () => { beep("tap"); if(duo){ duoEnd(); } else duoSetup(); });
@@ -3647,6 +3684,7 @@ let lastSyll = "";
 function syllGame(short){
   const pool = short ? SYLL.filter(x => x[1].length <= 2) : SYLL;
   let w; do { w = pick(pool); } while(w[0] === lastSyll);
+  { const rv = reviewPick("sons", pool.map(x => "syllabes : " + x[0]), "syllabes : " + lastSyll), f = rv && pool.find(x => "syllabes : " + x[0] === rv); if(f) w = f; }
   lastSyll = w[0];
   const [word, parts, pic] = w, n = parts.length;
   app.innerHTML = `${topBar(true)}
@@ -3759,7 +3797,8 @@ function fixPdata(d){
     challenge: d.challenge || null, medals: d.medals || 0, custom: d.custom || null,
     boost: d.boost || {}, recent: d.recent || {}, seen: d.seen || {}, gtime: d.gtime || {}, ileSeen: d.ileSeen || null, stk: d.stk, stkBase: d.stkBase, stkNew: d.stkNew || [], ileView: d.ileView === undefined ? -1 : d.ileView,
     hunt: d.hunt || undefined, aiStory: d.aiStory || undefined, lad: d.lad || null, introDay: d.introDay || null, carnetSeen: d.carnetSeen || null, updatedAt: d.updatedAt || 0,
-    review: d.review || {}, obs: d.obs || [], actDone: d.actDone || {}, unlockBase: d.unlockBase == null ? null : d.unlockBase};
+    review: d.review || {}, obs: d.obs || [], actDone: d.actDone || {}, unlockBase: d.unlockBase == null ? null : d.unlockBase,
+    mission: d.mission || null, motSeen: d.motSeen || {}, motQuiz: d.motQuiz || {}};
 }
 const capFirst = t => t.charAt(0).toUpperCase() + t.slice(1);
 
@@ -3973,16 +4012,17 @@ function sessionEnd(){
   const s = session; session = null; curGame = null;
   pdata.sessions[today()] = true; saveProfileData();
   const defi = DEFIS[s.games[0]] || DEFIS.couleurs;
+  pdata.mission = {d: dayNum(), t: defi, done: null}; saveProfileData();
   app.innerHTML = `${topBar(true)}
     <div class="endcard">
       ${SLEEPY()}
       <h2>Le garage ferme !</h2>
       <p>Tu as gagné <b>${s.gained}</b> étoile${s.gained > 1 ? "s" : ""} aujourd'hui. Ta voiture va dormir.</p>
-      <div class="defi"><b>Ton défi sans écran</b><span>${defi}</span></div>
+      <div class="defi"><b>🎯 Ta mission pour demain</b><span>${defi}</span></div>
       <button class="big" id="sback">Retour au menu</button>
     </div>`;
   wireTop();
-  say(`Bravo ! Le garage ferme. Tu as gagné ${s.gained} étoiles aujourd'hui. Ton défi sans écran : ${defi}`);
+  say(`Bravo ! Le garage ferme. Tu as gagné ${s.gained} étoiles aujourd'hui. Ta mission, dans la vraie vie : ${defi} Demain, tu me raconteras !`);
   document.getElementById("sback").onclick = () => menu();
 }
 function flow(fn){
@@ -4419,7 +4459,33 @@ const ART = {
   zzz: () => `<span class="sleepcar small"><span class="zzz">Z z z</span>${favSvg()}</span>`
 };
 for(const k of ["sun","rain","moon","puddle","bubbles","balloon","flower","garage","fuel"]) if(VIMG["obj_" + k]) ART[k] = () => isvg("obj_" + k);
-const artHtml = keys => [].concat(keys).map(k => `<span class="artit">${ART[k]()}</span>`).join("");
+// une clé d'image : dessin vectoriel (ART) ou dessin du jeu (stk:, j3:, ile:, img:, ou clé VIMG)
+function picSrc(k){
+  if(typeof k !== "string") return "";
+  const [p, n] = k.includes(":") ? k.split(":") : ["", k];
+  return p === "stk" ? STKIMG[n] : p === "j3" ? J3IMG[n] : p === "ile" ? ILEIMG[n] : p === "img" ? IMG[n] : (VIMG[k] || "");
+}
+const artHtml = keys => [].concat(keys).map(k => ART[k] ? `<span class="artit">${ART[k]()}</span>` : picSrc(k) ? `<span class="artit artimg${String(k).startsWith("ile:") ? " artwide" : ""}"><img src="${picSrc(k)}" alt="" draggable="false"></span>` : "").join("");
+// page d'histoire composée : décor de l'île + Vroumi, Dédé, un enfant, des objets
+function compHtml(sp, alt){
+  const bgOK = sp.bg && ILEIMG[sp.bg];
+  const im = (src, c) => src ? `<img class="${c}" src="${src}" alt="">` : "";
+  const objs = (sp.o || []).map(k => im(picSrc(k), "cob")).filter(Boolean);
+  const kid = sp.k && VIMG[sp.k] ? im(VIMG[sp.k], "ckid") : "", dd = sp.d && IMG.dede_body ? im(IMG.dede_body, "cdd") : "";
+  if(bgOK){ // le décor montre déjà Vroumi au centre : les autres personnages et objets se placent sur les côtés
+    const L = [kid, ...objs.filter((_, i) => i % 2 === 0)].filter(Boolean), R = [dd, ...objs.filter((_, i) => i % 2 === 1)].filter(Boolean);
+    if(!R.length && L.length > 1) R.push(L.pop());
+    return `<div class="sart illu comp" role="img" aria-label="${esc(alt || "")}"><img class="cbg" src="${ILEIMG[sp.bg]}" alt=""><div class="cside cl">${L.join("")}</div><div class="cside cr">${R.join("")}</div></div>`;
+  }
+  return `<div class="sart illu comp nobg" role="img" aria-label="${esc(alt || "")}"><div class="crow">${kid}${sp.v && IMG[sp.v] ? im(IMG[sp.v], "cvr") : ""}${dd}${objs.join("")}</div></div>`;
+}
+function storyPic(si, pi){
+  const st = STORIES[si], pg = st.pages[pi];
+  if(IMG["s" + si + "p" + pi]) return `<div class="sart illu">${illu("s" + si + "p" + pi, kidName(pg[0]))}</div>`;
+  if(pg[1] && !Array.isArray(pg[1])) return compHtml(pg[1], kidName(pg[0]));
+  return `<div class="sart">${artHtml(pg[1])}</div>`;
+}
+function storyHasPic(si, pi){ const pg = STORIES[si].pages[pi]; return !!(IMG["s" + si + "p" + pi] || (pg && pg[1] && !Array.isArray(pg[1]))); }
 const STORIES = [
   {title:"Vroumi et la flaque", pages:[
     ["Ce matin, Vroumi roule vers le parc. Le soleil brille.", ["hero","sun","tree"]],
@@ -4477,13 +4543,14 @@ const STORIES = [
        ["Qui faisait la course avec Vroumi ?", [[["moto","velo"],"La moto et le vélo"],[["bus","train"],"Le bus et le train"],[["ambulance","police"],"L'ambulance et la police"]]]]}
 ];
 const kidName = t => t.replace(/\{child\}/g, displayName());
-function storyMenu(){
+const storyMenu = lazyReady(storyMenu0);
+function storyMenu0(){
   curGame = "histoires";
   const nextI = (pdata.storyNext || 0) % STORIES.length;
   app.innerHTML = `${topBar(true)}
     <h1>Les histoires de Vroumi</h1>
     <p class="sub">Écoute l'histoire, puis réponds aux questions.</p>
-    <div class="storylist"><button class="ccard storyc aist" id="aistory"><span class="cpic">${artHtml(["hero","sun"])}</span><span class="cname">✨ L'histoire du jour</span><span class="ccost">Nouvelle chaque jour</span></button>${STORIES.slice(0, BASE_STORIES).map((s,i) => `<button class="ccard storyc${i === nextI ? " fav" : ""}" data-i="${i}">${IMG["s" + i + "p0"] ? `<span class="cpic illu">${illu("s" + i + "p0", s.title)}</span>` : `<span class="cpic">${artHtml(s.pages[0][1].slice(0,2))}</span>`}<span class="cname">${s.title}</span><span class="ccost">${i === nextI ? "Nouvelle histoire" : (pdata.storiesDone || []).includes(i) ? "Déjà écoutée" : "À découvrir"}</span></button>`).join("")}</div>`;
+    <div class="storylist"><button class="ccard storyc aist" id="aistory"><span class="cpic">${artHtml(["hero","sun"])}</span><span class="cname">✨ L'histoire du jour</span><span class="ccost">Nouvelle chaque jour</span></button>${STORIES.slice(0, BASE_STORIES).map((s,i) => `<button class="ccard storyc${i === nextI ? " fav" : ""}" data-i="${i}">${IMG["s" + i + "p0"] ? `<span class="cpic illu">${illu("s" + i + "p0", s.title)}</span>` : !Array.isArray(s.pages[0][1]) && ILEIMG[s.pages[0][1].bg] ? `<span class="cpic illu"><img src="${ILEIMG[s.pages[0][1].bg]}" alt="" draggable="false"></span>` : `<span class="cpic">${artHtml(s.pages[0][1].slice(0,2))}</span>`}<span class="cname">${s.title}</span><span class="ccost">${i === nextI ? "Nouvelle histoire" : (pdata.storiesDone || []).includes(i) ? "Déjà écoutée" : "À découvrir"}</span></button>`).join("")}</div>`;
   wireTop();
   say(`Quelle histoire veux-tu écouter ? Je te propose : ${STORIES[nextI].title}.`);
   app.querySelectorAll(".storyc:not(.aist)").forEach(b => b.onclick = () => { beep("tap"); storyRead(+b.dataset.i, 0); });
@@ -4494,7 +4561,7 @@ function storyRead(si, pi){
   app.innerHTML = `${topBar(true)}
     <div class="spage">
       <div class="shead">${st.title} · page ${pi + 1}/${st.pages.length}</div>
-      ${IMG["s" + si + "p" + pi] ? `<div class="sart illu">${illu("s" + si + "p" + pi, kidName(pg[0]))}</div>` : `<div class="sart">${artHtml(pg[1])}</div>`}
+      ${storyPic(si, pi)}
       <p class="stext">${esc(kidName(pg[0]))}</p>
     </div>
     <div class="pactions gpsact">
@@ -4519,21 +4586,21 @@ function storyQuiz(si, qi){
     choices: order.map(i => ({label: kidName(opts[i][1]), html: `<span class="qart">${artHtml(opts[i][0])}</span><span class="clab">${esc(kidName(opts[i][1]))}</span>`})),
     isRight: j => order[j] === 0,
     onRight: () => `Bravo ! ${kidName(opts[0][1])}.`,
-    onWrong: () => { const key = [].concat(opts[0][0])[0], pg = st.pages.find(p => p[1].includes(key)); return pg ? `Écoute encore : ${kidName(pg[0])}` : "Ce n'est pas ça. Repense à l'histoire."; },
+    onWrong: () => { const key = [].concat(opts[0][0])[0], pg = st.pages.find(p => Array.isArray(p[1]) ? p[1].includes(key) : [p[1].bg && "ile:" + p[1].bg, p[1].v && "img:" + p[1].v, p[1].k, ...(p[1].o || [])].includes(key)); return pg ? `Écoute encore : ${kidName(pg[0])}` : "Ce n'est pas ça. Repense à l'histoire."; },
     game: "histoires", item: `${st.title}, question ${qi + 1}`, next: () => storyQuiz(si, qi + 1), wait: 2200
   });
 }
 // remettre l'histoire dans l'ordre : début, milieu, fin
 function storySeq(si){
   const st = STORIES[si], idx = [0, 2, st.pages.length - 1];
-  if(!idx.every(i => IMG["s" + si + "p" + i])) return storyEnd(si);
+  if(!idx.every(i => storyHasPic(si, i))) return storyEnd(si);
   curGame = "histoires";
   const T = track("histoires", `${st.title}, l'ordre`), order = shuffle(idx.slice()); let next = 0;
   app.innerHTML = `${topBar(true)}
     <div class="prompt"><span>Qu'est-ce qui s'est passé en premier ?</span><button class="again" id="again" aria-label="Réécouter">🔊</button></div>
     <div class="stage"><p class="enhint">${st.title} · remets l'histoire dans l'ordre</p>
       <div class="seqrow">${[0, 1, 2].map(n => `<span class="seqslot" id="sq${n}">${n + 1}</span>`).join("")}</div>
-      <div class="seqpics">${order.map(i => `<button class="ans seqpic" data-p="${i}" aria-label="${esc(kidName(st.pages[i][0]))}">${illu("s" + si + "p" + i, "")}</button>`).join("")}</div></div>`;
+      <div class="seqpics">${order.map(i => `<button class="ans seqpic" data-p="${i}" aria-label="${esc(kidName(st.pages[i][0]))}">${storyPic(si, i)}</button>`).join("")}</div></div>`;
   wireTop();
   const ask = ["Qu'est-ce qui s'est passé en premier ?", "Et après ?", "Et à la fin ?"];
   say("Remets l'histoire dans l'ordre. " + ask[0]);
@@ -4542,7 +4609,7 @@ function storySeq(si){
     if(b.disabled) return;
     if(+b.dataset.p === idx[next]){
       beep("good"); b.disabled = true; b.classList.add("right");
-      const slot = document.getElementById("sq" + next); slot.innerHTML = illu("s" + si + "p" + b.dataset.p, ""); slot.classList.add("on");
+      const slot = document.getElementById("sq" + next); slot.innerHTML = storyPic(si, +b.dataset.p); slot.classList.add("on");
       next++;
       if(next === 3){ T.right(null); addStar(); say(`Bravo ! Tu as remis toute l'histoire dans l'ordre !`); return setTimeout(() => storyEnd(si), 2600); }
       say(ask[next]);
@@ -4555,12 +4622,12 @@ function storySeq(si){
 // ---------- Raconte à Vroumi : l'enfant raconte l'histoire au micro (gardé sur l'appareil) ----------
 function tellOK(){ return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder); }
 function tellScreen(si){
-  const st = STORIES[si], idx = [0, 2, st.pages.length - 1].filter(i => IMG["s" + si + "p" + i]);
+  const st = STORIES[si], idx = [0, 2, st.pages.length - 1].filter(i => storyHasPic(si, i));
   curGame = "histoires";
   app.innerHTML = `${topBar(true)}
     <div class="prompt"><span>Raconte l'histoire à Vroumi !</span></div>
     <div class="stage"><p class="enhint">${st.title} · regarde les images et raconte avec tes mots</p>
-      <div class="seqpics tellpics">${idx.map(i => `<span class="tellpic">${illu("s" + si + "p" + i, "")}</span>`).join("")}</div>
+      <div class="seqpics tellpics">${idx.map(i => `<span class="tellpic">${storyPic(si, i)}</span>`).join("")}</div>
       <div class="tellbox"><button class="tellmic" id="tellmic" aria-label="Commencer à raconter">🎙️</button><div class="tellbar"><i id="tellfill"></i></div><p class="tellmsg" id="tellmsg">Appuie sur le micro, puis raconte.</p></div>
       <div class="pactions"><button class="iconbtn" id="tellskip">Une autre histoire</button></div></div>`;
   wireTop();
@@ -4604,6 +4671,53 @@ async function kidTellRender(){
   el.innerHTML = list.length ? list.map(c => `<div class="pvrow"><span>${esc(c.title || "Histoire")} · ${new Date(c.at).toLocaleDateString("fr-FR", {day: "numeric", month: "short"})} · ${c.secs || "?"} s</span><button class="iconbtn" data-kplay="${c.id}" aria-label="Écouter">▶</button><button class="iconbtn" data-kdel="${c.id}" aria-label="Supprimer">🗑</button></div>`).join("") : `<p class="pnote">Pas encore d'enregistrement. Le bouton « Raconte l'histoire à Vroumi » apparaît à la fin d'une histoire.</p>`;
   el.querySelectorAll("[data-kplay]").forEach(b => b.onclick = () => { const c = list.find(x => x.id === b.dataset.kplay); if(c) pvPlay(c); });
   el.querySelectorAll("[data-kdel]").forEach(b => b.onclick = async () => { await pvStore("del", b.dataset.kdel).catch(() => {}); kidTellRender(); });
+}
+// ---------- Le mot du jour ----------
+const MOTS = [["un caméléon", "stk:cameleon", "C'est un petit animal qui change de couleur pour se cacher."], ["un volcan", "stk:volcan", "C'est une montagne qui peut cracher du feu, de la lave toute chaude."], ["une cascade", "stk:cascade", "C'est de l'eau qui tombe de très haut, d'une montagne."], ["un papangue", "stk:papangue", "C'est un grand oiseau de La Réunion qui vole en faisant des cercles."], ["une tortue", "stk:tortue", "C'est un animal qui a une carapace sur le dos. Elle avance doucement."], ["un dauphin", "stk:dauphin", "C'est un animal de la mer qui saute hors de l'eau. Il est très malin."], ["une baleine", "stk:baleine", "C'est le plus gros animal de la mer. Elle souffle de l'eau par le dos."], ["un flamboyant", "stk:flamboyant", "C'est un grand arbre couvert de fleurs rouges en été."], ["la vanille", "stk:vanille", "C'est une plante qui donne des gousses noires qui sentent très bon."], ["un letchi", "stk:letchi", "C'est un fruit rouge dehors et blanc dedans, tout sucré."], ["la canne à sucre", "stk:canne", "C'est une grande plante. Avec elle, on fabrique le sucre."], ["une case", "stk:case", "C'est une petite maison créole, souvent en bois, avec une varangue."], ["un gecko", "stk:gecko", "C'est un petit lézard vert qui grimpe sur les murs."], ["un tangue", "stk:tangue", "C'est un petit animal tout piquant, qui ressemble à un hérisson."], ["un paille-en-queue", "stk:paille", "C'est un oiseau blanc avec deux longues plumes sur la queue."], ["un cyclone", "sky_cyclone", "C'est une tempête avec un vent très très fort et beaucoup de pluie."], ["un parapluie", "gear_parapluie", "On l'ouvre au-dessus de sa tête pour ne pas être mouillé."], ["une bétonnière", "veh_betonniere", "C'est un camion qui tourne pour mélanger le béton."], ["une dépanneuse", "veh_depanneuse", "C'est un camion qui vient chercher les voitures en panne."], ["un tracteur", "veh_tracteur", "C'est un engin avec de grosses roues pour travailler dans les champs."], ["un camping-car", "veh_campingcar", "C'est une voiture où l'on peut dormir, comme une petite maison."], ["un cerf-volant", "gear_cerf", "C'est un jouet qui vole dans le ciel, accroché à une ficelle."], ["un escargot", "j3:escargot", "C'est un petit animal qui porte sa maison sur son dos."], ["un glaçon", "j3:glacon", "C'est de l'eau devenue toute dure parce qu'elle a eu très froid."], ["un aimant", "j3:aimant", "C'est un objet qui attire le fer. Il colle au frigo !"], ["une marionnette", "j3:marionnette", "C'est une poupée qu'on fait bouger avec la main."], ["une cloche", "j3:cloche", "Quand on la secoue, elle fait ding, dong !"], ["un panier", "j3:panier", "On l'utilise pour transporter les fruits et les courses."], ["une pyramide", "j3:pyramide", "C'est une forme pointue, avec des côtés en triangle."], ["un trombone", "j3:trombone", "C'est un petit fil de fer plié pour tenir des feuilles ensemble."]];
+const motOf = n => MOTS[((n % MOTS.length) + MOTS.length) % MOTS.length];
+const motBare = m => m[0].replace(/^(un |une |le |la |les |l')/, "");
+function missionDue(){ const m = pdata.mission; return m && m.d < dayNum() && m.d >= dayNum() - 3 && m.done === null ? m : null; }
+function missionHtml(){ const m = missionDue(); return m ? `<button class="motcard misscard" id="missbtn"><span class="motpic">🎯</span><span><b>Ta mission d'hier</b><small>Tu as réussi ?</small></span></button>` : ""; }
+function missionScreen(){
+  const m = missionDue(); if(!m) return menu();
+  curGame = null;
+  app.innerHTML = `${topBar(true)}<div class="endcard"><span class="sart">${artHtml(["hero","sun"])}</span><h2>🎯 Ta mission</h2><p class="missbig">${esc(m.t)}</p>
+    <div class="pactions"><button class="big" id="missyes">Oui, j'ai réussi !</button><button class="iconbtn" id="missno">Pas encore</button></div></div>`;
+  wireTop();
+  say(`Hier, je t'ai donné une mission : ${m.t} Tu as réussi ?`);
+  document.getElementById("missyes").onclick = () => { m.done = true; saveProfileData(); addStar(); beep("good"); try{ mascotReact("happy"); }catch(e){} say(`Bravo ${curProfile().name} ! Tu as gagné une étoile. Tu me racontes comment tu as fait ?`); window.setTimeout(() => menu(), 3400); };
+  document.getElementById("missno").onclick = () => { m.done = false; saveProfileData(); say("Pas grave ! Tu pourras essayer aujourd'hui, avec papa ou maman."); window.setTimeout(() => menu(), 2600); };
+}
+function motHtml(){
+  const n = dayNum(), w = motOf(n), quiz = (pdata.motSeen || {})[n - 1] && !(pdata.motQuiz || {})[n - 1];
+  return `<button class="motcard" id="motbtn"><span class="motpic">${picSrc(w[1]) ? `<img src="${picSrc(w[1])}" alt="">` : "📖"}</span><span><b>Le mot du jour</b><small>${quiz ? "Tu te souviens d'hier ?" : (pdata.motSeen || {})[n] ? esc(w[0]) : "Un mot tout neuf !"}</small></span></button>`;
+}
+function motScreen(){
+  const n = dayNum();
+  if((pdata.motSeen || {})[n - 1] && !(pdata.motQuiz || {})[n - 1]) return motQuiz(n - 1);
+  const w = motOf(n); curGame = null;
+  pdata.motSeen = Object.assign({}, pdata.motSeen, {[n]: 1}); saveProfileData();
+  app.innerHTML = `${topBar(true)}
+    <div class="endcard motend"><p class="enhint">📖 Le mot du jour</p>
+      <span class="motbig">${picSrc(w[1]) ? `<img src="${picSrc(w[1])}" alt="">` : ""}</span>
+      <h2>${esc(w[0])}</h2><p>${esc(w[2])}</p>
+      <div class="pactions"><button class="iconbtn" id="motagain">🔊 Réécouter</button><button class="big" id="motok">Je l'ai dit !</button></div>
+      <p class="pnote">Pour les parents : réutilisez « ${esc(w[0])} » dans la journée. Demain, Vroumi lui demandera s'il s'en souvient.</p></div>`;
+  wireTop();
+  const line = `Le mot du jour, c'est : ${w[0]} ! ${w[2]} Dis-le avec moi : ${w[0]} !`;
+  say(line);
+  document.getElementById("motagain").onclick = () => say(line);
+  document.getElementById("motok").onclick = () => { beep("good"); try{ mascotReact("happy"); }catch(e){} say(`Bravo ! ${capFirst(w[0])}. Tu as appris un nouveau mot !`); window.setTimeout(() => menu(), 2600); };
+}
+function motQuiz(n){
+  const w = motOf(n), others = shuffle(MOTS.filter(m => m !== w && picSrc(m[1]))).slice(0, 2), opts = shuffle([w, ...others]);
+  curGame = "motdujour";
+  choiceRound({
+    title: "Hier, on a appris un mot. Lequel ?", line: `Hier, on a appris un mot. Tu te souviens ? Montre-moi ${w[0]} !`, scene: `<p class="enhint">📖 Le mot d'hier</p>`,
+    choices: opts.map(m => ({label: m[0], html: `<span class="qart"><img class="motopt" src="${picSrc(m[1])}" alt=""></span><span class="clab">${esc(m[0])}</span>`})),
+    isRight: j => opts[j] === w, onRight: () => `Bravo ! C'était ${w[0]}. Tu as une super mémoire !`, onWrong: () => `Non, ça, ce n'est pas ${w[0]}. Regarde bien.`,
+    game: "motdujour", item: w[0], next: () => { pdata.motQuiz = Object.assign({}, pdata.motQuiz, {[n]: 1}); saveProfileData(); motScreen(); }, wait: 2600
+  });
 }
 function storyEnd(si){
   if(si >= BASE_STORIES){ app.innerHTML = `${topBar(true)}<div class="endcard"><span class="sart">${artHtml(["hero","sun"])}</span><h2>Fin de l'histoire du jour !</h2><p>Demain, Vroumi t'écrira une nouvelle histoire.</p><button class="big" id="sback">Les autres histoires</button></div>`; wireTop(); say(`Fin de l'histoire ! Bravo ${curProfile().name}. Demain, Vroumi t'écrira une nouvelle histoire !`); document.getElementById("sback").onclick = () => storyMenu(); return; }
@@ -5081,7 +5195,7 @@ function faceSvg(em){
 function emotionGame(){
   const g = gradeKey();
   const set = g === "PS" ? ["content","triste","colere"] : g === "MS" ? ["content","triste","colere","peur"] : Object.keys(EMO);
-  const target = pick(set), mode = g === "PS" ? "face" : (g === "MS" ? pick(["face","situ"]) : pick(["situ","situ","face"]));
+  const target = (rv => set.find(e => EMO[e].name === rv))(reviewPick("emotions", set.map(e => EMO[e].name))) || pick(set), mode = g === "PS" ? "face" : (g === "MS" ? pick(["face","situ"]) : pick(["situ","situ","face"]));
   const keys = shuffle([target, ...shuffle(set.filter(e => e !== target)).slice(0,2)]);
   const situ = pick(SITU[target]);
   choiceRound({
@@ -6300,6 +6414,8 @@ function photoGame(){
   };
 }
 // ---- 3. L'histoire du jour, écrite par Claude ----
+// histoires de La Réunion : images composées à partir des dessins du jeu
+STORIES.push(...[{"title": "Vroumi au marché", "pages": [["Ce samedi matin, Vroumi va au grand marché de Saint-Pierre avec {child}.", {"bg": "ile_i5", "v": "vroumi_happy", "k": "kid_jaune"}], ["Sur les étals, il y a des mangues, des ananas et des bananes. Ça sent bon !", {"bg": "ile_i5", "o": ["stk:mangue", "stk:ananas", "stk:banane"]}], ["La marchande donne un letchi à {child}. Il est rouge dehors et tout blanc dedans.", {"bg": "ile_i5", "o": ["stk:letchi"], "k": "kid_jaune"}], ["{child} remplit le panier. Une mangue, deux bananes, et un gros ananas !", {"bg": "ile_i5", "o": ["j3:panier", "stk:ananas"]}], ["Vroumi rentre doucement à la maison. Ce soir, on mange une salade de fruits !", {"bg": "ile_i1", "v": "vroumi_joy", "o": ["stk:mangue"]}]], "qs": [["Où Vroumi est-il allé avec {child} ?", [["ile:ile_i5", "Au marché"], ["ile:ile_i6", "Au volcan"], ["ile:ile_i2", "Au lagon"]]], ["Quel fruit est rouge dehors et blanc dedans ?", [["stk:letchi", "Le letchi"], ["stk:banane", "La banane"], ["stk:ananas", "L'ananas"]]], ["Dans quoi {child} a-t-il mis les fruits ?", [["j3:panier", "Dans un panier"], ["j3:verre", "Dans un verre"], ["gear_parapluie", "Dans un parapluie"]]]]}, {"title": "Le volcan qui gronde", "pages": [["Aujourd'hui, Vroumi et Dédé partent voir le Piton de la Fournaise.", {"bg": "ile_i6", "v": "vroumi_happy", "d": true}], ["Le volcan gronde. Il crache de la lave toute rouge et toute chaude !", {"bg": "ile_i6", "o": ["stk:volcan"]}], ["Dédé dit : on reste loin, c'est dangereux. On regarde de très loin.", {"bg": "ile_i6", "v": "vroumi_lookup", "d": true}], ["Dans le ciel, un papangue vole en grands cercles au-dessus du volcan.", {"bg": "ile_i6", "o": ["stk:papangue"]}], ["Le soir, Vroumi raconte tout à ses amis : j'ai vu un vrai volcan !", {"bg": "ile_i1", "v": "vroumi_proud"}]], "qs": [["Qu'est-ce que Vroumi est allé voir ?", [["stk:volcan", "Un volcan"], ["stk:cascade", "Une cascade"], ["stk:baleine", "Une baleine"]]], ["Pourquoi Vroumi et Dédé restent-ils loin ?", [["stk:volcan", "C'est dangereux"], ["j3:glace", "Il fait froid"], ["img:vroumi_sleepy", "Ils sont fatigués"]]], ["Quel oiseau vole dans le ciel ?", [["stk:papangue", "Le papangue"], ["stk:paille", "Le paille-en-queue"], ["j3:canard", "Le canard"]]]]}, {"title": "La tortue de Saint-Leu", "pages": [["Il fait beau. Vroumi roule jusqu'à la plage de Saint-Leu.", {"bg": "ile_i3", "v": "vroumi_happy", "o": ["obj_sun"]}], ["Dans l'eau, {child} voit une grosse tortue de mer. Elle nage tout doucement.", {"bg": "ile_i3", "o": ["stk:tortue"], "k": "kid_vert"}], ["La tortue mange des algues. Chut ! On ne la touche pas, on la regarde.", {"bg": "ile_i3", "o": ["stk:tortue"], "v": "vroumi_wink"}], ["Plus loin, un dauphin saute hors de l'eau. Splash !", {"bg": "ile_i2", "o": ["stk:dauphin"]}], ["La tortue repart vers le large. Au revoir, la tortue !", {"bg": "ile_i3", "v": "vroumi_joy", "o": ["stk:tortue"]}]], "qs": [["Quel animal nage tout doucement ?", [["stk:tortue", "La tortue"], ["stk:dauphin", "Le dauphin"], ["stk:poisson", "Le poisson"]]], ["Que fait-on quand on voit une tortue ?", [["stk:tortue", "On la regarde sans la toucher"], ["j3:balle", "On joue avec elle"], ["j3:panier", "On l'emporte"]]], ["Quel animal a sauté hors de l'eau ?", [["stk:dauphin", "Le dauphin"], ["stk:tortue", "La tortue"], ["stk:gecko", "Le gecko"]]]]}, {"title": "Le jour du cyclone", "pages": [["Ce matin, le ciel est tout gris. Le vent souffle très fort : c'est un cyclone !", {"bg": "ile_i1", "o": ["sky_cyclone"]}], ["Vroumi rentre vite au garage. Tout le monde reste à la maison, à l'abri.", {"bg": "ile_i1", "o": ["obj_garage"], "v": "vroumi_sad"}], ["Dehors, la pluie tombe fort. Dedans, {child} fait un puzzle avec maman.", {"o": ["sky_pluie", "j3:livre"], "k": "kid_bleu"}], ["Le lendemain, le vent s'arrête. Le soleil revient !", {"bg": "ile_i1", "o": ["sky_soleil"]}], ["Vroumi aide à ramasser les branches. Tout le monde est content.", {"bg": "ile_i1", "v": "vroumi_cheer", "o": ["j3:feuille"]}]], "qs": [["Quel temps faisait-il pendant le cyclone ?", [["sky_cyclone", "Beaucoup de vent"], ["sky_soleil", "Du soleil"], ["sky_froid", "De la neige"]]], ["Où reste-t-on pendant un cyclone ?", [["obj_garage", "À la maison, à l'abri"], ["ile:ile_i2", "À la plage"], ["ile:ile_i5", "Au marché"]]], ["Qu'est-ce qui revient après le cyclone ?", [["sky_soleil", "Le soleil"], ["obj_moon", "La lune"], ["sky_froid", "Le froid"]]]]}, {"title": "La cascade de Salazie", "pages": [["Vroumi monte la route de Salazie. Elle tourne, tourne, tourne !", {"bg": "ile_i8", "v": "vroumi_lookup"}], ["Sur une branche, un caméléon change de couleur. Il devient tout vert.", {"bg": "ile_i8", "o": ["stk:cameleon"]}], ["Voici la cascade du Voile de la Mariée. L'eau tombe de très haut !", {"bg": "ile_i8", "o": ["stk:cascade"]}], ["{child} écoute : l'eau fait un grand bruit, chhhhh !", {"bg": "ile_i8", "k": "kid_orange", "o": ["j3:oreille"]}], ["Sur le chemin du retour, {child} s'endort. Quelle belle journée !", {"bg": "ile_i1", "v": "vroumi_sleepy"}]], "qs": [["Quel animal change de couleur ?", [["stk:cameleon", "Le caméléon"], ["stk:tangue", "Le tangue"], ["stk:tortue", "La tortue"]]], ["Qu'est-ce que {child} a vu tomber de très haut ?", [["stk:cascade", "L'eau de la cascade"], ["stk:letchi", "Des letchis"], ["sky_pluie", "La pluie"]]], ["Comment est la route de Salazie ?", [["stk:cascade", "Elle tourne beaucoup"], ["veh_course", "Elle est toute droite"], ["j3:glace", "Elle est gelée"]]]]}, {"title": "Le cari du dimanche", "pages": [["C'est dimanche. Toute la famille va manger chez Mamie, dans sa jolie case.", {"bg": "ile_i9", "o": ["stk:case"], "v": "vroumi_happy"}], ["Mamie prépare un bon cari. Ça sent bon dans toute la maison !", {"o": ["stk:case", "j3:kari"]}], ["Mamie dit : « Vien manzé, marmay ! » Ça veut dire : venez manger, les enfants !", {"o": ["j3:manze", "j3:marmay"], "k": "kid_rouge"}], ["{child} goûte. Attention, le piment pique ! Il boit un verre d'eau.", {"o": ["j3:piman", "j3:verre"], "k": "kid_rouge"}], ["Pour le dessert, il y a des letchis. Merci Mamie !", {"bg": "ile_i9", "o": ["stk:letchi"], "v": "vroumi_joy"}]], "qs": [["Qu'est-ce que Mamie a préparé ?", [["j3:kari", "Un cari"], ["j3:glace", "Une glace"], ["stk:ananas", "Un ananas"]]], ["En créole, que veut dire « manzé » ?", [["j3:manze", "Manger"], ["img:vroumi_sleepy", "Dormir"], ["j3:balle", "Jouer"]]], ["Qu'est-ce qui pique ?", [["j3:piman", "Le piment"], ["stk:letchi", "Le letchi"], ["j3:verre", "L'eau"]]]]}]);
 const BASE_STORIES = STORIES.length;
 async function aiStory(btn){
   const key = today(); pdata.aiStory = pdata.aiStory || {};
@@ -6638,10 +6754,12 @@ function actOfDay(){
 }
 function homeActHtml(){
   const a = actOfDay(); if(!a.sk) return "";
+  const m = pdata.mission, w = motOf(dayNum());
   const done = (pdata.actDone || {})[today()], total = Object.keys(pdata.actDone || {}).length;
   return `<section class="pcard phomecard"><h3>🏠 L'activité du jour, sans écran</h3>
     <p class="pnote">5 minutes avec ${esc(displayName())}${a.weak ? ", là où ça coince encore dans les jeux" : ""}. C'est en parlant avec vous qu'il apprend le plus.</p>
     <p class="phome"><b>${a.sk.label} :</b> ${HOME_ACT[a.sk.id]}</p>
+    <p class="pnote">📖 Mot du jour : <b>${esc(w[0])}</b>. Essayez de l'utiliser dans une phrase aujourd'hui.${m && m.t ? `<br>🎯 Dernière mission de Vroumi : « ${esc(m.t)} »${m.done === true ? " (réussie ✓)" : m.done === false ? " (pas encore)" : ""}` : ""}</p>
     <div class="pactions"><button class="${done ? "iconbtn" : "big"}" id="actdone" ${done ? "disabled" : ""}>${done ? "✓ Fait aujourd'hui" : "C'est fait ✓"}</button>${total ? `<span class="pnote">${total} activité${total > 1 ? "s" : ""} faite${total > 1 ? "s" : ""} en tout</span>` : ""}</div></section>`;
 }
 // ---------- Observations des parents ----------
@@ -6672,7 +6790,7 @@ function retroWire(){
   if(cp) cp.onclick = async () => { const m = document.getElementById("obsmsg"); try{ await navigator.clipboard.writeText(obsText()); m.textContent = "Notes copiées : collez-les dans la conversation avec Claude."; }catch(e){ m.textContent = obsText(); } };
   const fp = document.getElementById("focusprop"); if(fp) fp.onclick = () => focusPropose();
   const fa = document.getElementById("focusall"); if(fa) fa.onclick = () => { pdata.settings.hidden = []; saveProfileData(); parentPage(); };
-  deviceCheck(); kidTellRender();
+  deviceCheck(); kidTellRender(); shareGameWire();
 }
 // ---------- Resserrer : une sélection de jeux d'après les vraies parties ----------
 function focusPlan(){
@@ -6806,6 +6924,18 @@ async function parentCheer(d){
 // ---------- Installer sur la tablette ----------
 let installEvt = null;
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; });
+function shareGameHtml(){
+  return `<section class="pcard"><h3>📣 Faire découvrir le jeu</h3>
+    <p class="pnote">Le jeu est gratuit, sans publicité, sans compte, et les données restent sur chaque appareil. Vous pouvez le conseiller à d'autres parents ou à la maîtresse.</p>
+    <div class="pactions"><button class="iconbtn" id="sharegame">📣 Envoyer le lien du jeu</button></div><p class="pnote" id="sharegmsg" aria-live="polite"></p></section>`;
+}
+function shareGameWire(){
+  const b = document.getElementById("sharegame"); if(!b) return;
+  const url = "https://dimitrigigan.github.io/garage-voitures/", text = "Le Garage des Petites Voitures : des jeux gratuits pour apprendre en maternelle, avec Vroumi. Sans pub, sans compte.";
+  b.onclick = async () => { const m = document.getElementById("sharegmsg");
+    try{ if(navigator.share){ await navigator.share({title: "Le Garage des Petites Voitures", text, url}); return; } await navigator.clipboard.writeText(text + " " + url); m.textContent = "Lien copié : collez-le dans un message."; }
+    catch(e){ if(!(e && e.name === "AbortError")) m.textContent = url; } };
+}
 function installHtml(){
   const onSite = /\.github\.io$/.test(location.hostname);
   return `<section class="pcard"><h3>📲 Le jeu sur la tablette</h3>
@@ -7306,6 +7436,11 @@ function whoPlays(){
         <small>${(GRADES[p.grade] || GRADES.MS).label} · ${STAR.replace('aria-hidden="true"','aria-hidden="true" class="inl"')} ${profileData(p.id).stars || 0} étoiles</small>
       </button>`).join("")}
     </div>
+    ${empty ? `<div class="welcome"><b>Pour les parents, en 20 secondes</b>
+      <span>🚗 35 petits jeux de maternelle avec Vroumi, qui parle à l'enfant : pas besoin de savoir lire.</span>
+      <span>📈 Le niveau s'adapte tout seul, et ce qu'il rate revient les jours suivants.</span>
+      <span>🏠 Chaque jour, une activité sans écran à faire ensemble, et une limite de temps que vous choisissez.</span>
+      <span>🔒 Gratuit, sans publicité, sans compte : tout reste sur cet appareil.</span></div>` : ""}
     <form id="addp" class="addp">
       <label for="newname">${empty ? "Prénom de l'enfant" : "Ajouter un enfant"}</label>
       <div class="addrow">
@@ -7341,7 +7476,7 @@ if(/[?&]test\b/.test(location.search)) window.__garage = {
   games: () => Object.keys(GAMES), run: k => { curGame = k; play = {game: k, count: 0}; GAMES[k].run(); }, home: () => menu(), parents: () => parentPage(),
   stats: () => stats, pdata: () => pdata, levels: () => ({level, shapeLevel, sizeN, soundLevel, trainLvl}),
   ladDown, adaptLevel, reviewMiss, reviewDone, reviewPick, reviewCount, dayNum, focusPlan, bundlePlan, mergeBundles, profileBundle, livretPages, carnetSvg, effGrade,
-  unlockedList, lockedGames, unlockLeft, tellScreen, star: () => addStar(),
+  unlockedList, lockedGames, unlockLeft, tellScreen, star: () => addStar(), motScreen, missionScreen, storyRead: (a, b) => storyRead(a, b), storySeq: si => storySeq(si), stories: () => STORIES.map(x => x.title), sessionEnd: () => { session = {games: ["couleurs"], i: 0, count: 0, gained: 2, start: Date.now()}; sessionEnd(); },
   duo: v => { if(v !== undefined) duo = v; return duo; }, save: () => saveProfileData()
 };
 if(profiles.list.length) loadProfile(curProfile().id);
