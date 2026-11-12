@@ -1,5 +1,5 @@
 // Le Garage des Petites Voitures — fonctionne sans internet.
-const V = "garage-v8";
+const V = "garage-v9";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icon-180.png", "icon-192.png", "icon-512.png", "voix/index.json"];
 const CHANTS = ["bois","choux","cloche","escargot","lune","marionnette","navire","pomme","prince"].map(n => "chants/c-" + n + ".json");
 const SONS = ["bonne","bravo","erreur","fanfare","musique-jour","musique-matin","musique-nuit","musique-soir","niveau"].map(n => "son/" + n + ".mp3");
@@ -33,7 +33,7 @@ self.addEventListener("activate", e => {
       const old = await caches.open(k);
       for(const r of await old.keys()){
         const p = new URL(r.url).pathname;
-        if(/\/(index\.html)?$/.test(p) || /sw\.js$/.test(p)) continue;
+        if(!/\/videos\//.test(p)) continue; // seules les comptines vidéo sont reprises ; voix et images sont rechargées (elles peuvent avoir changé)
         if(!(await c.match(r))){ const res = await old.match(r); if(res) await c.put(r, res); }
       }
       await caches.delete(k);
