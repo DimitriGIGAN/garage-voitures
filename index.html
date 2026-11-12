@@ -950,6 +950,12 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 @media (max-width:560px){ #mascot:not(.m-visit){top:80px;width:52px} }
 .welcome{display:grid;gap:6px;max-width:560px;margin:4px auto 14px;background:rgba(255,255,255,.92);border:3px solid var(--ink);border-radius:20px;padding:12px 18px;text-align:left;font-size:.98rem}
 .welcome b{font-family:var(--display);font-size:1.1rem}
+/* aide syllabes : ronds à remplir */
+.sdots i.ghost{background:transparent!important;border:3px dashed var(--ink);opacity:.55;animation:none}
+/* --- relance quand l'enfant attend : les réponses bougent un peu --- */
+@keyframes nudgeup{0%,100%{transform:none}30%{transform:translateY(-8px) scale(1.04)}60%{transform:translateY(2px)}}
+.app.nudge .ans:not([disabled]),.app.nudge .shape-ans,.app.nudge .veh,.app.nudge .garage,.app.nudge .memcard:not(.found),.app.nudge .ppiece,.app.nudge .tchoice,.app.nudge .coin{animation:nudgeup .8s ease-in-out 2}
+@media (prefers-reduced-motion:reduce){.app.nudge .ans,.app.nudge .shape-ans,.app.nudge .veh,.app.nudge .garage{animation:none;outline:4px dashed #e8541e;outline-offset:3px}}
 /* --- histoires composées, mot du jour, missions --- */
 /* robot : images composées dans les cases « remets dans l'ordre » et « raconte » */
 .seqpic .sart,.tellpic .sart,.seqslot .sart{display:block;width:100%;min-height:0;padding:0;margin:0;border:0;border-radius:10px;box-sizing:border-box}
@@ -1329,12 +1335,19 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 @media (max-width:460px){.top{gap:6px}.top .iconbtn{padding-left:9px;padding-right:9px;font-size:.88rem}.top .stars small.tot{display:none}.musbtn{min-width:40px}}
 </style>
 
-<div class="app" id="app"></div>
+<style>.boot{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font:800 1.3rem system-ui,sans-serif;color:#1f2a44;text-align:center}
+.boot .bcar{font-size:64px;animation:bootcar 1.1s ease-in-out infinite alternate}
+.boot .bbar{width:min(60vw,260px);height:12px;border-radius:99px;background:#fff;border:3px solid #1f2a44;overflow:hidden}
+.boot .bbar i{display:block;height:100%;width:40%;background:#e8541e;border-radius:99px;animation:bootbar 1.4s ease-in-out infinite}
+@keyframes bootcar{from{transform:translateX(-18px) rotate(-3deg)}to{transform:translateX(18px) rotate(3deg)}}
+@keyframes bootbar{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
+@media (prefers-reduced-motion:reduce){.boot .bcar,.boot .bbar i{animation:none}}</style>
+<div class="app" id="app"><div class="boot" role="status"><span class="bcar" aria-hidden="true">🚗</span>Vroumi démarre le moteur…<span class="bbar"><i></i></span></div></div>
 
 <script>
 (() => {
 // ====================== IMAGES (ComfyUI) ======================
-const VOICE_KEYS = new Set(["010d6bf4","01179b9f","015c1ed7","01f16448","020a323e","022414c3","02e90ade","030d78d8","0356c494","038653d6","03923012","03a71232","03c46867","03e00ab3","0413f758","0465883f","048f5a9b","04cc5c8e","04d6f13a","0541a0ae","05c2af6e","05cafd0f","060c3a31","0615d054","069d008c","07148945","07589602","077442dc","0781932f","07e63f63","07ece5b0","07f9b894","0806d6ba","093a9ec1","0971bf18","09db8e8e","0a10ae1d","0ad5eeae","0afaaf2a","0afc87e3","0b01dc7d","0b52c302","0bd13a52","0c177d93","0d0507aa","0d95b582","0de948f3","0e14dcdf","0ec3e44f","0edbeea9","0f03aa9b","0f89f3fb","0f92ae40","0fcaa15f","0fdfa5e6","101e3d34","1040e335","105ec6cd","1066c56b","10874241","108a8642","10f89a53","11089f69","11b567d0","1203f690","1228598a","12e21e97","135dd8df","13a6f4ed","141c2ad0","143f889f","145c0aff","14da008f","15215560","152f81f1","15463f23","154a4667","154f0f6b","159747cd","15c6108d","15ee7985","15ef9c89","15f977f7","15fce4ab","16453246","16d899b6","16f0d05f","170f9a84","172a58f5","1782deda","17f36b40","17f370f3","185f5690","186b75d7","187bd4a0","18d0f814","192b7679","195cb268","19888f23","1a49f03e","1a62b1f9","1a8d6f7a","1aea659e","1b1d3c87","1b5ac67e","1b5fc1ee","1b9105eb","1bbae108","1bbc89b0","1bf1b3e9","1c9e381f","1ca1c615","1cd1a7e1","1cd6166b","1ce574c1","1cf3ebe5","1d2e24a7","1dee4d82","1e0d175a","1e4ef209","1e5c1623","1e69b87f","1eb0ac10","1ee40405","1f00356a","1f72d942","1f749f11","1f9530f8","1f9c65a8","1fa626f7","1fb5ffa8","1fbc1e71","1fc1d5bf","2009d531","20d3181a","20eb8117","20ef5590","215472c1","21636e7c","2164aa55","21a8be6a","21eeed83","22003fa8","22045fbb","22650ee7","22edc9dd","23468097","239b5dda","23b03a18","24290f75","24679c6d","2569a72c","258ef3a7","25cdecbe","25cf5ad7","25e94794","26b61cf7","26e3ee84","2708e3b1","277cddb4","27957cbc","27a9042f","282496b8","28c84d22","2921d7b0","2942d3b6","297020fe","298185f4","29bdbaac","29f06187","2a210484","2a3209d8","2a503d82","2a6b3376","2aacbf88","2aaec826","2ab4cffe","2af05f26","2af07a80","2b13e113","2b3bc5a5","2b858327","2ba57dad","2bd90c2b","2c4cdf4e","2c4d300c","2ca44c48","2cd97c67","2d14cc7d","2d2c8af5","2d5d67b5","2d7e1fae","2da7fd5e","2db1fa3f","2e1efebe","2f1e24f3","2f9ce981","2f9ef7b7","2fe98784","2ff77e4b","305046e4","3095bd2c","309ec433","30a56dc6","312a6142","3176a309","317fd242","31bdc4d2","31d0d874","320b6ba6","327227c5","328c0cb9","32b1acd1","32f81ba8","32ff2ee3","33191bde","34324873","3441dc37","34c315be","34da365b","3551e61b","355f1381","359bca3b","35c656ff","35cce5dc","35f96d12","3605cc1c","362a7922","3644ebcf","364d4e10","374eaca6","37a44fed","37ae1597","37db260d","38a7b9af","38ea2f72","39831b98","3a1787de","3a21bc56","3a26711f","3a39f26a","3a5dac7c","3a6b2ab9","3a8f1c76","3a949481","3a9d33d5","3b66898d","3b96d2f8","3be9da67","3c00a66d","3c485dbb","3c6899a1","3c89ebfc","3c8ede1d","3ca29cee","3cef2872","3db579d5","3dccdbba","3de62e37","3de8c3eb","3e060890","3e6da6b8","3ea972b6","3f218331","3f3eeafd","3f855fbe","3faec876","3fd4e7ae","404b3aaa","40540d39","410b8ded","41a65833","41aea321","41f906c4","42296db7","426f3665","42aa5e31","42afbd5d","42fd12f1","43127e44","43363cde","4339d9c6","436ef1c1","4404eade","44061c59","4477569f","44c8ca3c","44e266fc","44f8767c","4548f36c","45542207","4560494b","459dee7b","45bfe991","45e0acb1","45f53b86","460f7c59","46136786","46496013","464f3a22","466d4374","4746cc94","47ddd3cb","486b4c38","48712fe0","48a19117","48e2c6fb","49125fbd","4945f45b","496d6077","496de6f9","4992ce5a","49db9625","49e65a09","49ed20b2","4a2ba73c","4a36a34a","4a3f13da","4a4555c7","4a7540d9","4adef8c3","4b356569","4b59d528","4b5ada73","4b85a2f1","4b90904c","4bc4b163","4bcb9d8b","4c065e65","4c0c99d7","4c12ee22","4c77b3ce","4d60414f","4dcbdd0d","4def74e1","4e6138f2","4ea20812","4edce7bb","4ee2a735","4f38c893","4f9b2d67","4fedb2a4","50007dfa","503b3177","5079812e","508cb713","50a8a95c","50d47300","51175898","511e48f4","51275280","513ca8ee","516b6704","51ccd28b","5255d911","526e3c4f","52b95902","52e79305","52f4fb8c","5322baeb","53871261","5397df5c","53bf2ec5","5457b467","54aa8ed9","550eab89","552fda1b","55513084","55d5bd6c","55e218ca","56197828","565a7b38","566b7ae3","5697fcee","5722370c","572d6e8d","573e3c2f","5741adb3","57a4de86","57a6695b","57b635a8","57f392ee","583bd0da","586f3dcf","58806f9a","58a28835","58a51906","58d0b1db","58f10ec4","591b2d48","5927c087","597fbac9","5992a139","59d4f3c2","59e05407","5a136c7f","5a3dc639","5a42136b","5a659aa6","5a9383d8","5a993bbf","5ad7f0c0","5aea8282","5b144473","5ba35891","5c297c0b","5c3cab63","5ca7135e","5d01f4ea","5d3f1a48","5d714873","5e517996","5ed1d8fc","5efcf416","5f47ca4f","5f59e3ce","5fc9e16e","5fd100b9","5ff823ed","601b0807","607cadda","60858786","60b0eee2","60bde241","60c81f82","60e1da3b","60fd38fa","61433a5a","615d0b79","619bba7c","61f35e74","624e41d5","626f0f4f","6292d8b6","62d7b114","62f4ebc8","6373d881","639281a4","639c52c9","63db947e","6407d9ac","641ad3bf","649d705c","64a6faae","64ed8e8e","650e0066","654c29a2","656a63fd","65badb07","65e51955","65e8be6d","6609e592","660b14d5","6621cf7e","6644aa69","66c44134","66d25cc1","66de2554","6720914b","673270fa","67416472","67a72feb","67e5ceec","67f3d488","67f6e685","68398741","68c54632","68ec3365","6933b59f","694168cc","6955e6cc","69a79f7e","69e2c3fd","69e3e49c","69fd3fce","6aa43fdb","6aebe02b","6ba05c39","6bc1c004","6bc321be","6c44bc32","6c59c2a9","6c9db81f","6cdd44a3","6cf9f486","6d017001","6d3a0228","6d7ec49e","6da741e8","6debc3f5","6e0dcab8","6e1a9186","6e756c0b","6f89d1ff","6f8ba7cb","6f9f8c23","6ff7440c","7009431f","7050e6f4","7055ba5f","70bf724c","70d2f63f","70e01ec4","70f847d9","71265fe4","7144f710","71f3baf0","7203d60f","72084b04","725d7215","737b76f4","738baf53","7407a4a0","7416f2ab","741da553","74716dfd","749a2c98","74c2f8b5","74e14456","753db5e7","753e97df","75831d69","75bb0358","7609e99b","761161de","761391c0","7684157d","7694c9b1","76b5bca3","76bc4d18","76c8efa3","76ebf61e","76f4884b","76fa10d9","772682c3","774a7171","77827e7e","779d2f30","780c1ae4","7828a126","7836295e","7862d6ac","78819e64","790ed501","791dd2e2","7937c176","7957e6a0","795c70da","79a8edaf","7aa462c4","7ab872dd","7ad59f92","7aeea60c","7afa2a23","7b981822","7b9f35aa","7c49cb99","7c66776b","7c8d9f71","7ceaad7d","7d0749bf","7d178a1a","7d30c30b","7d3af5a4","7d53bc9c","7dbf931f","7dc4c36d","7e3e5264","7e5cc60e","7eab6725","7ed7e457","7eff7110","7f023f84","7f343d1f","7f64cde8","7fc820e5","7fd2efe2","7ff79b6b","80451c8a","80665723","80cc88a1","80d8ff9b","811532bf","813242ea","81781d78","81ba7758","8220cf4a","82288bc8","824f7160","8279b6fa","8368f4f3","8385f42e","839c59ee","8401692d","842d8d66","84cfd18d","84ed8683","84f237f2","8541a4ad","85a8a0b7","86545644","8693b4ae","86b57f32","86df1a00","872d3437","873856c8","87498df9","874f8c68","87add592","87f06117","87fd4d5d","880ce8ac","88815a25","888bd281","88ac7c16","8900e797","891d32c9","89a65ffd","89ae32cb","89bea96f","89c97f91","8a1553d2","8aa1665b","8aa52f8d","8ae9c700","8b4583fb","8ba7a6a5","8bb3f7a6","8bd56b50","8bdfa867","8c1a25c8","8c3d3345","8cb81385","8cef68a0","8cf1868c","8d46e90f","8d7a4b82","8e50b477","8e52724f","8edc64e0","8f9384cc","8fb89a4a","8fc2bc60","8ffc0b4e","90216462","903a9097","9087e9ff","90b09182","90cf166e","90fe763f","90ff1874","911f5219","9147afff","91556c8b","9173557f","92014cf3","92441ab8","9286010b","92bb808d","92d5d9c6","92e2e53d","931680a2","939f459e","93bb9f6c","93c3afee","93ebd0af","93f02394","942171c4","947fdaa3","9493262f","949d16d2","950797e6","9521356d","95223fc5","9588a01a","95b417f7","95b9412f","967aef7f","9683f95b","96ae549b","96c01306","976aa621","97ba79ac","97fc07ad","985aecdf","9875128c","98754e9a","990673ec","994118d4","9a90dd9a","9ac0b441","9b3a4f3a","9b51f50d","9b9db8fd","9bbe66c4","9c12bac8","9c5a7cc0","9cc3c648","9d38ab57","9d885a75","9d930e47","9df180b7","9e42a9ed","9e7df065","9e8bed6e","9f32be9f","9f6d6d85","a0002f4a","a0175f63","a05c0bd3","a0f47a2d","a0f7a2c9","a10a52a5","a129bde6","a14511e7","a15b90c1","a16570d4","a19572b4","a1a799a9","a1cb0916","a210a877","a217ef43","a21adf33","a23d8ff9","a24a96c1","a2aa5acd","a2f5581e","a31d78d6","a33d5e39","a350c5e7","a36fa0e0","a39e57cb","a3b65f14","a420af43","a4377a84","a43da09b","a47ca343","a539a5a3","a53b2b8f","a53d354c","a59519c1","a596c1ec","a5ce6391","a66c67f0","a676450e","a693374d","a6d1c371","a72011be","a73429a6","a74bb55c","a75bd1a2","a79e7303","a7bd77ec","a7c8a01d","a7d309f7","a87d420c","a88d44d0","a8b0283d","a8cf1e3e","a8dc3c43","a909345e","a92fd6c3","a9434af2","a94d979b","a98dea5e","a9c443e3","a9fdaab3","aa030d1d","aa4f4182","aa5e9fd1","aa647b38","aa8dc0c9","aab59164","aac8102f","ab4687cb","abc00ac6","abd59793","abdb2e86","abe8b550","ac2410bc","ac43efbb","ac45d6e8","ac7a9181","ac7a9192","acf308d1","acf804cc","ad014e88","ad07be29","ad38095c","ad5c3258","adccc2ac","adce6fc7","adeca29e","ae29ff19","ae677ff4","ae6ad79c","aea0ec60","af716420","af8ebf93","b0024b09","b07b2832","b089e91b","b09cab2a","b0c28c31","b1531487","b19984c3","b1dd800f","b1f75c16","b21fff63","b24a852b","b2866bbc","b28c06c5","b29414d8","b2ba93fa","b2cfcffc","b39480b6","b3e5ec44","b43f49c7","b483b706","b4c28760","b4c4cac4","b4dc6402","b4e54c5c","b524e465","b5339217","b5de5084","b6090bb0","b68e0ed8","b6d4e2b2","b70e7308","b79ee854","b7b25faa","b7c3233a","b864b559","b8f7064f","b8fc8e51","b90072da","b9b635e7","b9ef86bf","ba284be7","ba7041ba","bad17cf3","bad1bd2c","bb038685","bb228397","bb5025da","bb66f79f","bb6e05bb","bb99a472","bbd75d0c","bc0b3217","bc1a1dfa","bc6e8441","bc94c353","bc98a319","bccf7ab8","bce5d330","bd08f9cc","bd30663b","bd362352","bd6833c3","bd801dea","bddd6f4c","be4216a1","be718df1","bebe32a5","bec1ddcf","bec74fa6","beca3134","bf557b9a","bf6d7309","bf7b9f2b","c0160436","c02a0621","c02fc729","c03871fc","c08f5d9b","c0afaa8d","c0ba34c8","c15b57d3","c1de3769","c21c7af8","c25dca0e","c2c3605b","c2f7ba2c","c310de17","c32a2352","c3480c73","c39a335e","c3b32ca1","c3f7be4b","c41d957e","c43bb8ea","c4a11489","c4b57975","c4bb666c","c4d7663f","c4eebf5d","c4f98617","c509699a","c524d503","c54432b3","c5e036cd","c5e8f908","c6277f68","c672d068","c6a15cf5","c6dc4c2f","c6e438b3","c7169d48","c71ecb5b","c7e52dc7","c7e7bf40","c7fedf59","c81774c1","c85c0f77","c876aac0","c8bce0d6","c8eaf68b","c8f05475","c90d8c8a","c931d368","c94d6fdb","c954ee81","c97fa8d1","c9be70d9","c9caf33d","c9da7d2a","c9e7a824","c9f87f16","ca2ae028","cad23973","cb045612","cb65a61f","cc66dcdf","cc78e3f5","ccbb23a0","cd171163","cd18fbd5","cd23da4d","cdc1f911","cdc6c42c","cdd6e0f1","cde08f67","ce3fa5af","ce49ceda","ce515102","cf0db587","cf2e5136","cf4baeb1","cf589373","cf99dd33","d0739549","d0f3d3da","d1031404","d12e70f9","d16225e9","d1a82f4b","d23a9f7b","d257ccd4","d31a3e5f","d3309dc9","d36e405a","d370ad7f","d39ea837","d3ebef36","d3f123ee","d412e7fd","d4e5b83c","d5175579","d51c5f67","d52bf62f","d57f3ee5","d5959940","d5b5684c","d5c3a895","d5ea9659","d5f77cfc","d6f20d04","d6fb0abb","d73736f8","d776fb6b","d77c3fd6","d7ac4ced","d7cf3c42","d7d19e37","d7f5b069","d8502c9d","d8b41752","d8e71acb","d90bcde0","d91ac09c","d9325ccf","d944186f","d9473f7b","d98c82bc","d9b74125","d9de354b","da74e3c6","da758359","daabf41b","dafcef35","db1fb423","db3cd6e6","db7758d8","dbb9d0af","dbff55f7","dc1cb5a6","dc673fe6","dca64bea","dcd89d88","dcd935cf","dd1b3265","dd220911","dd2ab969","dd356385","dd42a7ec","dd9989a2","ddbce3db","ddc1479a","dded4ad8","de1e0c92","de2f7c34","de9c1c4a","de9c5a8b","decc0eba","dee935ea","df76f221","dfb9b5ae","dffed9b6","e01d5a2d","e07c029d","e0c4d2b8","e0e69105","e11d47c0","e15ca9ae","e163a5ba","e16bbb80","e17d0c8d","e1ce02de","e1fdf15a","e2234cdd","e22d3b39","e242d461","e25aa56f","e2733b9d","e2b41f2c","e2cfd9a4","e42d9829","e44aeff6","e4a4ef9e","e4e2f04c","e4ed5274","e508065b","e5438a31","e563ae9b","e566decb","e58ae276","e62885b8","e63305b7","e6566361","e6b1500a","e6b97d5c","e6be49dd","e6f11e53","e6f3f71b","e751b824","e7806607","e7870cd6","e7ae0ba7","e7e155ee","e8785987","e8d25503","e8d7f7cc","e8e36d38","e9322fa9","e979f157","e97fc43c","e982ca51","e9c95d39","ea070377","ea0fef4f","eb66b804","eb78793d","ebfc3e57","ec3bf069","ec401fa6","ecdd37e4","ecf6f4fe","ed2559ad","ed49005c","edf4582e","ee252d45","ee796472","ee85fe98","eedc436b","ef03d703","ef3248db","ef603aba","ef8a7db2","f0036f49","f04bf670","f06efd49","f0ea61c8","f0eec9bc","f12e794f","f1351371","f164fc8c","f16dd752","f176f8a4","f22b5a8e","f27c809a","f293cc84","f299ad9e","f2b003fe","f37c579f","f3ca4205","f3dca9cc","f4004fba","f46a9c60","f47a4a18","f4ce2ab4","f50c9260","f53b8d8f","f53d8764","f5958d62","f5bcf3e0","f5efd637","f609d930","f66d8466","f6f267d2","f7951700","f8510dfb","f8530399","f889d4ff","f892c0e8","f8954f54","f8e0b1b4","f8ea4f81","f91de5f7","f978aad0","fb013fbc","fb3a26f8","fb3f7265","fb41d082","fb77ef87","fba26a2b","fbd99feb","fbe035eb","fbe483f9","fc7b0451","fc821b39","fc8f4cc0","fcb9da91","fcbc738b","fcda3979","fce4011f","fd14d033","fd2e1677","fd8aed09","fdbce9ca","fe67fe01","fea01f79","feadfb7d","fef0a315","ff154e89","ffb18aea","ffd98e76"]);
+const VOICE_KEYS = new Set(["010d6bf4","01179b9f","015c1ed7","01f16448","020a323e","022414c3","02e90ade","030d78d8","0356c494","038653d6","03923012","03a71232","03c46867","03e00ab3","0413f758","0465883f","048f5a9b","04cc5c8e","04d6f13a","0541a0ae","05c2af6e","05cafd0f","060c3a31","0615d054","069d008c","07148945","07589602","077442dc","0781932f","0794f8af","07e63f63","07ece5b0","07f9b894","0806d6ba","093a9ec1","0971bf18","09db8e8e","0a10ae1d","0ad5eeae","0afaaf2a","0afc87e3","0b01dc7d","0b52c302","0bd13a52","0c177d93","0d0507aa","0d95b582","0de948f3","0e14dcdf","0ec3e44f","0edbeea9","0f03aa9b","0f89f3fb","0f92ae40","0fcaa15f","0fdfa5e6","101e3d34","1040e335","105ec6cd","1066c56b","10874241","108a8642","10f89a53","11089f69","11b567d0","1203f690","1228598a","12e21e97","135dd8df","13a6f4ed","141c2ad0","143f889f","145c0aff","14da008f","15215560","152f81f1","15463f23","154a4667","154f0f6b","159747cd","15c6108d","15ee7985","15ef9c89","15f977f7","15fce4ab","16453246","16d899b6","16f0d05f","170f9a84","172a58f5","1782deda","17f36b40","17f370f3","185f5690","186b75d7","187bd4a0","18d0f814","192b7679","195cb268","19888f23","1a28d339","1a49f03e","1a62b1f9","1a8d6f7a","1aea659e","1b1d3c87","1b5ac67e","1b5fc1ee","1b9105eb","1bbae108","1bbc89b0","1bf1b3e9","1c9e381f","1ca1c615","1cd1a7e1","1cd6166b","1ce574c1","1cf3ebe5","1d2e24a7","1dee4d82","1e0d175a","1e4ef209","1e5c1623","1e69b87f","1eb0ac10","1ee40405","1f00356a","1f72d942","1f749f11","1f9530f8","1f9c65a8","1fa626f7","1fb5ffa8","1fbc1e71","1fc1d5bf","2009d531","20d3181a","20eb8117","20ef5590","215472c1","21636e7c","2164aa55","21a8be6a","21cd2300","21eeed83","22003fa8","22045fbb","220a4300","22650ee7","22edc9dd","23468097","239b5dda","23b03a18","24290f75","24679c6d","24fbf431","2569a72c","258ef3a7","25cdecbe","25cf5ad7","25e94794","26b61cf7","26e3ee84","2708e3b1","277cddb4","27957cbc","27a9042f","282496b8","28a91103","28c84d22","2921d7b0","2942d3b6","297020fe","298185f4","29bdbaac","29f06187","2a210484","2a3209d8","2a503d82","2a6b3376","2aacbf88","2aaec826","2ab4cffe","2af05f26","2af07a80","2b13e113","2b3bc5a5","2b858327","2ba57dad","2bd90c2b","2c470a9e","2c4cdf4e","2c4d300c","2ca44c48","2cd97c67","2d14cc7d","2d2c8af5","2d5d67b5","2d7e1fae","2da7fd5e","2db1fa3f","2dc36b02","2e1efebe","2f1e24f3","2f9ce981","2f9ef7b7","2fa9ea91","2fe98784","2ff77e4b","305046e4","3095bd2c","309ec433","30a56dc6","312a6142","31705486","3176a309","317fd242","31bdc4d2","31d0d874","320b6ba6","327227c5","328c0cb9","32b1acd1","32f81ba8","32ff2ee3","33191bde","34324873","3441dc37","34c315be","34da365b","3551e61b","355f1381","359bca3b","35c656ff","35cce5dc","35f96d12","3605cc1c","362a7922","3644ebcf","364d4e10","367baff1","374eaca6","37a44fed","37ae1597","37db260d","38a7b9af","38ea2f72","39831b98","3a1787de","3a21bc56","3a26711f","3a39f26a","3a5dac7c","3a6b2ab9","3a8f1c76","3a949481","3a9d33d5","3b66898d","3b96d2f8","3be9da67","3c00a66d","3c485dbb","3c6899a1","3c89ebfc","3c8ede1d","3ca29cee","3cef2872","3db579d5","3dccdbba","3de62e37","3de8c3eb","3e060890","3e6da6b8","3ea972b6","3f218331","3f3eeafd","3f855fbe","3faec876","3fd4e7ae","404b3aaa","40540d39","410b8ded","41a65833","41aea321","41f906c4","42296db7","426f3665","42aa5e31","42afbd5d","42fd12f1","43127e44","43363cde","4339d9c6","436ef1c1","4404eade","44061c59","4477569f","44c8ca3c","44e266fc","44f8767c","4548f36c","45542207","4560494b","459dee7b","45a9130c","45bfe991","45e0acb1","45f53b86","460f7c59","46136786","46496013","464f3a22","466d4374","4746cc94","4761b535","47ddd3cb","486b4c38","48712fe0","48a19117","48e2c6fb","49125fbd","4945f45b","496d6077","496de6f9","4992ce5a","49db9625","49e65a09","49ed20b2","4a2ba73c","4a36a34a","4a3f13da","4a4555c7","4a7540d9","4adef8c3","4b356569","4b59d528","4b5ada73","4b85a2f1","4b90904c","4bc4b163","4bcb9d8b","4c065e65","4c0c99d7","4c12ee22","4c77b3ce","4d60414f","4dcbdd0d","4def74e1","4e6138f2","4ea20812","4edce7bb","4ee2a735","4f38c893","4f9b2d67","4fedb2a4","50007dfa","503b3177","5079812e","508cb713","50a8a95c","50d47300","51175898","511e48f4","51275280","513ca8ee","516b6704","51ccd28b","5218a2ab","5255d911","526e3c4f","52b95902","52e79305","52f4fb8c","5322baeb","534ef8a5","53871261","5397df5c","53bf2ec5","5457b467","54aa8ed9","550eab89","552fda1b","55513084","55d20d7e","55d5bd6c","55e218ca","56197828","565a7b38","566b7ae3","5697fcee","5722370c","572d6e8d","573e3c2f","5741adb3","57a4de86","57a6695b","57b635a8","57f392ee","583bd0da","586f3dcf","58806f9a","58a28835","58a51906","58d0b1db","58f10ec4","591b2d48","5927c087","597fbac9","5992a139","59d4f3c2","59e05407","5a136c7f","5a3dc639","5a42136b","5a659aa6","5a9383d8","5a993bbf","5ad7f0c0","5aea8282","5b144473","5ba35891","5bc395f3","5c297c0b","5c3cab63","5ca7135e","5d01f4ea","5d3f1a48","5d714873","5e517996","5ed1d8fc","5efcf416","5f47ca4f","5f59e3ce","5fc9e16e","5fd100b9","5ff823ed","5ff9745a","601b0807","607cadda","60858786","60b0eee2","60bde241","60c81f82","60e1da3b","60fd38fa","61433a5a","615d0b79","619bba7c","61f35e74","624e41d5","626f0f4f","6292d8b6","62d7b114","62f4ebc8","6373d881","639281a4","639c52c9","63db947e","6407d9ac","641ad3bf","649d705c","64a6faae","64ed8e8e","650e0066","654c29a2","656a63fd","65badb07","65e51955","65e8be6d","6609e592","660b14d5","6621cf7e","6644aa69","66c44134","66d25cc1","66de2554","6720914b","673270fa","67416472","67a72feb","67e5ceec","67f3d488","67f6e685","68398741","68c54632","68ec3365","6933b59f","694168cc","6955e6cc","69a79f7e","69be2e1c","69e2c3fd","69e3e49c","69fd3fce","6aa43fdb","6aebe02b","6ba05c39","6bc1c004","6bc321be","6c44bc32","6c59c2a9","6c9db81f","6cdd44a3","6cf9f486","6d017001","6d3a0228","6d7ec49e","6da741e8","6debc3f5","6e0dcab8","6e1a9186","6e756c0b","6f73a78d","6f89d1ff","6f8ba7cb","6f9f8c23","6ff7440c","7009431f","7050e6f4","7055ba5f","70bf724c","70d2f63f","70e01ec4","70f847d9","71265fe4","7144f710","71f3baf0","7203d60f","72084b04","725d7215","737b76f4","738baf53","7407a4a0","7416f2ab","741da553","74716dfd","749a2c98","74c2f8b5","74e14456","752a8200","753db5e7","753e97df","75831d69","75bb0358","7609e99b","761161de","761391c0","7684157d","7694c9b1","76b5bca3","76bc4d18","76c8efa3","76ebf61e","76f4884b","76fa10d9","772682c3","774a7171","77827e7e","779d2f30","780c1ae4","7828a126","7836295e","7862d6ac","7880ed1a","78819e64","790ed501","791dd2e2","7937c176","7957e6a0","795c70da","79a8edaf","7aa462c4","7ab872dd","7ad59f92","7aeea60c","7afa2a23","7b981822","7b9f35aa","7c49cb99","7c66776b","7c8d9f71","7ceaad7d","7d0749bf","7d178a1a","7d30c30b","7d3af5a4","7d53bc9c","7dbf931f","7dc4c36d","7e3e5264","7e5cc60e","7e9fc500","7eab6725","7ed7e457","7eff7110","7f023f84","7f343d1f","7f64cde8","7fc820e5","7fd2efe2","7ff79b6b","80451c8a","80665723","80cc88a1","80d8ff9b","811532bf","813242ea","81781d78","81ba7758","8220cf4a","82288bc8","824f7160","8279b6fa","8368f4f3","8385f42e","839c59ee","83b25e60","8401692d","842d8d66","84cfd18d","84ed8683","84f237f2","8541a4ad","85a8a0b7","86545644","8693b4ae","86b57f32","86df1a00","872d3437","873856c8","87498df9","874f8c68","87add592","87f06117","87fd4d5d","880ce8ac","88815a25","888bd281","88ac7c16","8900e797","891d32c9","89a65ffd","89ae32cb","89bea96f","89c97f91","8a1553d2","8aa1665b","8aa52f8d","8ac79189","8ae9c700","8b4583fb","8ba7a6a5","8bb3f7a6","8bd56b50","8bdfa867","8c1a25c8","8c3d3345","8cb81385","8cef68a0","8cf1868c","8d46e90f","8d7a4b82","8e50b477","8e52724f","8edc64e0","8f9384cc","8fb89a4a","8fc2bc60","8ffc0b4e","90216462","903a9097","9087e9ff","90b09182","90cf166e","90fe763f","90ff1874","911f5219","9147afff","91556c8b","9173557f","92014cf3","92441ab8","9286010b","92bb808d","92d5d9c6","92e2e53d","931680a2","939f459e","93bb9f6c","93c3afee","93ebd0af","93f02394","942171c4","947fdaa3","9493262f","949d16d2","950797e6","9521356d","95223fc5","9588a01a","95b417f7","95b9412f","967aef7f","9683f95b","96ae549b","96c01306","976aa621","97ba79ac","97fc07ad","985aecdf","9875128c","98754e9a","990673ec","994118d4","9a90dd9a","9ac0b441","9b3a4f3a","9b51f50d","9b9db8fd","9bbe66c4","9c12bac8","9c5a7cc0","9cc3c648","9d38ab57","9d885a75","9d930e47","9df180b7","9e42a9ed","9e7df065","9e8bed6e","9f32be9f","9f6d6d85","a0002f4a","a0175f63","a05c0bd3","a0a148ac","a0f47a2d","a0f7a2c9","a10a52a5","a129bde6","a14511e7","a15b90c1","a16570d4","a19572b4","a1a799a9","a1cb0916","a210a877","a217ef43","a21adf33","a23d8ff9","a24a96c1","a2aa5acd","a2f5581e","a31d78d6","a33d5e39","a350c5e7","a36fa0e0","a39e57cb","a3b65f14","a420af43","a4377a84","a43da09b","a47ca343","a4f5c1cc","a539a5a3","a53b2b8f","a53d354c","a59519c1","a596c1ec","a5ce6391","a66c67f0","a676450e","a67cb46a","a693374d","a6d1c371","a72011be","a73429a6","a74bb55c","a75bd1a2","a79e7303","a7bd77ec","a7c8a01d","a7d309f7","a87d420c","a88d44d0","a8b0283d","a8cf1e3e","a8dc3c43","a909345e","a92fd6c3","a9434af2","a94d979b","a98dea5e","a9c443e3","a9fdaab3","aa030d1d","aa4f4182","aa5e9fd1","aa647b38","aa8dc0c9","aab59164","aac8102f","ab4687cb","abc00ac6","abd59793","abdb2e86","abe8b550","ac2410bc","ac43efbb","ac45d6e8","ac7a9181","ac7a9192","acf308d1","acf804cc","ad014e88","ad07be29","ad38095c","ad5c3258","adccc2ac","adce6fc7","adeca29e","ae29ff19","ae677ff4","ae6ad79c","aea0ec60","af716420","af8ebf93","b0024b09","b07b2832","b089e91b","b09cab2a","b0c28c31","b1531487","b19984c3","b1dd800f","b1f75c16","b21fff63","b24a852b","b2866bbc","b28c06c5","b29414d8","b2ba93fa","b2cfcffc","b39480b6","b3e5ec44","b43f49c7","b483b706","b4c28760","b4c4cac4","b4dc6402","b4e54c5c","b524e465","b5339217","b5de5084","b6090bb0","b68e0ed8","b6d4e2b2","b70e7308","b79ee854","b7b25faa","b7c3233a","b7cdcb6f","b864b559","b8ee1637","b8f7064f","b8fc8e51","b90072da","b9b635e7","b9ef86bf","ba284be7","ba7041ba","bad17cf3","bad1bd2c","bb038685","bb228397","bb5025da","bb66f79f","bb6e05bb","bb99a472","bbd75d0c","bc0b3217","bc1a1dfa","bc6e8441","bc94c353","bc98a319","bccf7ab8","bce5d330","bd08f9cc","bd30663b","bd362352","bd6833c3","bd801dea","bd89e678","bddd6f4c","be4216a1","be718df1","bebe32a5","bec1ddcf","bec74fa6","beca3134","bf557b9a","bf6d7309","bf7b9f2b","c0160436","c02a0621","c02fc729","c03871fc","c08f5d9b","c0afaa8d","c0ba34c8","c15b57d3","c1de3769","c21c7af8","c25dca0e","c2c3605b","c2f7ba2c","c310de17","c32a2352","c3480c73","c39a335e","c3b32ca1","c3f7be4b","c41d957e","c43bb8ea","c4a11489","c4b57975","c4bb666c","c4d7663f","c4eebf5d","c4f98617","c509699a","c524d503","c54432b3","c5e036cd","c5e8f908","c6277f68","c672d068","c6a15cf5","c6dc4c2f","c6e438b3","c7169d48","c71ecb5b","c7e52dc7","c7e7bf40","c7fedf59","c81774c1","c85c0f77","c876aac0","c8bce0d6","c8eaf68b","c8f05475","c90d8c8a","c931d368","c94d6fdb","c954ee81","c97fa8d1","c9be70d9","c9caf33d","c9da7d2a","c9e7a824","c9f87f16","ca2ae028","cad23973","cb045612","cb65a61f","cbe0a130","cc66dcdf","cc78e3f5","ccbb23a0","cd171163","cd18fbd5","cd23da4d","cdc1f911","cdc6c42c","cdd6e0f1","cde08f67","ce3fa5af","ce49ceda","ce515102","cf0db587","cf2e5136","cf4baeb1","cf589373","cf99dd33","d0739549","d0f3d3da","d1031404","d12e70f9","d16225e9","d1a82f4b","d23a9f7b","d257ccd4","d31a3e5f","d3309dc9","d36e405a","d370ad7f","d39ea837","d3ebef36","d3f123ee","d412e7fd","d4e5b83c","d5175579","d51c5f67","d52bf62f","d57f3ee5","d5959940","d5b5684c","d5c3a895","d5ea9659","d5f77cfc","d6f20d04","d6fb0abb","d73736f8","d776fb6b","d77c3fd6","d7ac4ced","d7cf3c42","d7d19e37","d7f5b069","d8502c9d","d8b41752","d8e71acb","d90bcde0","d91ac09c","d9325ccf","d93cec80","d944186f","d9473f7b","d98c82bc","d9b74125","d9de354b","da74e3c6","da758359","daabf41b","dafcef35","db1fb423","db3cd6e6","db7758d8","dbb9d0af","dbd0e81e","dbff55f7","dc1cb5a6","dc55f218","dc673fe6","dca64bea","dcd89d88","dcd935cf","dd1b3265","dd220911","dd2ab969","dd356385","dd42a7ec","dd9989a2","ddbce3db","ddc1479a","dded4ad8","de1e0c92","de2f7c34","de9c1c4a","de9c5a8b","decc0eba","dee935ea","df76f221","dfb9b5ae","dffed9b6","e01d5a2d","e07c029d","e0c4d2b8","e0e69105","e11d47c0","e15ca9ae","e163a5ba","e16bbb80","e17d0c8d","e1ce02de","e1fdf15a","e2234cdd","e22d3b39","e242d461","e25aa56f","e2733b9d","e2b41f2c","e2cfd9a4","e2e5ccf3","e42d9829","e44aeff6","e4a4ef9e","e4e2f04c","e4ecea2c","e4ed5274","e508065b","e5438a31","e563ae9b","e566decb","e58ae276","e62885b8","e63305b7","e6566361","e6b1500a","e6b97d5c","e6be49dd","e6f11e53","e6f3f71b","e71eeece","e751b824","e7806607","e7870cd6","e7ae0ba7","e7e155ee","e8785987","e8d25503","e8d7f7cc","e8e36d38","e9322fa9","e979f157","e97fc43c","e982ca51","e9c95d39","ea070377","ea0fef4f","eb66b804","eb78793d","ebfc3e57","ec3bf069","ec401fa6","ecdd37e4","ecf6f4fe","ed2559ad","ed49005c","edf4582e","ee252d45","ee796472","ee85fe98","eedc436b","ef03d703","ef3248db","ef603aba","ef8a7db2","f0036f49","f04bf670","f06efd49","f0ea61c8","f0eec9bc","f12e794f","f1351371","f164fc8c","f16dd752","f176f8a4","f22b5a8e","f27c809a","f293cc84","f299ad9e","f2b003fe","f37c579f","f3ca4205","f3dca9cc","f4004fba","f46a9c60","f47a4a18","f4ce2ab4","f50c9260","f53b8d8f","f53d8764","f5958d62","f5bcf3e0","f5efd637","f609d930","f66d8466","f6f267d2","f7951700","f8510dfb","f8530399","f889d4ff","f892c0e8","f8954f54","f8e0b1b4","f8ea4f81","f91de5f7","f978aad0","f98ec243","f9b8208d","fb013fbc","fb3a26f8","fb3f7265","fb41d082","fb77ef87","fba26a2b","fbd99feb","fbe035eb","fbe483f9","fc7b0451","fc821b39","fc8f4cc0","fcb9da91","fcbc738b","fcda3979","fce4011f","fd14d033","fd2e1677","fd8aed09","fdbce9ca","fe67fe01","fea01f79","feadfb7d","fef0a315","ff154e89","ffb18aea","ffd98e76"]);
 
 // ---- voix enregistrée, bruitages, musique ----
 const VDATA = {}, VPACK = {};
@@ -1473,7 +1486,7 @@ function loadVoice(){
 }
 try{ loadVoice(); speechSynthesis.onvoiceschanged = loadVoice; }catch(e){}
 function say(text, cb, noVoice){
-  sayGen++;
+  sayGen++; try{ idleNote(text); }catch(e){}
   if(!noVoice){ try{ showSubs(text); }catch(e){} }
   let called = false;
   const fin = () => { if(!called){ called = true; cb && cb(); } };
@@ -1550,11 +1563,12 @@ function track(game, item, noTime){
   return {
     get errors(){ return errs; },
     wrong(){
-      if(closed) return; errs++;
+      if(closed) return; errs++; try{ if(behVisit && behVisit.g === game) behVisit.open = errs; }catch(e){}
       if(item != null){ const g = gstat(game); g.missed[item] = (g.missed[item]||0) + 1; saveStats(); try{ reviewMiss(game, item); }catch(e){} }
     },
     right(lvl){
       if(closed) return; closed = true;
+      try{ if(behVisit && behVisit.g === game){ behVisit.r++; behVisit.open = 0; } }catch(e){}
       const g = gstat(game);
       g.rounds++; if(!errs) g.first++; g.errors += errs;
       try{ pdata.updatedAt = Date.now(); syncSoon(); }catch(e){}
@@ -1736,6 +1750,8 @@ function parentPage(){
       ${weekSummaryHtml()}
       ${carnetReminderHtml()}
       ${screenTimeHtml()}
+      ${behHtml()}
+      ${offlineHtml()}
       ${homeActHtml()}
       ${kidTellHtml()}
       ${obsHtml()}
@@ -2149,7 +2165,7 @@ function singScreen(k, fromBox){
   const my = navSeq, v = document.getElementById("kvid");
   singSeen[k] = 1;
   let ready = false;
-  if(v){ chantMsg("Chargement de la chanson…"); vidLoad(k).then(u => { if(navSeq !== my) return; v.src = u; ready = true; chantMsg(""); if(pendingPlay) playV(); }).catch(e => chantMsg("La vidéo n'a pas pu se charger (" + e + ").")); }
+  if(v){ chantMsg("Chargement de la chanson…"); vidLoad(k).then(u => { if(navSeq !== my) return; v.src = u; ready = true; chantMsg(""); if(pendingPlay) playV(); }).catch(e => chantMsg(navigator.onLine === false || /fetch|network|réseau/i.test(String(e)) ? "Cette vidéo n'est pas encore sur l'appareil. Avec internet, elle se garde pour la prochaine fois (ou dans l'espace parents : « Garder les comptines »)." : "La vidéo n'a pas pu se charger (" + e + ").")); }
   let pendingPlay = false;
   const playV = () => { if(!v || navSeq !== my) return; if(!ready){ pendingPlay = true; return; } pendingPlay = false; try{ stopVoice(); speechSynthesis.cancel(); }catch(e){} singing = true; try{ musicStop(); }catch(e){}
     v.currentTime = 0; const p = v.play(); if(p && p.catch) p.catch(e => chantMsg("Touche le bouton ▶ de la vidéo pour la lancer.")); };
@@ -3251,7 +3267,13 @@ function posGame(){
     {id:"dans",   word:"dans le garage",     x:220, b:226},
     {id:"cote",   word:"à côté de l'arbre",  x:300, b:226}
   ];
-  const target = pick(SPOTS), hex = pick(COLORS).hex;
+  // grande section et CP : plus de mots de position (la simulation montrait 4 consignes seulement)
+  const gk = gradeKey();
+  if(gk === "GS" || gk === "CP") SPOTS.push({id:"toit", word:"sur le toit du garage", x:220, b:150});
+  let target; do { target = pick(SPOTS); } while(SPOTS.length > 1 && target.id === posGame.last); posGame.last = target.id;
+  if((gk === "GS" || gk === "CP") && target.id === "cote" && Math.random() < .5) target = Object.assign({}, target, {word:"à droite du garage"});
+  if(gk === "CP" && target.id === "sous" && Math.random() < .5) target = Object.assign({}, target, {word:"à gauche du garage, sous le pont"});
+  const hex = pick(COLORS).hex;
   const spotRect = s => `<rect class="spot" data-id="${s.id}" x="${s.x - 6}" y="${s.b - 40}" width="72" height="44" rx="8"/>`;
   app.innerHTML = `${topBar(true)}
     <div class="prompt"><span>Gare la voiture ${target.word} !</span>
@@ -3285,7 +3307,7 @@ function posGame(){
     r.addEventListener("click", () => {
       if(done) return;
       const s = SPOTS.find(x => x.id === r.dataset.id);
-      if(s === target){
+      if(s.id === target.id){
         done = true; beep("good"); T.right(null);
         document.getElementById("poscar").innerHTML = `<g class="popin" transform="translate(${s.x},${s.b - 31}) scale(.5)">${carInner(hex)}</g>`;
         r.classList.add("ok");
@@ -3717,9 +3739,10 @@ function syllGame(short){
   say(line);
   const T = track("sons", "syllabes : " + word);
   document.getElementById("again").onclick = () => say(word);
-  let taps = 0, done = false;
+  let taps = 0, done = false, miss = 0;
   const dots = document.getElementById("sdots");
-  const draw = () => { dots.innerHTML = Array.from({length: taps}, () => `<i class="popin"></i>`).join(""); };
+  // après deux essais ratés, on montre les ronds à remplir : un par syllabe (vu en simulant un enfant qui bloque)
+  const draw = () => { dots.innerHTML = Array.from({length: taps}, () => `<i class="popin"></i>`).join("") + (miss >= 2 ? Array.from({length: Math.max(0, n - taps)}, () => `<i class="ghost"></i>`).join("") : ""); };
   document.getElementById("horn").onclick = () => { if(done || taps >= 6) return; taps++; draw(); try{ const c = ac(); osc(c,"square",400,c.currentTime,.18,.1,lowpass(c,1800)); }catch(e){} };
   document.getElementById("sreset").onclick = () => { if(done) return; taps = 0; draw(); };
   document.getElementById("scheck").onclick = () => {
@@ -3730,8 +3753,8 @@ function syllGame(short){
       say(`Bravo ! ${parts.join(", ")} : ${numWord(n)} syllabe${n > 1 ? "s" : ""} !`);
       setTimeout(() => party ? celebrate(flow(soundsEntry)) : flow(soundsEntry)(), 3200);
     } else {
-      T.wrong(); beep("bad"); taps = 0; draw();
-      say(`Pas tout à fait. Écoute bien en tapant dans tes mains : ${parts.join(", ")}. Essaie encore !`);
+      T.wrong(); beep("bad"); taps = 0; miss++; draw();
+      say(miss >= 2 ? `Regarde les ronds : il y en a ${numWord(n)}. ${parts.join(", ")}. Un tut pour chaque rond !` : `Pas tout à fait. Écoute bien en tapant dans tes mains : ${parts.join(", ")}. Essaie encore !`);
     }
   };
 }
@@ -3814,7 +3837,7 @@ function fixPdata(d){
     boost: d.boost || {}, recent: d.recent || {}, seen: d.seen || {}, gtime: d.gtime || {}, ileSeen: d.ileSeen || null, stk: d.stk, stkBase: d.stkBase, stkNew: d.stkNew || [], ileView: d.ileView === undefined ? -1 : d.ileView,
     hunt: d.hunt || undefined, aiStory: d.aiStory || undefined, lad: d.lad || null, introDay: d.introDay || null, carnetSeen: d.carnetSeen || null, updatedAt: d.updatedAt || 0,
     review: d.review || {}, obs: d.obs || [], actDone: d.actDone || {}, unlockBase: d.unlockBase == null ? null : d.unlockBase,
-    mission: d.mission || null, motSeen: d.motSeen || {}, motQuiz: d.motQuiz || {}};
+    mission: d.mission || null, motSeen: d.motSeen || {}, motQuiz: d.motQuiz || {}, beh: Array.isArray(d.beh) ? d.beh.slice(-300) : [], behFix: d.behFix || {}};
 }
 const capFirst = t => t.charAt(0).toUpperCase() + t.slice(1);
 
@@ -4149,8 +4172,9 @@ function sparkHtml(g){
 // ---------- bus scolaire (partager) ----------
 const KID = hex => (CARIMG[String(hex).toLowerCase()] && VIMG["kid_" + CARIMG[String(hex).toLowerCase()]]) ? isvg("kid_" + CARIMG[String(hex).toLowerCase()]) : `<svg viewBox="0 0 30 40" aria-hidden="true" style="display:block;width:100%"><circle cx="15" cy="11" r="8" fill="#f3c79b" stroke="#1f2a44" stroke-width="2"/><circle cx="12" cy="10.5" r="1.2" fill="#1f2a44"/><circle cx="18" cy="10.5" r="1.2" fill="#1f2a44"/><path d="M12 14 q3 2.5 6 0" fill="none" stroke="#1f2a44" stroke-width="1.4" stroke-linecap="round"/><path d="M5 38 V28 Q5 20 15 20 Q25 20 25 28 V38 Z" fill="${hex}" stroke="#1f2a44" stroke-width="2" stroke-linejoin="round"/></svg>`;
 function busGame(){
-  const g = gradeKey(), nb = g === "CP" && Math.random() < .5 ? 3 : 2;
-  const per = g === "PS" ? 1 + rnd(2) : g === "MS" ? 2 + rnd(2) : g === "GS" ? 3 + rnd(3) : (nb === 3 ? 2 + rnd(3) : 4 + rnd(5));
+  // plus de cas différents (la simulation ne voyait que 2 ou 3 partages possibles par classe)
+  const g = gradeKey(), nb = (g === "CP" && Math.random() < .5) || (g === "GS" && Math.random() < .3) ? 3 : 2;
+  const per = g === "PS" ? 1 + rnd(2) : g === "MS" ? 2 + rnd(3) : g === "GS" ? (nb === 3 ? 2 + rnd(2) : 3 + rnd(3)) : (nb === 3 ? 2 + rnd(3) : 4 + rnd(5));
   const total = per * nb, kidCols = Array.from({length: total}, () => pick(COLORS).hex);
   let queue = [...kidCols], inBus = Array.from({length: nb}, () => []), done = false;
   app.innerHTML = `${topBar(true)}
@@ -6778,6 +6802,111 @@ function homeActHtml(){
     <p class="pnote">📖 Mot du jour : <b>${esc(w[0])}</b>. Essayez de l'utiliser dans une phrase aujourd'hui.${m && m.t ? `<br>🎯 Dernière mission de Vroumi : « ${esc(m.t)} »${m.done === true ? " (réussie ✓)" : m.done === false ? " (pas encore)" : ""}` : ""}</p>
     <div class="pactions"><button class="${done ? "iconbtn" : "big"}" id="actdone" ${done ? "disabled" : ""}>${done ? "✓ Fait aujourd'hui" : "C'est fait ✓"}</button>${total ? `<span class="pnote">${total} activité${total > 1 ? "s" : ""} faite${total > 1 ? "s" : ""} en tout</span>` : ""}</div></section>`;
 }
+// ---------- Enfant qui ne touche plus rien : Vroumi répète la consigne, puis fait bouger les réponses ----------
+// (trouvé en simulant un enfant qui attend : dans beaucoup de jeux, plus rien ne se passait)
+const IDLE_SKIP = ["feu","rue","rythme","histoires","peinture","trace"];
+const PRAISE = /^(bravo|super|génial|oui|bien joué|bien vu|presque|encore|essaie|ouf|youpi|trop fort|merci|c'est ça|hop|tu as|à toi)/i;
+let lastInput = Date.now(), lastSayT = 0, lastAsk = "", lastAskGame = null, idleStage = 0;
+function idleNote(t){ lastSayT = Date.now(); if(curGame && t && t.length > 14 && !PRAISE.test(t.trim())){ lastAsk = t; lastAskGame = curGame; } }
+["pointerdown","keydown"].forEach(ev => addEventListener(ev, () => { lastInput = Date.now(); idleStage = 0; app.classList.remove("nudge"); }, true));
+setInterval(() => { try{
+  if(!curGame || !GAMES[curGame] || IDLE_SKIP.includes(curGame) || document.visibilityState === "hidden" || !soundOn) return;
+  if(document.querySelector(".party, .levelup, .unlockpop, .restpop")) return;
+  const quiet = Date.now() - Math.max(lastInput, lastSayT);
+  if(idleStage === 0 && quiet > 14000 && lastAsk && lastAskGame === curGame){ idleStage = 1; say(lastAsk); }
+  else if(idleStage === 1 && quiet > 16000){ idleStage = 2; app.classList.add("nudge"); setTimeout(() => app.classList.remove("nudge"), 2600); if(lastAsk && lastAskGame === curGame) say(lastAsk); }
+}catch(e){} }, 1000);
+// ---------- Relevé automatique : ce que l'enfant fait vraiment (reste sur l'appareil) ----------
+// Une « visite » = un passage dans un jeu. On note : manches finies, durée, erreurs dans la manche
+// en cours quand il part, et s'il l'a choisi lui-même (hors « Ma journée »).
+let behVisit = null;
+function behEnd(){
+  const v = behVisit; behVisit = null;
+  if(!v || !pdata || duo) return;
+  const sec = Math.round((Date.now() - v.t) / 1000); if(sec < 3) return;
+  pdata.beh = (pdata.beh || []).concat([[dayNum(), v.g, v.r, Math.min(sec, 3600), v.open, v.self ? 1 : 0]]).slice(-300);
+  try{ behAutoFix(v.g); }catch(e){}
+  saveProfileData();
+}
+setInterval(() => { try{
+  const g = curGame && GAMES[curGame] ? curGame : null;
+  if(behVisit && behVisit.g !== g) behEnd();
+  if(g && !behVisit && !duo) behVisit = {g, t: Date.now(), r: 0, open: 0, self: !session};
+}catch(e){} }, 1000);
+addEventListener("pagehide", () => { try{ behEnd(); }catch(e){} });
+document.addEventListener("visibilitychange", () => { try{ if(document.visibilityState === "hidden") behEnd(); }catch(e){} });
+const behQuit = v => v[2] === 0 && v[3] >= 8;
+function behStats(days){
+  const from = dayNum() - (days || 30), by = {};
+  (pdata.beh || []).filter(v => v[0] >= from && GAMES[v[1]]).forEach((v, i, all) => {
+    const b = by[v[1]] = by[v[1]] || {n:0, quit:0, quitErr:0, self:0, again:0, rounds:0, sec:0};
+    b.n++; b.rounds += v[2]; b.sec += v[3]; if(behQuit(v)){ b.quit++; if(v[4]) b.quitErr++; }
+    if(v[5]){ b.self++; if(all.slice(0, i).some(w => w[0] === v[0] && w[1] === v[1])) b.again++; }
+  });
+  return by;
+}
+// trois abandons sur les quatre derniers passages, dont deux après des erreurs : le jeu baisse d'un cran tout seul
+function behAutoFix(g){
+  if(NO_ADAPT.includes(g)) return;
+  const last = (pdata.beh || []).filter(v => v[1] === g).slice(-4);
+  if(last.length < 4 || last.filter(behQuit).length < 3 || last.filter(v => behQuit(v) && v[4]).length < 2) return;
+  const fx = pdata.behFix = pdata.behFix || {};
+  if(fx[g] && dayNum() - fx[g].d < 7) return;
+  pdata.boost = pdata.boost || {}; const b = pdata.boost[g] || 0;
+  if(b <= -1) return;
+  pdata.boost[g] = b - 1; (pdata.recent || {})[g] = [];
+  fx[g] = {d: dayNum(), n: ((fx[g] || {}).n || 0) + 1};
+}
+function behTopMissed(){
+  const out = [];
+  Object.entries(stats || {}).forEach(([g, st]) => { if(!GAMES[g] || !st || !st.missed) return; Object.entries(st.missed).forEach(([it, c]) => { if(c >= 2) out.push({g, it, c}); }); });
+  return out.sort((a, b) => b.c - a.c).slice(0, 5);
+}
+function behHtml(){
+  const by = behStats(30), ent = Object.entries(by), name = esc(displayName());
+  const visits = ent.reduce((a, [, b]) => a + b.n, 0);
+  const head = `<section class="pcard" id="behcard"><h3>🔎 Ce que montre le jeu</h3>
+    <p class="pnote">Relevé automatique des 30 derniers jours, sans rien à faire de votre côté. Il reste sur cet appareil.</p>`;
+  if(visits < 5) return head + `<p class="pmiss">Pas encore assez de parties : revenez après quelques jours de jeu.</p></section>`;
+  const likes = ent.filter(([, b]) => b.self >= 2 && b.quit / b.n < .5).sort((a, b) => (b[1].self + b[1].again * 2) - (a[1].self + a[1].again * 2)).slice(0, 3);
+  const hard = ent.filter(([, b]) => b.n >= 3 && b.quit / b.n >= .5).sort((a, b) => b[1].quit / b[1].n - a[1].quit / a[1].n).slice(0, 3);
+  const miss = behTopMissed(), fixes = Object.entries(pdata.behFix || {}).filter(([g, f]) => GAMES[g] && dayNum() - f.d <= 30);
+  const lbl = g => esc(GAMES[g].label), mn = s => s < 90 ? `${s} s` : `${Math.round(s / 60)} min`;
+  return head + `
+    <p><b>💚 Ce qu'il choisit tout seul :</b> ${likes.length ? likes.map(([g, b]) => `${lbl(g)} (${b.self} fois${b.again ? `, relancé ${b.again} fois le même jour` : ""})`).join(" · ") : "rien de marquant pour l'instant."}</p>
+    <p><b>🚪 Ce qu'il quitte vite :</b> ${hard.length ? hard.map(([g, b]) => `${lbl(g)} (${b.quit} sur ${b.n} passages${b.quitErr ? `, souvent juste après une erreur` : ""})`).join(" · ") : "aucun jeu abandonné souvent. 👍"}</p>
+    <p><b>🧩 Les questions qui coincent :</b> ${miss.length ? miss.map(m => `${lbl(m.g)} : ${esc(m.it)} (${m.c} erreurs)`).join(" · ") : "aucune erreur qui revient."}</p>
+    ${fixes.length ? `<p><b>🛠️ Corrigé tout seul :</b> ${fixes.map(([g]) => lbl(g)).join(", ")} : le jeu est passé un cran plus facile, car ${name} le quittait après des erreurs.</p>` : ""}
+    <p class="pnote">${visits} passages dans les jeux, ${mn(ent.reduce((a, [, b]) => a + b.sec, 0))} au total.</p>
+    <div class="pactions"><button class="iconbtn" id="behcopy">📋 Copier le relevé</button></div>
+    <p class="pnote" id="behmsg" aria-live="polite">Collez-le dans la conversation avec Claude pour qu'il ajuste les jeux.</p></section>`;
+}
+function behText(){
+  const by = behStats(30);
+  const rows = Object.entries(by).sort((a, b) => b[1].n - a[1].n).map(([g, b]) => `${GAMES[g].label} : ${b.n} passage${b.n > 1 ? "s" : ""}, ${b.rounds} manche${b.rounds > 1 ? "s" : ""}, ${b.quit} abandon${b.quit > 1 ? "s" : ""} (${b.quitErr} après erreur), ${b.self} fois choisi seul, ${b.again} relances, ${Math.round(b.sec / 60)} min`);
+  const miss = behTopMissed().map(m => `${GAMES[m.g].label} : ${m.it} (${m.c})`);
+  return `Relevé du Garage (30 jours) · classe ${gradeKey()}\n${rows.join("\n")}\nQuestions qui coincent : ${miss.join(" ; ") || "aucune"}\nCorrigés tout seuls : ${Object.keys(pdata.behFix || {}).filter(g => GAMES[g]).map(g => GAMES[g].label).join(", ") || "aucun"}`;
+}
+// ---------- Sans internet : les comptines vidéo à garder sur l'appareil ----------
+function offlineHtml(){
+  if(!("caches" in window) || !navigator.serviceWorker || !navigator.serviceWorker.controller) return "";
+  return `<section class="pcard" id="offcard"><h3>📶 Jouer sans internet</h3>
+    <p class="pnote">Les jeux, les voix, les histoires et les chansons marchent sans internet après la première visite. Les comptines en vidéo sont plus lourdes : elles se gardent quand on les regarde, ou toutes d'un coup ici (environ 40 Mo, de préférence en wifi).</p>
+    <p id="offstat" aria-live="polite">Vérification…</p>
+    <div class="pactions"><button class="iconbtn" id="offget" hidden>⬇️ Garder les comptines sur l'appareil</button></div></section>`;
+}
+async function offlineWire(){
+  const st = document.getElementById("offstat"), bt = document.getElementById("offget"); if(!st) return;
+  const parts = Object.entries(VIDPARTS).flatMap(([k, n]) => Array.from({length: n}, (_, i) => `videos/v-${k}-${i}.json`));
+  const have = async () => { let n = 0; for(const u of parts) if(await caches.match(u)) n++; return n; };
+  const show = n => { const all = n >= parts.length; st.textContent = all ? "✅ Toutes les comptines vidéo sont sur l'appareil." : `Comptines vidéo sur l'appareil : ${Math.round(n / parts.length * 100)} %.`; bt.hidden = all; };
+  show(await have());
+  bt.onclick = async () => {
+    bt.disabled = true; let n = await have(), fail = 0;
+    for(const u of parts){ if(!document.body.contains(st)) return; if(await caches.match(u)) continue; try{ const r = await fetch(u); if(!r.ok) fail++; else{ await r.blob(); n++; } }catch(e){ fail++; } st.textContent = `Téléchargement… ${Math.round(n / parts.length * 100)} %`; }
+    bt.disabled = false; show(await have()); if(fail) st.textContent += " Une partie n'a pas pu se télécharger : réessayez avec internet.";
+  };
+}
 // ---------- Observations des parents ----------
 function obsHtml(){
   const list = (pdata.obs || []).slice(-5).reverse();
@@ -6794,6 +6923,8 @@ function obsHtml(){
 }
 function obsText(){ return (pdata.obs || []).map(o => `${o.d}${o.like && GAMES[o.like] ? " | préféré : " + GAMES[o.like].label : ""}${o.hard && GAMES[o.hard] ? " | a bloqué : " + GAMES[o.hard].label : ""}${o.t ? " | " + o.t : ""}`).join("\n"); }
 function retroWire(){
+  try{ offlineWire(); }catch(e){}
+  const bc = document.getElementById("behcopy"); if(bc) bc.onclick = async () => { const m = document.getElementById("behmsg"); try{ await navigator.clipboard.writeText(behText()); m.textContent = "Relevé copié : collez-le dans la conversation avec Claude."; }catch(e){ m.textContent = behText(); } };
   const ad = document.getElementById("actdone"); if(ad) ad.onclick = () => { pdata.actDone = pdata.actDone || {}; pdata.actDone[today()] = 1; saveProfileData(); parentPage(); };
   const sv = document.getElementById("obssave");
   if(sv) sv.onclick = () => {
@@ -6984,7 +7115,7 @@ function introShow(){
   let gone = false; const close = () => { if(gone) return; gone = true; d.classList.add("iout"); window.setTimeout(() => d.remove(), 450); };
   d.onclick = close;
   window.setTimeout(() => { if(!gone) beep("honk"); }, 900);
-  window.setTimeout(() => { if(!gone) say(`Bonjour ${displayName()} ! On part à l'aventure ?`); }, 2300);
+  window.setTimeout(() => { if(!gone && document.body.contains(d) && !curGame) say(`Bonjour ${displayName()} ! On part à l'aventure ?`); }, 2300);
   window.setTimeout(close, 7600);
 }
 
@@ -7492,7 +7623,7 @@ if(/[?&]test\b/.test(location.search)) window.__garage = {
   games: () => Object.keys(GAMES), run: k => { curGame = k; play = {game: k, count: 0}; GAMES[k].run(); }, home: () => menu(), parents: () => parentPage(),
   stats: () => stats, pdata: () => pdata, levels: () => ({level, shapeLevel, sizeN, soundLevel, trainLvl}),
   ladDown, adaptLevel, reviewMiss, reviewDone, reviewPick, reviewCount, dayNum, focusPlan, bundlePlan, mergeBundles, profileBundle, livretPages, carnetSvg, effGrade,
-  unlockedList, lockedGames, unlockLeft, tellScreen, star: () => addStar(), motScreen, missionScreen, storyRead: (a, b) => storyRead(a, b), storySeq: si => storySeq(si), stories: () => STORIES.map(x => x.title), sessionEnd: () => { session = {games: ["couleurs"], i: 0, count: 0, gained: 2, start: Date.now()}; sessionEnd(); },
+  unlockedList, lockedGames, unlockLeft, tellScreen, star: () => addStar(), motScreen, missionScreen, behStats, behHtml, behText, behEnd, behAutoFix, behVisit: () => behVisit, storyRead: (a, b) => storyRead(a, b), storySeq: si => storySeq(si), stories: () => STORIES.map(x => x.title), sessionEnd: () => { session = {games: ["couleurs"], i: 0, count: 0, gained: 2, start: Date.now()}; sessionEnd(); },
   duo: v => { if(v !== undefined) duo = v; return duo; }, save: () => saveProfileData()
 };
 if(profiles.list.length) loadProfile(curProfile().id);
