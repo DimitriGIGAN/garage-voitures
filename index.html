@@ -948,6 +948,26 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 }
 /* Vroumi ne doit pas couvrir le bouton Menu sur téléphone */
 @media (max-width:560px){ #mascot:not(.m-visit){top:80px;width:52px} }
+/* --- jeux à débloquer, raconte à Vroumi --- */
+.mode.locked{filter:grayscale(.85) brightness(.97);opacity:.8}
+.lockbadge{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:999px;padding:3px 12px;font:800 .82rem var(--body);white-space:nowrap}
+.unltoast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:12px;background:#fff;border:4px solid var(--ink);border-radius:22px;padding:10px 18px;box-shadow:0 6px 0 var(--ink);font:700 1.05rem var(--body);animation:unlin .5s cubic-bezier(.2,.9,.3,1.3) both;transition:opacity .4s,transform .4s}
+.unltoast .pic{width:72px;height:54px;flex:none;border-radius:12px;overflow:hidden;display:block}
+.unltoast .pic img,.unltoast .pic svg{width:100%;height:100%;object-fit:cover}
+.unltoast.out{opacity:0;transform:translateX(-50%) translateY(-20px)}
+@keyframes unlin{from{opacity:0;transform:translateX(-50%) translateY(-40px) scale(.8)}}
+.tellpics{margin-bottom:14px}
+.tellpic{width:min(26vw,200px);border:4px solid var(--ink);border-radius:16px;overflow:hidden;background:#fff;display:block}
+.tellpic img{width:100%;display:block}
+.tellbox{display:flex;flex-direction:column;align-items:center;gap:10px;margin:6px 0 12px}
+.tellmic{width:110px;height:110px;border-radius:50%;border:5px solid var(--ink);background:#c84f0c;font-size:3rem;box-shadow:0 7px 0 var(--ink);cursor:pointer;transition:transform .12s,box-shadow .12s}
+.tellmic:active{transform:translateY(5px);box-shadow:0 2px 0 var(--ink)}
+.tellmic.on{background:#2fb36b;animation:ilepulse 1s ease-in-out infinite}
+.tellmic:disabled{background:#fff;animation:none}
+.tellbar{width:min(70vw,360px);height:14px;border:3px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden}
+.tellbar i{display:block;height:100%;width:0;background:#2fb36b}
+.tellmsg{font:800 1.15rem var(--body);background:rgba(255,255,255,.9);border-radius:999px;padding:4px 16px;margin:0}
+@media (prefers-reduced-motion:reduce){ .tellmic.on,.unltoast{animation:none} }
 /* --- observations, sélection, vérification --- */
 .obsq{display:grid;gap:6px;margin:8px 0}
 .obstxt{width:100%;font:600 1rem var(--body);border:3px solid var(--ink);border-radius:14px;padding:10px;resize:vertical;box-sizing:border-box}
@@ -1655,6 +1675,7 @@ function parentPage(){
       ${weekSummaryHtml()}
       ${carnetReminderHtml()}
       ${homeActHtml()}
+      ${kidTellHtml()}
       ${obsHtml()}
       <div class="pactions"><button class="iconbtn" id="classv">Tous les enfants · gérer les profils</button><button class="iconbtn" id="carnet">📘 Carnet de route du mois</button><button class="iconbtn" id="livret">🎓 Livret pour la maîtresse</button></div>
       <div class="addrow gradeline"><label for="pgrade" class="glab">Classe de ${displayName()}</label>${gradeSelect("pgrade", gradeKey())}</div>
@@ -1743,7 +1764,9 @@ function shownStars(){ return curGame ? (starsBy[curGame] || 0) : stars; }
 function addStar(){
   if(duo){ duo.score[duo.turn]++; if(duo.turn === 1){ const b = app.querySelector(".duobar"); if(b) b.outerHTML = duoBar(); return false; } }
   stars++; if(curGame) starsBy[curGame] = (starsBy[curGame] || 0) + 1;
+  const lockedBefore = lockedGames();
   pdata.earned = (pdata.earned || 0) + 1;
+  try{ const now = new Set(lockedGames()), fresh = lockedBefore.filter(k => !now.has(k)); if(fresh.length) unlockToast(fresh[0]); }catch(e){}
   let ileNew = false; try{ ileNew = ileCheck(); }catch(e){}
   let stkNew = false; try{ stkNew = stkCheck(); }catch(e){}
   const unlock = CARS.find(c => c.cost === pdata.earned && c.cost > 0);
@@ -2405,12 +2428,14 @@ function menu(page){
   document.getElementById("m33").onclick = () => { beep("honk"); comptineGame(); };
   document.getElementById("m34").onclick = () => { beep("honk"); laboGame(); };
   document.getElementById("m35").onclick = () => { beep("honk"); creoleGame(); };
+  const locked = new Set(lockedGames()), left = unlockLeft();
   [["m1","couleurs"],["m2","compter"],["m3","formes"],["m4","taille"],["m5","sons"],["m6","prenom"],["m7","feu"],["m8","suites"],["m9","espace"],["m10","bus"],["m11","semaine"],["m12","lavage"],["m13","trace"],["m14","histoires"],["m15","consignes"],["m16","memoire"],["m17","emotions"],["m18","puzzle"],["m19","ombres"],["m20","monnaie"],["m21","rythme"],["m22","rue"],["m23","peinture"],["m24","labyrinthe"],["m25","tri"],["m26","meteo"],["m27","metiers"],["m28","balance"],["m29","course"],["m30","moitie"],["m31","contraires"],["m32","animaux"],["m33","comptines"],["m34","labo"],["m35","creole"]].forEach(([id, g]) => {
     const el = document.getElementById(id), f = el.onclick;
     el.insertAdjacentHTML("afterbegin", `<span class="mstars" aria-label="${starsBy[g] || 0} étoiles">${STAR}${starsBy[g] || 0}</span>`);
     if(gameResting(g)){ el.classList.add("resting"); el.insertAdjacentHTML("beforeend", '<span class="restbadge">💤 Au repos</span>'); }
     el.onclick = () => { if(gameResting(g)){ beep("tap"); return restScreen(g, false); } withWipe(() => { navSeq++; if(limitReached()) return closedScreen(); curGame = g; play = {game: g, count: 0}; if(duo){ duo.turn = 0; return showTurn(f); } f(); }); };
     if(GAMES[g] && (!gradeOK(g) || pdata.settings.hidden.includes(g))) el.hidden = true;
+    else if(GAMES[g] && locked.has(g)){ if(page === "home") el.hidden = true; else { el.classList.add("locked"); el.insertAdjacentHTML("beforeend", `<span class="lockbadge">🔒 Encore ${left} étoile${left > 1 ? "s" : ""}</span>`); el.onclick = () => { beep("tap"); say(`Ce jeu est encore fermé. Gagne ${left} étoile${left > 1 ? "s" : ""} pour ouvrir un nouveau jeu !`); }; } }
     { const pic = el.querySelector(".pic"); if(pic) GAMEPIC[g] = pic.outerHTML; }
     if(!el.hidden && GAMES[g]){ const onHome = home.includes(g); if(page === "home" ? !onHome : onHome) el.hidden = true; }
     if(EN() && ["couleurs","compter","formes","sons"].includes(g)) el.insertAdjacentHTML("beforeend", '<span class="enbadge">en anglais</span>');
@@ -3722,7 +3747,7 @@ function fixPdata(d){
     challenge: d.challenge || null, medals: d.medals || 0, custom: d.custom || null,
     boost: d.boost || {}, recent: d.recent || {}, seen: d.seen || {}, gtime: d.gtime || {}, ileSeen: d.ileSeen || null, stk: d.stk, stkBase: d.stkBase, stkNew: d.stkNew || [], ileView: d.ileView === undefined ? -1 : d.ileView,
     hunt: d.hunt || undefined, aiStory: d.aiStory || undefined, lad: d.lad || null, introDay: d.introDay || null, carnetSeen: d.carnetSeen || null, updatedAt: d.updatedAt || 0,
-    review: d.review || {}, obs: d.obs || [], actDone: d.actDone || {}};
+    review: d.review || {}, obs: d.obs || [], actDone: d.actDone || {}, unlockBase: d.unlockBase == null ? null : d.unlockBase};
 }
 const capFirst = t => t.charAt(0).toUpperCase() + t.slice(1);
 
@@ -3813,7 +3838,32 @@ const GAMES = {
   espace:  {label:"Le GPS",              run:() => gpsGame()}
 };
 function gradeOK(k){ return !GAMES[k].grades || GAMES[k].grades.includes(baseGradeKey()); }
-function availableGames(){ const ah = a11yHidden(); return Object.keys(GAMES).filter(k => gradeOK(k) && !pdata.settings.hidden.includes(k) && !ah.includes(k)); }
+// ---------- Jeux à débloquer : 12 pour commencer, puis un nouveau toutes les 10 étoiles ----------
+const UNLOCK_ORDER = ["couleurs","compter","formes","sons","prenom","memoire","histoires","comptines","puzzle","emotions","taille","animaux","suites","espace","trace","consignes","semaine","rythme","labo","creole","meteo","ombres","lavage","feu","rue","tri","metiers","contraires","course","balance","bus","labyrinthe","moitie","monnaie","problemes"];
+const UNLOCK_START = 12, UNLOCK_EVERY = 10;
+function unlockOn(){ return pdata.settings.unlock !== false; }
+function eligibleGames(){ const ah = a11yHidden(); return Object.keys(GAMES).filter(k => gradeOK(k) && !pdata.settings.hidden.includes(k) && !ah.includes(k)); }
+function unlockedList(){
+  const ix = k => { const i = UNLOCK_ORDER.indexOf(k); return i < 0 ? 99 : i; };
+  const L = eligibleGames().sort((a, b) => ix(a) - ix(b));
+  if(!unlockOn()) return L;
+  if(pdata.unlockBase == null) pdata.unlockBase = pdata.earned || 0;
+  const played = L.filter(k => (stats[k] || {}).rounds > 0 || (starsBy[k] || 0) > 0);
+  const n = Math.max(UNLOCK_START, played.length) + Math.floor(Math.max(0, (pdata.earned || 0) - pdata.unlockBase) / UNLOCK_EVERY);
+  const out = new Set(played); for(const k of L){ if(out.size >= n) break; out.add(k); }
+  return L.filter(k => out.has(k));
+}
+function unlockLeft(){ return UNLOCK_EVERY - (Math.max(0, (pdata.earned || 0) - (pdata.unlockBase || 0)) % UNLOCK_EVERY); }
+function lockedGames(){ if(!unlockOn()) return []; const u = new Set(unlockedList()); return eligibleGames().filter(k => !u.has(k)); }
+function unlockToast(k){
+  const g = GAMES[k]; if(!g) return;
+  const d = document.createElement("div"); d.className = "unltoast"; d.setAttribute("role", "status");
+  d.innerHTML = `${GAMEPIC[k] || ""}<span><b>Nouveau jeu débloqué !</b><br>${esc(g.label)}</span>`;
+  document.body.appendChild(d); try{ beep("good"); }catch(e){}
+  window.setTimeout(() => { try{ say(`Bravo ! Tu as débloqué un nouveau jeu : ${g.label} !`); }catch(e){} }, 1800);
+  window.setTimeout(() => { d.classList.add("out"); window.setTimeout(() => d.remove(), 500); }, 5200);
+}
+function availableGames(){ const u = unlockedList(); return u; }
 function playedToday(){ return pdata.time[today()] || 0; }
 function limitReached(){ const m = +pdata.settings.maxMin || 0; return m > 0 && playedToday() >= m * 60; }
 setInterval(() => {
@@ -3952,6 +4002,7 @@ function settingsHtml(){
       <div class="setrow"><input type="checkbox" id="setparty"${s.party ? " checked" : ""}><label for="setparty">Petite fête toutes les 5 étoiles</label></div>
       <div class="setrow"><input type="checkbox" id="setvvoice"${s.vvoice !== false ? " checked" : ""}><label for="setvvoice">Voix enregistrée de Vroumi (sinon, voix de la tablette)</label></div>
       <div class="setrow"><input type="checkbox" id="setmusic"${s.music !== false ? " checked" : ""}><label for="setmusic">Musique douce pendant les jeux</label></div>
+      <div class="setrow"><input type="checkbox" id="setunlock"${s.unlock !== false ? " checked" : ""}><label for="setunlock">Débloquer les jeux petit à petit (${UNLOCK_START} pour commencer, un nouveau toutes les ${UNLOCK_EVERY} étoiles)</label></div>
       <div class="setrow"><input type="checkbox" id="setauto"${s.autoNext !== false ? " checked" : ""}><label for="setauto">Changer de jeu automatiquement après ${ROUND_LEN} bonnes réponses</label></div>
       ${voiceSettingsHtml()}
       <fieldset class="setgames"><legend class="glab">Jeux visibles dans le menu</legend>
@@ -3968,6 +4019,7 @@ function wireSettings(){
   document.getElementById("setparty").onchange = e => { pdata.settings.party = e.target.checked; saveProfileData(); };
   document.getElementById("setvvoice").onchange = e => { pdata.settings.vvoice = e.target.checked; saveProfileData(); say(e.target.checked ? "Coucou ! C'est moi, Vroumi !" : "D'accord, je prends la voix de la tablette."); };
   document.getElementById("setmusic").onchange = e => { pdata.settings.music = e.target.checked; saveProfileData(); musicUpdate(); };
+  document.getElementById("setunlock").onchange = e => { pdata.settings.unlock = e.target.checked; if(e.target.checked) pdata.unlockBase = pdata.earned || 0; saveProfileData(); };
   document.getElementById("setauto").onchange = e => { pdata.settings.autoNext = e.target.checked; saveProfileData(); };
   wireVoiceSettings();
   { const box = app.querySelector(".a11yset"); if(box) wireA11yFields(box.parentElement, "a11yp", a => { curProfile().a11y = a; saveProfiles(); applyA11y(); parentPage(); }); }
@@ -4477,6 +4529,59 @@ function storySeq(si){
     }
   });
 }
+// ---------- Raconte à Vroumi : l'enfant raconte l'histoire au micro (gardé sur l'appareil) ----------
+function tellOK(){ return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder); }
+function tellScreen(si){
+  const st = STORIES[si], idx = [0, 2, st.pages.length - 1].filter(i => IMG["s" + si + "p" + i]);
+  curGame = "histoires";
+  app.innerHTML = `${topBar(true)}
+    <div class="prompt"><span>Raconte l'histoire à Vroumi !</span></div>
+    <div class="stage"><p class="enhint">${st.title} · regarde les images et raconte avec tes mots</p>
+      <div class="seqpics tellpics">${idx.map(i => `<span class="tellpic">${illu("s" + si + "p" + i, "")}</span>`).join("")}</div>
+      <div class="tellbox"><button class="tellmic" id="tellmic" aria-label="Commencer à raconter">🎙️</button><div class="tellbar"><i id="tellfill"></i></div><p class="tellmsg" id="tellmsg">Appuie sur le micro, puis raconte.</p></div>
+      <div class="pactions"><button class="iconbtn" id="tellskip">Une autre histoire</button></div></div>`;
+  wireTop();
+  say("Regarde les images, appuie sur le micro, et raconte-moi l'histoire !");
+  const mic = document.getElementById("tellmic"), msg = document.getElementById("tellmsg"), fill = document.getElementById("tellfill");
+  let rec = null, stream = null, timer = 0, t0 = 0, raf = 0, chunks = [];
+  const stopAll = () => { clearTimeout(timer); cancelAnimationFrame(raf); try{ stream && stream.getTracks().forEach(t => t.stop()); }catch(e){} };
+  document.getElementById("tellskip").onclick = () => { try{ if(rec && rec.state !== "inactive"){ rec.onstop = null; rec.stop(); } }catch(e){} stopAll(); storyMenu(); };
+  mic.onclick = async () => {
+    if(rec && rec.state === "recording"){ rec.stop(); return; }
+    try{ speechSynthesis.cancel(); }catch(e){}
+    try{ stream = await navigator.mediaDevices.getUserMedia({audio: true}); }
+    catch(e){ msg.textContent = "Le micro n'est pas disponible. Raconte l'histoire à papa ou maman !"; say("Je n'arrive pas à t'écouter ici. Raconte l'histoire à papa ou maman !"); mic.disabled = true; return; }
+    try{ musicStop(); }catch(e){}
+    chunks = []; rec = new MediaRecorder(stream);
+    rec.ondataavailable = e => { if(e.data && e.data.size) chunks.push(e.data); };
+    rec.onstop = async () => {
+      stopAll(); mic.classList.remove("on"); mic.disabled = true; mic.textContent = "💛";
+      const blob = new Blob(chunks, {type: rec.mimeType || "audio/webm"}), secs = Math.round((Date.now() - t0) / 1000);
+      if(blob.size > 800 && secs >= 2){
+        try{ await pvStore("put", {id: "k" + Date.now(), pid: profiles.current, at: Date.now(), blob, kid: true, title: st.title, secs});
+          const all = await pvAll(true); for(const c of all.slice(0, Math.max(0, all.length - 10))) await pvStore("del", c.id); }catch(e){}
+        msg.textContent = "Merci ! Vroumi a adoré ton histoire."; addStar(); try{ mascotReact("happy"); }catch(e){}
+        say(`Merci ${curProfile().name} ! J'ai adoré ton histoire. Papa et maman pourront l'écouter aussi.`);
+      } else { msg.textContent = "Je n'ai rien entendu. On réessaiera la prochaine fois !"; say("Je n'ai rien entendu. On réessaiera la prochaine fois !"); }
+      window.setTimeout(() => { if(document.body.contains(mic)) storyMenu(); }, 5200);
+    };
+    rec.start(); t0 = Date.now(); mic.classList.add("on"); mic.textContent = "⏹"; mic.setAttribute("aria-label", "J'ai fini"); msg.textContent = "Vroumi t'écoute… Appuie encore quand tu as fini.";
+    const tick = () => { const p = Math.min(1, (Date.now() - t0) / 30000); fill.style.width = (p * 100) + "%"; if(p < 1) raf = requestAnimationFrame(tick); }; tick();
+    timer = setTimeout(() => { if(rec && rec.state === "recording") rec.stop(); }, 30000);
+  };
+}
+function kidTellHtml(){
+  return `<section class="pcard" id="kidcard" hidden><h3>🗣️ ${esc(displayName())} raconte</h3>
+    <p class="pnote">Après une histoire, ${esc(displayName())} peut la raconter à Vroumi. Écoutez-le : c'est le meilleur aperçu de son langage. Les 10 derniers enregistrements restent sur cet appareil, nulle part ailleurs.</p>
+    <div class="pvlist" id="kidlist"></div></section>`;
+}
+async function kidTellRender(){
+  const card = document.getElementById("kidcard"), el = document.getElementById("kidlist"); if(!el) return;
+  const list = (await pvAll(true)).reverse(); card.hidden = !list.length && !tellOK();
+  el.innerHTML = list.length ? list.map(c => `<div class="pvrow"><span>${esc(c.title || "Histoire")} · ${new Date(c.at).toLocaleDateString("fr-FR", {day: "numeric", month: "short"})} · ${c.secs || "?"} s</span><button class="iconbtn" data-kplay="${c.id}" aria-label="Écouter">▶</button><button class="iconbtn" data-kdel="${c.id}" aria-label="Supprimer">🗑</button></div>`).join("") : `<p class="pnote">Pas encore d'enregistrement. Le bouton « Raconte l'histoire à Vroumi » apparaît à la fin d'une histoire.</p>`;
+  el.querySelectorAll("[data-kplay]").forEach(b => b.onclick = () => { const c = list.find(x => x.id === b.dataset.kplay); if(c) pvPlay(c); });
+  el.querySelectorAll("[data-kdel]").forEach(b => b.onclick = async () => { await pvStore("del", b.dataset.kdel).catch(() => {}); kidTellRender(); });
+}
 function storyEnd(si){
   if(si >= BASE_STORIES){ app.innerHTML = `${topBar(true)}<div class="endcard"><span class="sart">${artHtml(["hero","sun"])}</span><h2>Fin de l'histoire du jour !</h2><p>Demain, Vroumi t'écrira une nouvelle histoire.</p><button class="big" id="sback">Les autres histoires</button></div>`; wireTop(); say(`Fin de l'histoire ! Bravo ${curProfile().name}. Demain, Vroumi t'écrira une nouvelle histoire !`); document.getElementById("sback").onclick = () => storyMenu(); return; }
   pdata.storiesDone = [...new Set([...(pdata.storiesDone || []), si])];
@@ -4487,10 +4592,11 @@ function storyEnd(si){
       <h2>Fin de l'histoire !</h2>
       <p>Bravo, tu as écouté « ${STORIES[si].title} ».</p>
       <p class="pnote">Pour les parents : demandez à ${esc(displayName())} de vous raconter l'histoire avec ses mots.</p>
-      <button class="big" id="sback">Choisir une autre histoire</button></div>`;
+      <div class="pactions">${tellOK() ? `<button class="big" id="stell">🎙️ Raconte l'histoire à Vroumi</button>` : ""}<button class="${tellOK() ? "iconbtn" : "big"}" id="sback">Choisir une autre histoire</button></div></div>`;
   wireTop();
-  say(`Fin de l'histoire ! Bravo ${curProfile().name}. Tu peux raconter l'histoire à papa ou maman !`);
+  say(tellOK() ? `Fin de l'histoire ! Bravo ${curProfile().name}. Tu veux me raconter l'histoire ?` : `Fin de l'histoire ! Bravo ${curProfile().name}. Tu peux raconter l'histoire à papa ou maman !`);
   document.getElementById("sback").onclick = () => storyMenu();
+  { const tb = document.getElementById("stell"); if(tb) tb.onclick = () => { beep("tap"); tellScreen(si); }; }
 }
 GAMES.histoires = {label:"Les histoires", run:() => storyMenu()};
 
@@ -6543,7 +6649,7 @@ function retroWire(){
   if(cp) cp.onclick = async () => { const m = document.getElementById("obsmsg"); try{ await navigator.clipboard.writeText(obsText()); m.textContent = "Notes copiées : collez-les dans la conversation avec Claude."; }catch(e){ m.textContent = obsText(); } };
   const fp = document.getElementById("focusprop"); if(fp) fp.onclick = () => focusPropose();
   const fa = document.getElementById("focusall"); if(fa) fa.onclick = () => { pdata.settings.hidden = []; saveProfileData(); parentPage(); };
-  deviceCheck();
+  deviceCheck(); kidTellRender();
 }
 // ---------- Resserrer : une sélection de jeux d'après les vraies parties ----------
 function focusPlan(){
@@ -6619,8 +6725,8 @@ function pvOpen(){
   if(!PV.db) PV.db = new Promise((res, rej) => { try{ const r = indexedDB.open("garage-voix-parents", 1); r.onupgradeneeded = () => r.result.createObjectStore("clips", {keyPath: "id"}); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }catch(e){ rej(e); } });
   return PV.db;
 }
-async function pvAll(){
-  try{ const db = await pvOpen(); return await new Promise(res => { const q = db.transaction("clips").objectStore("clips").getAll(); q.onsuccess = () => res((q.result || []).filter(c => c.pid === profiles.current).sort((a, b) => a.at - b.at)); q.onerror = () => res([]); }); }catch(e){ return []; }
+async function pvAll(kid){
+  try{ const db = await pvOpen(); return await new Promise(res => { const q = db.transaction("clips").objectStore("clips").getAll(); q.onsuccess = () => res((q.result || []).filter(c => c.pid === profiles.current && !!c.kid === !!kid).sort((a, b) => a.at - b.at)); q.onerror = () => res([]); }); }catch(e){ return []; }
 }
 async function pvStore(mode, val){
   const db = await pvOpen();
@@ -7212,6 +7318,7 @@ if(/[?&]test\b/.test(location.search)) window.__garage = {
   games: () => Object.keys(GAMES), run: k => { curGame = k; play = {game: k, count: 0}; GAMES[k].run(); }, home: () => menu(), parents: () => parentPage(),
   stats: () => stats, pdata: () => pdata, levels: () => ({level, shapeLevel, sizeN, soundLevel, trainLvl}),
   ladDown, adaptLevel, reviewMiss, reviewDone, reviewPick, reviewCount, dayNum, focusPlan, bundlePlan, mergeBundles, profileBundle, livretPages, carnetSvg, effGrade,
+  unlockedList, lockedGames, unlockLeft, tellScreen, star: () => addStar(),
   duo: v => { if(v !== undefined) duo = v; return duo; }, save: () => saveProfileData()
 };
 if(profiles.list.length) loadProfile(curProfile().id);
