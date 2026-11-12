@@ -948,6 +948,17 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 }
 /* Vroumi ne doit pas couvrir le bouton Menu sur téléphone */
 @media (max-width:560px){ #mascot:not(.m-visit){top:80px;width:52px} }
+/* --- temps d'écran --- */
+.stnow{font-size:1.15rem;margin:4px 0 8px}
+.stbar{height:16px;border:3px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden;margin-bottom:10px}
+.stbar i{display:block;height:100%;background:#2fb36b}.stbar i.full{background:#c84f0c}
+.stweek{display:flex;gap:10px;align-items:flex-end;justify-content:center;margin:10px 0 2px}
+.stday{display:flex;flex-direction:column;align-items:center;gap:2px;width:34px}
+.stday i{display:block;width:22px;border-radius:6px 6px 0 0;background:#8fb8e8}
+.stday.today i{background:#2fb36b}
+.stday b{font-size:.82rem;font-variant-numeric:tabular-nums}
+.stday small{color:var(--soft);font-weight:800}
+.stcard .setrow{margin-top:10px}
 /* --- jeux à débloquer, raconte à Vroumi --- */
 .mode.locked{filter:grayscale(.85) brightness(.97);opacity:.8}
 .lockbadge{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:999px;padding:3px 12px;font:800 .82rem var(--body);white-space:nowrap}
@@ -1674,6 +1685,7 @@ function parentPage(){
       <h2 class="ptitle">Bilan de ${displayName()}</h2>
       ${weekSummaryHtml()}
       ${carnetReminderHtml()}
+      ${screenTimeHtml()}
       ${homeActHtml()}
       ${kidTellHtml()}
       ${obsHtml()}
@@ -3989,16 +4001,27 @@ function flow(fn){
     return fn();
   };
 }
+// ---------- Temps d'écran : bien visible en haut de l'espace parents ----------
+function screenTimeHtml(){
+  const s = pdata.settings, mins = Math.round(playedToday() / 60), max = +s.maxMin || 0;
+  const days = Array.from({length: 7}, (_, i) => { const d = new Date(); d.setDate(d.getDate() - (6 - i)); const k = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); return {l: "DLMMJVS"[d.getDay()], m: Math.round((pdata.time[k] || 0) / 60)}; });
+  const top = Math.max(max, 10, ...days.map(d => d.m)), tot = days.reduce((a, d) => a + d.m, 0);
+  return `<section class="pcard stcard" id="stcard"><h3>⏱️ Temps d'écran</h3>
+      <p class="stnow"><b>${mins} min</b> aujourd'hui${max ? ` sur ${max} min autorisées` : " · pas de limite"}</p>
+      ${max ? `<div class="stbar" role="img" aria-label="${mins} minutes sur ${max}"><i style="width:${Math.min(100, Math.round(100 * mins / max))}%" class="${mins >= max ? "full" : ""}"></i></div>` : ""}
+      <div class="stweek" role="img" aria-label="Minutes de jeu des 7 derniers jours : ${days.map(d => d.m).join(", ")}">${days.map((d, i) => `<span class="stday${i === 6 ? " today" : ""}"><i style="height:${Math.max(3, Math.round(56 * d.m / top))}px"></i><b>${d.m}</b><small>${d.l}</small></span>`).join("")}</div>
+      <p class="pnote">${tot} minute${tot > 1 ? "s" : ""} sur les 7 derniers jours.</p>
+      <div class="setrow"><label for="setmax" class="glab">Temps de jeu maximum par jour</label>
+        <select id="setmax" class="gsel">${[0,10,15,20,30,45,60].map(m => `<option value="${m}"${+s.maxMin === m ? " selected" : ""}>${m ? m + " minutes" : "Pas de limite"}</option>`).join("")}</select></div>
+      <div class="setrow"><label for="setrest" class="glab">Un même jeu, au maximum par jour</label>
+        <select id="setrest" class="gsel">${[0,5,8,10,15,20].map(m => `<option value="${m}"${(s.restMin === undefined ? 10 : +s.restMin) === m ? " selected" : ""}>${m ? m + " minutes" : "Pas de limite"}</option>`).join("")}</select></div>
+      <p class="pnote">Quand le temps du jour est fini, Vroumi dit au revoir jusqu'à demain. Quand un jeu a atteint sa limite, il se repose et Vroumi propose les autres.</p>
+    </section>`;
+}
 function settingsHtml(){
   const s = pdata.settings, mins = Math.round(playedToday() / 60);
   return `<section class="settings">
       <h3>Réglages pour ${esc(curProfile().name)}</h3>
-      <div class="setrow"><label for="setmax" class="glab">Temps de jeu maximum par jour</label>
-        <select id="setmax" class="gsel">${[0,10,15,20,30,45,60].map(m => `<option value="${m}"${+s.maxMin === m ? " selected" : ""}>${m ? m + " minutes" : "Pas de limite"}</option>`).join("")}</select></div>
-      <p class="pnote">Aujourd'hui : ${mins} minute${mins > 1 ? "s" : ""} de jeu.</p>
-      <div class="setrow"><label for="setrest" class="glab">Un même jeu, au maximum par jour</label>
-        <select id="setrest" class="gsel">${[0,5,8,10,15,20].map(m => `<option value="${m}"${(s.restMin === undefined ? 10 : +s.restMin) === m ? " selected" : ""}>${m ? m + " minutes" : "Pas de limite"}</option>`).join("")}</select></div>
-      <p class="pnote">Quand la limite est atteinte, le jeu se repose jusqu'au lendemain et propose d'autres jeux : l'enfant varie les apprentissages.</p>
       <div class="setrow"><input type="checkbox" id="setparty"${s.party ? " checked" : ""}><label for="setparty">Petite fête toutes les 5 étoiles</label></div>
       <div class="setrow"><input type="checkbox" id="setvvoice"${s.vvoice !== false ? " checked" : ""}><label for="setvvoice">Voix enregistrée de Vroumi (sinon, voix de la tablette)</label></div>
       <div class="setrow"><input type="checkbox" id="setmusic"${s.music !== false ? " checked" : ""}><label for="setmusic">Musique douce pendant les jeux</label></div>
