@@ -1,5 +1,5 @@
 // Le Garage des Petites Voitures — fonctionne sans internet.
-const V = "garage-v6";
+const V = "garage-v7";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "voix/index.json"];
 self.addEventListener("install", e => {
   e.waitUntil((async () => {
