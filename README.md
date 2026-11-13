@@ -1,4 +1,4 @@
-# Le Garage des Petites Voitures
+# Les aventures de Vroumi
 
 Des jeux éducatifs gratuits pour la maternelle (de la petite section au CP), avec Vroumi, une petite voiture qui parle à l'enfant. Pas besoin de savoir lire.
 

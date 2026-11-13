@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>Le Garage des Petites Voitures</title>
+<title>Les aventures de Vroumi</title>
 <script>document.documentElement.lang = "fr";</script>
 <script>
 // Appli installable : seulement sur le site GitHub Pages (pas dans l'aperçu Claude)
@@ -2297,7 +2297,7 @@ function menu(page){
   const home = hasA("attention") ? homeGames().slice(0, 4) : homeGames(), moreList = availableGames().filter(k => !home.includes(k));
   if(typeof stopLights === "function") stopLights();
   app.innerHTML = `${topBar(false)}
-    <h1>${page === "home" ? "Le Garage des Petites Voitures" : "Encore plus de jeux"}</h1>
+    <h1>${page === "home" ? "Les aventures de Vroumi" : "Encore plus de jeux"}</h1>
     <p class="sub">${page === "home" ? `Tes ${hasA("attention") ? 4 : 6} jeux du jour · ${grade().label}` : "Choisis un jeu !"}</p>
     ${limitReached() ? `<p class="closedbanner">Le garage est fermé pour aujourd'hui. À demain !</p>` : ""}
     ${page === "home" ? `<div class="daybar homebar">
@@ -6615,7 +6615,7 @@ function carnetSvg(prev){
   <text x="110" y="${py}" font-size="36" font-weight="800" fill="#1f2a44">Mes permis de conduire · ${permits.length}</text>
   ${permits.length ? permits.slice(0, showNote ? 12 : pmax).map((p, i) => `<text x="${i % 2 ? 660 : 130}" y="${py + 60 + Math.floor(i / 2) * 50}" font-size="29" fill="#1f2a44">★ ${X(p)}</text>`).join("") : `<text x="130" y="${py + 60}" font-size="29" fill="#5a6a8a">Le premier permis arrive bientôt !</text>`}
   ${showNote ? noteSvg : ""}
-  <text x="${W / 2}" y="${H - 175}" text-anchor="middle" font-size="24" fill="#5a6a8a">Le Garage des Petites Voitures · jeux éducatifs à la maison</text>
+  <text x="${W / 2}" y="${H - 175}" text-anchor="middle" font-size="24" fill="#5a6a8a">Les aventures de Vroumi · jeux éducatifs à la maison</text>
   <text x="${W / 2}" y="${H - 110}" font-size="42" font-weight="800" text-anchor="middle" fill="#2fb36b">Bravo ${X(nm)}, continue comme ça !</text>
 </svg>`;
 }
@@ -6668,7 +6668,7 @@ function livretPage(doms, page, info){
   });
   const head = page === 1 ? `
     <text x="${W / 2}" y="140" font-size="58" font-weight="800" text-anchor="middle" fill="#1f2a44">Livret de suivi</text>
-    <text x="${W / 2}" y="196" font-size="28" font-weight="700" text-anchor="middle" fill="#5a6a8a">Le Garage des Petites Voitures · jeux éducatifs à la maison</text>
+    <text x="${W / 2}" y="196" font-size="28" font-weight="700" text-anchor="middle" fill="#5a6a8a">Les aventures de Vroumi · jeux éducatifs à la maison</text>
     <rect x="90" y="236" width="${W - 180}" height="170" rx="24" fill="#f4f7fc" stroke="#d5dcea" stroke-width="3"/>
     <text x="130" y="292" font-size="34" font-weight="800" fill="#1f2a44">${X(curProfile().name)}</text>
     <text x="130" y="334" font-size="25" fill="#1f2a44">${X(grade().label)} · ${info.n} jour${info.n > 1 ? "s" : ""} de jeu · ${pdata.earned || 0} étoiles</text>
@@ -7143,9 +7143,9 @@ function shareGameHtml(){
 }
 function shareGameWire(){
   const b = document.getElementById("sharegame"); if(!b) return;
-  const url = "https://dimitrigigan.github.io/garage-voitures/", text = "Le Garage des Petites Voitures : des jeux gratuits pour apprendre en maternelle, avec Vroumi. Sans pub, sans compte.";
+  const url = "https://dimitrigigan.github.io/garage-voitures/", text = "Les aventures de Vroumi : des jeux gratuits pour apprendre en maternelle, avec Vroumi. Sans pub, sans compte.";
   b.onclick = async () => { const m = document.getElementById("sharegmsg");
-    try{ if(navigator.share){ await navigator.share({title: "Le Garage des Petites Voitures", text, url}); return; } await navigator.clipboard.writeText(text + " " + url); m.textContent = "Lien copié : collez-le dans un message."; }
+    try{ if(navigator.share){ await navigator.share({title: "Les aventures de Vroumi", text, url}); return; } await navigator.clipboard.writeText(text + " " + url); m.textContent = "Lien copié : collez-le dans un message."; }
     catch(e){ if(!(e && e.name === "AbortError")) m.textContent = url; } };
 }
 function installHtml(){

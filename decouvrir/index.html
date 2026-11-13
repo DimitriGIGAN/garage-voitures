@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Le Garage des Petites Voitures</title>
+<title>Les aventures de Vroumi</title>
 <meta name="description" content="Un jeu gratuit pour apprendre en s'amusant, de la petite section au CP. Sans pub, sans compte.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Le Garage des Petites Voitures 🚗">
+<meta property="og:title" content="Les aventures de Vroumi 🚗">
 <meta property="og:description" content="35 jeux gratuits pour les 3-6 ans, des histoires de La Réunion, sans pub et sans compte. Regarde la vidéo !">
-<meta property="og:image" content="https://dimitrigigan.github.io/garage-voitures/decouvrir/affiche.jpg">
+<meta property="og:image" content="https://dimitrigigan.github.io/garage-voitures/decouvrir/affiche.jpg?v=2">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:url" content="https://dimitrigigan.github.io/garage-voitures/decouvrir/">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,9 +33,9 @@ li span{color:var(--muted);font-size:15px}
 #copied{font-size:15px;color:var(--muted);align-self:center}
 </style></head>
 <body><main>
-<h1>Le Garage des Petites Voitures 🚗</h1>
+<h1>Les aventures de Vroumi 🚗</h1>
 <p class="lead">Un jeu pour apprendre en s'amusant, de la petite section au CP. Gratuit, sans pub, sans compte.</p>
-<video controls playsinline preload="metadata" poster="affiche.jpg" src="garage.mp4"></video>
+<video controls playsinline preload="metadata" poster="affiche.jpg?v=2" src="garage.mp4?v=2"></video>
 <div class="cta">
   <a class="btn" href="../">Jouer maintenant</a>
   <button class="btn alt" id="share" type="button">Partager</button>
@@ -53,7 +53,7 @@ li span{color:var(--muted);font-size:15px}
 </main>
 <script>
 document.getElementById("share").onclick = async () => {
-  const url = location.href.split("#")[0], data = {title:"Le Garage des Petites Voitures", text:"Un jeu gratuit pour les 3-6 ans, regarde la vidéo :", url};
+  const url = location.href.split("#")[0], data = {title:"Les aventures de Vroumi", text:"Un jeu gratuit pour les 3-6 ans, regarde la vidéo :", url};
   try{ if(navigator.share){ await navigator.share(data); return; } }catch(e){ return; }
   try{ await navigator.clipboard.writeText(url); document.getElementById("copied").textContent = "Lien copié !"; }catch(e){ document.getElementById("copied").textContent = url; }
 };
