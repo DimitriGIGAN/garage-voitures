@@ -1,5 +1,5 @@
 // Le Garage des Petites Voitures — fonctionne sans internet.
-const V = "garage-v9";
+const V = "garage-v10";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icon-180.png", "icon-192.png", "icon-512.png", "voix/index.json"];
 const CHANTS = ["bois","choux","cloche","escargot","lune","marionnette","navire","pomme","prince"].map(n => "chants/c-" + n + ".json");
 const SONS = ["bonne","bravo","erreur","fanfare","musique-jour","musique-matin","musique-nuit","musique-soir","niveau"].map(n => "son/" + n + ".mp3");
